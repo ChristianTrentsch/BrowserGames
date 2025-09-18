@@ -1,0 +1,139 @@
+/* DEPRECATED */
+/* body {
+  background: #111;
+  color: #f8f9fa;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.text-neon {
+  color: #ff0000;
+  text-shadow: 0 0 3px #ff8800, 0 0 10px #ff5100, 0 0 20px #fbff00;
+}
+
+.game-card {
+  background: #222;
+  border-radius: 15px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px rgba(0, 255, 204, 0.5);
+}
+
+.game-card img {
+  max-width: 100px;
+  margin-bottom: 1rem;
+}
+
+footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 1rem;
+  color: #aaa;
+} */
+
+/* ===== Grund-Layout ===== */
+body {
+  background-color: #1a1a1a; /* sehr dunkles Grau */
+  color: #e0e0e0; /* helles Grau für Text */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+/* ===== Header ===== */
+h1 {
+  color: #ffffff; /* Weiß für den Titel */
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.6); /* leichter roter Glow */
+  margin-bottom: 1rem;
+}
+
+img {
+  height: 100px;
+  width: auto;
+  vertical-align: middle;
+  margin-bottom: 20px;
+}
+
+/* ===== Container ===== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.intro h1 {
+  color: #8d5454;
+  text-shadow: 0 0 8px rgba(255, 46, 46, 0.7);
+}
+
+.intro p {
+  color: #ddd;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* ===== Kacheln für Spiele ===== */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.game-tile {
+  background: linear-gradient(145deg, #2a2a2a, #1c1c1c);
+  border: 2px solid #333;
+  border-radius: 15px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+.game-tile:hover {
+  border-color: #ff2e2e; /* roter Hover-Rand */
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4);
+}
+
+.game-tile img {
+  height: 100px;
+  width: auto;
+  margin-bottom: 1rem;
+}
+
+.game-tile h2 {
+  color: #fff;
+  margin: 0.5rem 0 0;
+}
+
+/* ===== Buttons ===== */
+.btn-custom {
+  background-color: #ff2e2e;
+  border: none;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-custom:hover {
+  background-color: #ff4c4c;
+}
+
+/* ===== Footer ===== */
+footer {
+  margin-top: 3rem;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  color: #aaa;
+  border-top: 1px solid #333;
+}

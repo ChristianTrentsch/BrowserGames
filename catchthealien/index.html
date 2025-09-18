@@ -41,6 +41,13 @@
       <button hidden id="resetButton" class="btn btn-danger btn-lg">Reset Highscore</button>
     </div>
 
+    <!-- Startseite -->
+    <div class="mb-4">
+      <a href="../index.html" class="btn btn-outline-info btn-lg">
+        🎮 Zurück zur Startseite
+      </a>
+    </div>
+
     <!-- Spielbereich -->
     <div class="card bg-secondary shadow-lg rounded-4 p-3 mx-auto" style="max-width: 450px;">
       <canvas id="game" width="400" height="400" class="mx-auto d-block"></canvas>
@@ -59,6 +66,8 @@
         </thead>
         <tbody></tbody>
       </table>
+
+
     </div>
   </div>
 
@@ -151,7 +160,7 @@
     function gameOver() {
       gameRunning = false;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      let name = prompt(`Game Over! Punkte: ${score}\nGib deine 3 Buchstaben ein:`) || "???";
+      let name = prompt(`Game Over! Punkte: ${score}\nGib deinen Namen ein, du hast 3 Buchstaben ein:`) || "???";
       name = name.substring(0, 3).toUpperCase();
       saveHighscore(name, score);
       loadHighscores();
