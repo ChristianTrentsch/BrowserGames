@@ -1,0 +1,14 @@
+/* Neon-Titel */
+.text-neon {
+  color: #00f3ff;
+  text-shadow: 0 0 5px #00f3ff, 0 0 10px #00f3ff, 0 0 20px #00f3ff,
+    0 0 40px #00c2cc;
+}
+
+/* Canvas leichter Glow */
+canvas {
+  border: 2px solid #00f3ff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 243, 255, 0.7), 0 0 20px rgba(0, 243, 255, 0.5);
+  background-color: #111;
+}
