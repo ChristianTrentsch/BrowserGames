@@ -5,6 +5,9 @@ body {
 
   overflow: hidden;
   image-rendering: pixelated;
+
+  background-color: #1a1a1a; /* sehr dunkles Grau */
+  text-align: center;
 }
 
 canvas {
