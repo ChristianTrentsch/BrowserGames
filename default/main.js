@@ -52,6 +52,7 @@ class Sprite {
     frame, // which frame to show
     scale, // how large to draw the sprite
     position, // where to draw the sprite
+    animations, // animation pattern to use
   }) {
     this.resource = resource;
     this.frameSize = frameSize ?? new Vector2(16, 16);
@@ -61,6 +62,7 @@ class Sprite {
     this.frameMap = new Map();
     this.scale = scale ?? 1;
     this.position = position ?? new Vector2(0, 0);
+    this.animations = animations ?? null;
 
     this.buildFrameMap();
   }
@@ -76,6 +78,15 @@ class Sprite {
         frameCount++;
       }
     }
+  }
+
+  step(delta) {
+    if (!this.animations) {
+      return;
+    }
+
+    this.animations.step(delta);
+    this.frame = this.animations.frame;
   }
 
   drawImage(ctx, x, y) {
@@ -235,13 +246,112 @@ class Input {
   }
 }
 
+class FrameIndexPattern {
+  constructor(animationConfig) {
+    this.currentTime = 0;
+    this.animationConfig = animationConfig;
+    this.duration = animationConfig.duration ?? 500;
+  }
+
+  get frame() {
+    const { frames } = this.animationConfig;
+    for (let i = frames.length - 1; i >= 0; i--) {
+      if (this.currentTime >= frames[i].time) {
+        return frames[i].frame;
+      }
+    }
+
+    throw "Time is befor the first frame!";
+  }
+
+  step(delta) {
+    this.currentTime += delta;
+    if (this.currentTime >= this.duration) {
+      this.currentTime = 0;
+    }
+  }
+}
+
+class Animations {
+  constructor(patterns) {
+    this.patterns = patterns;
+    this.activeKey = Object.keys(this.patterns)[0];
+  }
+
+  get frame() {
+    return this.patterns[this.activeKey].frame;
+  }
+
+  play(key, startAtTime = 0) {
+    // Already playing
+    if (this.activeKey === key) {
+      return;
+    }
+
+    // Switch to new pattern
+    this.activeKey = key;
+    this.patterns[this.activeKey].currentTime = startAtTime;
+  }
+
+  step(delta) {
+    this.patterns[this.activeKey].step(delta);
+  }
+}
+
 // ##### Const and Helpers #####
+
+const makeStandingFrames = (rootFrame = 0) => {
+  return {
+    duration: 400,
+    frames: [
+      {
+        time: 0,
+        frame: rootFrame,
+      },
+    ],
+  };
+};
+
+const makeWalkingFrames = (rootFrame = 0) => {
+  return {
+    duration: 400,
+    frames: [
+      {
+        time: 0,
+        frame: rootFrame + 1,
+      },
+      {
+        time: 100,
+        frame: rootFrame,
+      },
+      {
+        time: 200,
+        frame: rootFrame + 1,
+      },
+      {
+        time: 300,
+        frame: rootFrame + 2,
+      },
+    ],
+  };
+};
 
 const LEFT = "LEFT";
 const RIGHT = "RIGHT";
 const UP = "UP";
 const DOWN = "DOWN";
+
 const TILE_SIZE = 16;
+
+const STAND_DOWN = makeStandingFrames(1);
+const STAND_RIGHT = makeStandingFrames(4);
+const STAND_UP = makeStandingFrames(7);
+const STAND_LEFT = makeStandingFrames(10);
+
+const WALK_DOWN = makeWalkingFrames(0);
+const WALK_RIGHT = makeWalkingFrames(3);
+const WALK_UP = makeWalkingFrames(6);
+const WALK_LEFT = makeWalkingFrames(9);
 
 const wallDefinitions = {
   right: ["240,32", "256,48", "256,64", "256,80", "256,96"],
@@ -351,9 +461,20 @@ const heroSprite = new Sprite({
   vFrames: 8,
   frame: 1,
   position: new Vector2(gridCells(6), gridCells(5)),
+  animations: new Animations({
+    walkLeft: new FrameIndexPattern(WALK_LEFT),
+    walkDown: new FrameIndexPattern(WALK_DOWN),
+    walkUp: new FrameIndexPattern(WALK_UP),
+    walkRight: new FrameIndexPattern(WALK_RIGHT),
+    standLeft: new FrameIndexPattern(STAND_LEFT),
+    standDown: new FrameIndexPattern(STAND_DOWN),
+    standUp: new FrameIndexPattern(STAND_UP),
+    standRight: new FrameIndexPattern(STAND_RIGHT),
+  }),
 });
 
 const heroDestinationPosition = heroSprite.position.duplicate();
+let heroFacing = DOWN;
 
 const shadowSprite = new Sprite({
   resource: resources.images.shadow,
@@ -366,7 +487,7 @@ const walls = new Set(Object.values(wallDefinitions).flat());
 // Input handler
 const input = new Input();
 
-const update = () => {
+const update = (delta) => {
   const distance = moveTowards(heroSprite, heroDestinationPosition, 1);
 
   // Attempt to move if we have arrived
@@ -374,35 +495,56 @@ const update = () => {
   if (hasArrived) {
     tryMove();
   }
+
+  // Update Animation
+  heroSprite.step(delta);
 };
 
 const tryMove = () => {
+  // No input
   if (!input.direction) {
+    switch (heroFacing) {
+      case LEFT:
+        heroSprite.animations.play("standLeft");
+        break;
+      case RIGHT:
+        heroSprite.animations.play("standRight");
+        break;
+      case UP:
+        heroSprite.animations.play("standUp");
+        break;
+      case DOWN:
+        heroSprite.animations.play("standDown");
+        break;
+    }
+
     return;
   }
 
   let nextX = heroDestinationPosition.x;
   let nextY = heroDestinationPosition.y;
-  const grideSize = 16;
+  const grideSize = TILE_SIZE;
 
   switch (input.direction) {
     case LEFT:
       nextX -= grideSize;
-      heroSprite.frame = 9;
+      heroSprite.animations.play("walkLeft");
       break;
     case RIGHT:
       nextX += grideSize;
-      heroSprite.frame = 3;
+      heroSprite.animations.play("walkRight");
       break;
     case UP:
       nextY -= grideSize;
-      heroSprite.frame = 6;
+      heroSprite.animations.play("walkUp");
       break;
     case DOWN:
       nextY += grideSize;
-      heroSprite.frame = 0;
+      heroSprite.animations.play("walkDown");
       break;
   }
+
+  heroFacing = input.direction ?? heroFacing;
 
   // Collision Detection
   if (isSpaceFree(walls, nextX, nextY)) {
