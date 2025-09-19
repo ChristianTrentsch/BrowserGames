@@ -16,6 +16,7 @@ import {
   WALK_LEFT,
   WALK_RIGHT,
   WALK_UP,
+  PICK_UP_DOWN,
 } from "./heroAnimations.js";
 import { moveTowards } from "../../helpers/moveTowards.js";
 import { TILE_SIZE } from "../../helpers/grid.js";
@@ -50,16 +51,30 @@ export class Hero extends GameObject {
         standDown: new FrameIndexPattern(STAND_DOWN),
         standUp: new FrameIndexPattern(STAND_UP),
         standRight: new FrameIndexPattern(STAND_RIGHT),
+        pickUpDown: new FrameIndexPattern(PICK_UP_DOWN),
       }),
     });
     this.addChild(this.body);
 
     this.facingDirection = DOWN;
     this.destinationPosition = this.position.duplicate();
+
+    this.itemPickUpTime = 0;
+    this.itemPickUpShell = null;
+
+    events.on(events.HERO_PICKS_UP_ITEM, this, (data) => {
+      this.onPickUpItem(data);
+    });
   }
 
   step(delta, root) {
     // Implement Hero specific logic here
+
+    // Lock movement if celebrating an item pickup
+    if (this.itemPickUpTime > 0) {
+      this.workOnItemPickUp(delta);
+      return;
+    }
 
     const distance = moveTowards(this, this.destinationPosition, 1);
 
@@ -79,7 +94,7 @@ export class Hero extends GameObject {
     this.lastX = this.position.x;
     this.lastY = this.position.y;
 
-    events.emit("HERO_POSTION", this.position);
+    events.emit(events.HERO_POSTION, this.position);
   }
 
   tryMove(root) {
@@ -135,6 +150,33 @@ export class Hero extends GameObject {
       // update postion of hero
       this.destinationPosition.x = nextX;
       this.destinationPosition.y = nextY;
+    }
+  }
+
+  onPickUpItem({ image, position }) {
+    // Make sure we land right on the item
+    this.destinationPosition = position.duplicate();
+
+    // Start the pickup animation
+    this.itemPickUpTime = 1000; // ms
+
+    this.itemPickUpShell = new GameObject({});
+    this.itemPickUpShell.addChild(
+      new Sprite({
+        resource: image,
+        position: new Vector2(0, -18),
+      })
+    );
+    this.addChild(this.itemPickUpShell);
+  }
+
+  workOnItemPickUp(delta) {
+    this.itemPickUpTime -= delta;
+    this.body.animations.play("pickUpDown");
+
+    // destroy gameobject wenn time to pick up is over
+    if (this.itemPickUpTime <= 0) {
+      this.itemPickUpShell.destroy();
     }
   }
 }

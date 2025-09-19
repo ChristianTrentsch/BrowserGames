@@ -2,6 +2,9 @@ class Events {
   callbacks = [];
   nextId = 0;
 
+  HERO_POSTION = "HERO_POSTION";
+  HERO_PICKS_UP_ITEM = "HERO_PICKS_UP_ITEM";
+
   // emit event
   emit(eventName, value) {
     this.callbacks.forEach((stored) => {

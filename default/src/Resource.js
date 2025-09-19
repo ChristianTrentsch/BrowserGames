@@ -25,7 +25,7 @@ class Resources {
 
       img.onload = () => {
         this.images[key].isLoaded = true;
-        console.log(`${key} loaded!`);
+        // console.log(`${key} loaded!`);
       };
     });
   }

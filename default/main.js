@@ -7,7 +7,7 @@ import { gridCells } from "./src/helpers/grid.js";
 import { GameObject } from "./src/GameObject.js";
 import { Hero } from "./src/objects/Hero/Hero.js";
 import { Camera } from "./src/Camera.js";
-// import {Rod} from "./src/objects/Rod/Rod.js";
+import { Rod } from "./src/objects/Rod/Rod.js";
 // import {Inventory} from "./src/objects/Inventory/Inventory.js";
 
 // Canvas und Context holen
@@ -38,6 +38,10 @@ mainScene.addChild(hero);
 const camera = new Camera();
 mainScene.addChild(camera);
 
+/* ADD ITEMS TO SCENE */
+const rod = new Rod(gridCells(7), gridCells(6));
+mainScene.addChild(rod);
+
 // Input handler
 mainScene.input = new Input();
 
@@ -53,10 +57,10 @@ const draw = () => {
 
   skySprite.drawImage(ctx, 0, 0);
 
-  // Save the current context state
+  // Save the current state (for camera offset)
   ctx.save();
 
-  // Offset the entire scene to center the hero
+  // Offset by camera position
   ctx.translate(camera.position.x, camera.position.y);
 
   // Draw objects in the mounted scene
