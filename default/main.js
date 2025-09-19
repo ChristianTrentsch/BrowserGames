@@ -32,7 +32,7 @@ const groundSprite = new Sprite({
 mainScene.addChild(groundSprite);
 
 // Create Hero and add to scene
-const hero = new Hero(gridCells(6), gridCells(5));
+const hero = new Hero(gridCells(8), gridCells(4));
 mainScene.addChild(hero);
 
 const camera = new Camera();

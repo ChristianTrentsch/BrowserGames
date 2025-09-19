@@ -31,7 +31,7 @@ export class Hero extends GameObject {
     const shadow = new Sprite({
       resource: resources.images.shadow,
       frameSize: new Vector2(32, 32),
-      position: new Vector2(-8, -20),
+      position: new Vector2(-8, -18),
     });
     this.addChild(shadow);
 
@@ -41,7 +41,7 @@ export class Hero extends GameObject {
       hFrames: 3,
       vFrames: 8,
       frame: 1,
-      position: new Vector2(-8, -21),
+      position: new Vector2(-8, -19),
       animations: new Animations({
         walkLeft: new FrameIndexPattern(WALK_LEFT),
         walkDown: new FrameIndexPattern(WALK_DOWN),
