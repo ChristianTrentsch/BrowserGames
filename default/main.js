@@ -1,449 +1,25 @@
-// A simple resource loader for images
-class Vector2 {
-  constructor(x = 0, y = 0) {
-    this.x = x;
-    this.y = y;
-  }
-
-  duplicate() {
-    return new Vector2(this.x, this.y);
-  }
-}
-
-class Resources {
-  constructor() {
-    // Everything we want to load
-    this.toLoad = {
-      ground: "./images/sprites/ground.png",
-      hero: "./images/sprites/hero-sheet.png",
-      rod: "./images/sprites/rod.png",
-      shadow: "./images/sprites/shadow.png",
-      sky: "./images/sprites/sky.png",
-      spritesheet: "./images/sprites/spritesheet.png",
-    };
-
-    // A bucket to store all of our images
-    this.images = {};
-
-    // Load all of the images
-    Object.keys(this.toLoad).forEach((key) => {
-      const img = new Image();
-      img.src = this.toLoad[key];
-
-      this.images[key] = {
-        image: img,
-        isLoaded: false,
-      };
-
-      img.onload = () => {
-        this.images[key].isLoaded = true;
-        console.log(`${key} loaded!`);
-      };
-    });
-  }
-}
-
-class Sprite {
-  constructor({
-    resource, // image we want to use
-    frameSize, // size of each frame
-    hFrames, // how is the sprite arranged horizontally
-    vFrames, // how is the sprite arranged vertically
-    frame, // which frame to show
-    scale, // how large to draw the sprite
-    position, // where to draw the sprite
-    animations, // animation pattern to use
-  }) {
-    this.resource = resource;
-    this.frameSize = frameSize ?? new Vector2(16, 16);
-    this.hFrames = hFrames ?? 1;
-    this.vFrames = vFrames ?? 1;
-    this.frame = frame ?? 0;
-    this.frameMap = new Map();
-    this.scale = scale ?? 1;
-    this.position = position ?? new Vector2(0, 0);
-    this.animations = animations ?? null;
-
-    this.buildFrameMap();
-  }
-
-  buildFrameMap() {
-    let frameCount = 0;
-    for (let v = 0; v < this.vFrames; v++) {
-      for (let h = 0; h < this.hFrames; h++) {
-        this.frameMap.set(
-          frameCount,
-          new Vector2(this.frameSize.x * h, this.frameSize.y * v)
-        );
-        frameCount++;
-      }
-    }
-  }
-
-  step(delta) {
-    if (!this.animations) {
-      return;
-    }
-
-    this.animations.step(delta);
-    this.frame = this.animations.frame;
-  }
-
-  drawImage(ctx, x, y) {
-    if (!this.resource.isLoaded) {
-      return;
-    }
-
-    // Find the correct Sprite
-    let frameCoordX = 0;
-    let frameCoordY = 0;
-    const frame = this.frameMap.get(this.frame);
-    if (frame) {
-      frameCoordX = frame.x;
-      frameCoordY = frame.y;
-    }
-
-    ctx.drawImage(
-      this.resource.image, // Image
-      frameCoordX, // X-Coordinate of the frame
-      frameCoordY, // Y-Coordinate of the frame
-      this.frameSize.x, // Width of the frame
-      this.frameSize.y, // Height of the frame
-      x, // X-Coordinate on the canvas
-      y, // Y-Coordinate on the canvas
-      this.frameSize.x * this.scale, // Width on the canvas
-      this.frameSize.y * this.scale // Height on the canvas
-    );
-  }
-}
-
-class GameLoop {
-  constructor(update, render) {
-    this.lastFrameTime = 0;
-    this.accumulatedTime = 0;
-    this.timeStep = 1000 / 60; // 60 FPS
-
-    this.update = update;
-    this.render = render;
-
-    this.rafId = null;
-    this.isRunning = false;
-  }
-
-  mainLoop = (timestamp) => {
-    if (!this.isRunning) return;
-
-    let deltaTime = timestamp - this.lastFrameTime;
-    this.lastFrameTime = timestamp;
-
-    this.accumulatedTime += deltaTime;
-
-    while (this.accumulatedTime >= this.timeStep) {
-      this.update(this.timeStep);
-      this.accumulatedTime -= this.timeStep;
-    }
-
-    this.render();
-    this.rafId = requestAnimationFrame(this.mainLoop);
-  };
-
-  start() {
-    if (!this.isRunning) {
-      this.isRunning = true;
-      this.rafId = requestAnimationFrame(this.mainLoop);
-    }
-  }
-
-  stop() {
-    if (this.rafId) {
-      cancelAnimationFrame(this.rafId);
-    }
-    this.isRunning = false;
-  }
-}
-
-class Input {
-  constructor() {
-    this.heldDirections = [];
-
-    document.addEventListener("keydown", (e) => {
-      switch (e.code) {
-        case "ArrowLeft":
-          this.onArrowPressed(LEFT);
-          break;
-        case "ArrowRight":
-          this.onArrowPressed(RIGHT);
-          break;
-        case "ArrowUp":
-          this.onArrowPressed(UP);
-          break;
-        case "ArrowDown":
-          this.onArrowPressed(DOWN);
-          break;
-        case "KeyA":
-          this.onArrowPressed(LEFT);
-          break;
-        case "KeyD":
-          this.onArrowPressed(RIGHT);
-          break;
-        case "KeyW":
-          this.onArrowPressed(UP);
-          break;
-        case "KeyS":
-          this.onArrowPressed(DOWN);
-          break;
-      }
-    });
-
-    document.addEventListener("keyup", (e) => {
-      switch (e.code) {
-        case "ArrowLeft":
-          this.onArrowReleased(LEFT);
-          break;
-        case "ArrowRight":
-          this.onArrowReleased(RIGHT);
-          break;
-        case "ArrowUp":
-          this.onArrowReleased(UP);
-          break;
-        case "ArrowDown":
-          this.onArrowReleased(DOWN);
-          break;
-        case "KeyA":
-          this.onArrowReleased(LEFT);
-          break;
-        case "KeyD":
-          this.onArrowReleased(RIGHT);
-          break;
-        case "KeyW":
-          this.onArrowReleased(UP);
-          break;
-        case "KeyS":
-          this.onArrowReleased(DOWN);
-          break;
-      }
-    });
-  }
-
-  get direction() {
-    return this.heldDirections[0];
-  }
-
-  onArrowPressed(direction) {
-    if (this.heldDirections.indexOf(direction) === -1) {
-      this.heldDirections.unshift(direction);
-    }
-  }
-
-  onArrowReleased(direction) {
-    const index = this.heldDirections.indexOf(direction);
-    if (index === -1) {
-      return;
-    }
-
-    // Remove the direction from the array
-    this.heldDirections.splice(index, 1);
-  }
-}
-
-class FrameIndexPattern {
-  constructor(animationConfig) {
-    this.currentTime = 0;
-    this.animationConfig = animationConfig;
-    this.duration = animationConfig.duration ?? 500;
-  }
-
-  get frame() {
-    const { frames } = this.animationConfig;
-    for (let i = frames.length - 1; i >= 0; i--) {
-      if (this.currentTime >= frames[i].time) {
-        return frames[i].frame;
-      }
-    }
-
-    throw "Time is befor the first frame!";
-  }
-
-  step(delta) {
-    this.currentTime += delta;
-    if (this.currentTime >= this.duration) {
-      this.currentTime = 0;
-    }
-  }
-}
-
-class Animations {
-  constructor(patterns) {
-    this.patterns = patterns;
-    this.activeKey = Object.keys(this.patterns)[0];
-  }
-
-  get frame() {
-    return this.patterns[this.activeKey].frame;
-  }
-
-  play(key, startAtTime = 0) {
-    // Already playing
-    if (this.activeKey === key) {
-      return;
-    }
-
-    // Switch to new pattern
-    this.activeKey = key;
-    this.patterns[this.activeKey].currentTime = startAtTime;
-  }
-
-  step(delta) {
-    this.patterns[this.activeKey].step(delta);
-  }
-}
-
-// ##### Const and Helpers #####
-
-const makeStandingFrames = (rootFrame = 0) => {
-  return {
-    duration: 400,
-    frames: [
-      {
-        time: 0,
-        frame: rootFrame,
-      },
-    ],
-  };
-};
-
-const makeWalkingFrames = (rootFrame = 0) => {
-  return {
-    duration: 400,
-    frames: [
-      {
-        time: 0,
-        frame: rootFrame + 1,
-      },
-      {
-        time: 100,
-        frame: rootFrame,
-      },
-      {
-        time: 200,
-        frame: rootFrame + 1,
-      },
-      {
-        time: 300,
-        frame: rootFrame + 2,
-      },
-    ],
-  };
-};
-
-const LEFT = "LEFT";
-const RIGHT = "RIGHT";
-const UP = "UP";
-const DOWN = "DOWN";
-
-const TILE_SIZE = 16;
-
-const STAND_DOWN = makeStandingFrames(1);
-const STAND_RIGHT = makeStandingFrames(4);
-const STAND_UP = makeStandingFrames(7);
-const STAND_LEFT = makeStandingFrames(10);
-
-const WALK_DOWN = makeWalkingFrames(0);
-const WALK_RIGHT = makeWalkingFrames(3);
-const WALK_UP = makeWalkingFrames(6);
-const WALK_LEFT = makeWalkingFrames(9);
-
-const wallDefinitions = {
-  right: ["240,32", "256,48", "256,64", "256,80", "256,96"],
-  left: ["32,48", "32,64", "32,80", "32,96"],
-  top: [
-    "48,32",
-    "64,32",
-    "80,32",
-    "96,32",
-    "112,16",
-    "128,16",
-    "144,16",
-    "160,16",
-    "176,16",
-    "192,16",
-    "208,16",
-    "224,16",
-  ],
-  bottom: [
-    "48,112",
-    "64,112",
-    "80,112",
-    "96,112",
-    "112,112",
-    "128,112",
-    "144,112",
-    "160,112",
-    "176,112",
-    "192,112",
-    "208,112",
-    "224,112",
-    "240,112",
-  ],
-  tree: ["64,48", "208,64", "224,32"],
-  stone: ["192,96", "208,96", "224,96"],
-  squares: ["64,64", "64,80", "80,64", "80,80", "128,48", "144,48"],
-  water: ["112,80", "128,80", "144,80", "160,80"],
-  house: ["224,64"],
-};
-
-const gridCells = (n) => {
-  return n * TILE_SIZE;
-};
-
-const isSpaceFree = (walls, x, y) => {
-  // convert to string
-  const str = `${x},${y}`;
-
-  // check if wall is present
-  const isWallPresent = walls.has(str);
-
-  return !isWallPresent;
-};
-
-function moveTowards(person, destinationPosition, speed) {
-  let distanceToTravelX = destinationPosition.x - person.position.x;
-  let distanceToTravelY = destinationPosition.y - person.position.y;
-
-  let distance = Math.sqrt(distanceToTravelX ** 2 + distanceToTravelY ** 2);
-
-  if (distance <= speed) {
-    // If we are close enough, just set the position to the destination
-    person.position.x = destinationPosition.x;
-    person.position.y = destinationPosition.y;
-  } else {
-    // Normalize the distance to travel
-    let normalizedX = distanceToTravelX / distance;
-    let normalizedY = distanceToTravelY / distance;
-
-    // Move the person
-    person.position.x += normalizedX * speed;
-    person.position.y += normalizedY * speed;
-
-    // Recaculate the distance to travel
-    distanceToTravelX = destinationPosition.x - person.position.x;
-    distanceToTravelY = destinationPosition.y - person.position.y;
-    distance = Math.sqrt(distanceToTravelX ** 2 + distanceToTravelY ** 2);
-  }
-
-  return distance;
-}
-
-// ##### Main Game Code #####
-
-// Load all Images
-const resources = new Resources();
+import { resources } from "./src/Resource.js";
+import { Sprite } from "./src/Sprite.js";
+import { Vector2 } from "./src/Vector2.js";
+import { GameLoop } from "./src/GameLoop.js";
+import { Input } from "./src/Input.js";
+import { gridCells } from "./src/helpers/grid.js";
+import { GameObject } from "./src/GameObject.js";
+import { Hero } from "./src/objects/Hero/Hero.js";
+import { Camera } from "./src/Camera.js";
+// import {Rod} from "./src/objects/Rod/Rod.js";
+// import {Inventory} from "./src/objects/Inventory/Inventory.js";
 
 // Canvas und Context holen
 const canvas = document.querySelector("#game-canvas");
 const ctx = canvas.getContext("2d");
 
-// Sprites erstellen
+// Load the main scene
+const mainScene = new GameObject({
+  position: new Vector2(0, 0),
+});
+
+// Build up the scene by adding a sky, ground and hero
 const skySprite = new Sprite({
   resource: resources.images.sky,
   frameSize: new Vector2(320, 180),
@@ -453,121 +29,43 @@ const groundSprite = new Sprite({
   resource: resources.images.ground,
   frameSize: new Vector2(320, 180),
 });
+mainScene.addChild(groundSprite);
 
-const heroSprite = new Sprite({
-  resource: resources.images.hero,
-  frameSize: new Vector2(32, 32),
-  hFrames: 3,
-  vFrames: 8,
-  frame: 1,
-  position: new Vector2(gridCells(6), gridCells(5)),
-  animations: new Animations({
-    walkLeft: new FrameIndexPattern(WALK_LEFT),
-    walkDown: new FrameIndexPattern(WALK_DOWN),
-    walkUp: new FrameIndexPattern(WALK_UP),
-    walkRight: new FrameIndexPattern(WALK_RIGHT),
-    standLeft: new FrameIndexPattern(STAND_LEFT),
-    standDown: new FrameIndexPattern(STAND_DOWN),
-    standUp: new FrameIndexPattern(STAND_UP),
-    standRight: new FrameIndexPattern(STAND_RIGHT),
-  }),
-});
+// Create Hero and add to scene
+const hero = new Hero(gridCells(6), gridCells(5));
+mainScene.addChild(hero);
 
-const heroDestinationPosition = heroSprite.position.duplicate();
-let heroFacing = DOWN;
-
-const shadowSprite = new Sprite({
-  resource: resources.images.shadow,
-  frameSize: new Vector2(32, 32),
-});
-
-// Collision Preperation
-const walls = new Set(Object.values(wallDefinitions).flat());
+const camera = new Camera();
+mainScene.addChild(camera);
 
 // Input handler
-const input = new Input();
+mainScene.input = new Input();
 
+// Update and Draw functions for the game loop
 const update = (delta) => {
-  const distance = moveTowards(heroSprite, heroDestinationPosition, 1);
-
-  // Attempt to move if we have arrived
-  const hasArrived = distance <= 0;
-  if (hasArrived) {
-    tryMove();
-  }
-
-  // Update Animation
-  heroSprite.step(delta);
+  mainScene.stepEntry(delta, mainScene);
 };
 
-const tryMove = () => {
-  // No input
-  if (!input.direction) {
-    switch (heroFacing) {
-      case LEFT:
-        heroSprite.animations.play("standLeft");
-        break;
-      case RIGHT:
-        heroSprite.animations.play("standRight");
-        break;
-      case UP:
-        heroSprite.animations.play("standUp");
-        break;
-      case DOWN:
-        heroSprite.animations.play("standDown");
-        break;
-    }
-
-    return;
-  }
-
-  let nextX = heroDestinationPosition.x;
-  let nextY = heroDestinationPosition.y;
-  const grideSize = TILE_SIZE;
-
-  switch (input.direction) {
-    case LEFT:
-      nextX -= grideSize;
-      heroSprite.animations.play("walkLeft");
-      break;
-    case RIGHT:
-      nextX += grideSize;
-      heroSprite.animations.play("walkRight");
-      break;
-    case UP:
-      nextY -= grideSize;
-      heroSprite.animations.play("walkUp");
-      break;
-    case DOWN:
-      nextY += grideSize;
-      heroSprite.animations.play("walkDown");
-      break;
-  }
-
-  heroFacing = input.direction ?? heroFacing;
-
-  // Collision Detection
-  if (isSpaceFree(walls, nextX, nextY)) {
-    // update postion of hero
-    heroDestinationPosition.x = nextX;
-    heroDestinationPosition.y = nextY;
-  }
-};
-
+// Draw the main scene
 const draw = () => {
+  // Clear the canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   skySprite.drawImage(ctx, 0, 0);
-  groundSprite.drawImage(ctx, 0, 0);
 
-  // Center the hero
-  const heroOffset = new Vector2(-8, -21);
-  const heroPosX = heroSprite.position.x + heroOffset.x;
-  const heroPosY = heroSprite.position.y + 1 + heroOffset.y;
+  // Save the current context state
+  ctx.save();
 
-  shadowSprite.drawImage(ctx, heroPosX, heroPosY);
-  heroSprite.drawImage(ctx, heroPosX, heroPosY);
+  // Offset the entire scene to center the hero
+  ctx.translate(camera.position.x, camera.position.y);
+
+  // Draw objects in the mounted scene
+  mainScene.draw(ctx, 0, 0);
+
+  // Restore the context to its original state
+  ctx.restore();
 };
 
+// Start the game
 const gameLopp = new GameLoop(update, draw);
 gameLopp.start();
-
-// ##### Ende Main Game Code #####
