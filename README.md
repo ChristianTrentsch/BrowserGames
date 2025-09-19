@@ -22,7 +22,7 @@ Statische Browsergames. Übersichtlich, modern und responsiv gestaltet mit HTML,
 
 ## 🏡 Über das Projekt
 
-**BrowserGames** ist ein kleines, browserbasiertes Spiel, das ohne Server oder Datenbank direkt im Browser läuft. Ziel ist es, Spielern ein unterhaltsames, leicht zugängliches Erlebnis zu bieten.
+**BrowserGames** ist ein kleines, browserbasiertes Spiel, das ohne Datenbank direkt im Browser läuft. Ziel ist es, Spielern ein unterhaltsames, leicht zugängliches Erlebnis zu bieten.
 
 ---
 
@@ -52,11 +52,11 @@ Statische Browsergames. Übersichtlich, modern und responsiv gestaltet mit HTML,
 
 ### ℹ️ Warum löst das mein CORS-Problem?
 
-👉 Wenn du die **HTML-Datei direkt** mit  
+Wenn du die **HTML-Datei direkt** mit  
 `file://index.html` öffnest, interpretiert der Browser das als eine **andere Origin**  
 ➡️ **CORS-Blockade tritt auf**
 
-👉 Wenn du sie dagegen über  
+Wenn du sie dagegen über  
 `http://localhost:3000` lädst, stammen **HTML, JS und CSS vom gleichen Origin**  
 ➡️ **Keine CORS-Fehler mehr 🎉**
 
