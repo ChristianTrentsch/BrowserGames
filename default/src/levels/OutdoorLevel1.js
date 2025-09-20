@@ -12,9 +12,6 @@ import { CaveLevel1 } from "./CaveLevel1.js";
 export class OutdoorLevel1 extends Level {
   constructor(params = {}) {
     super({});
-
-    this.rodIsTaken = false;
-
     // Choose Background Image of your Level
     this.background = new Sprite({
       resource: resources.images.sky,
@@ -28,10 +25,6 @@ export class OutdoorLevel1 extends Level {
     });
     this.addChild(groundSprite);
 
-    // 1. links/rechts
-    // 2. oben/unten
-    // gridCells(10), gridCells(3)
-
     const exit = new Exit(gridCells(10), gridCells(3));
     this.addChild(exit);
 
@@ -41,12 +34,8 @@ export class OutdoorLevel1 extends Level {
     this.addChild(hero);
 
     /* ADD ITEMS TO SCENE */
-    if (!this.rodIsTaken) {
-      this.rodIsTaken = true;
-
-      const rod = new Rod(gridCells(7), gridCells(6));
-      this.addChild(rod);
-    }
+    const rod = new Rod(gridCells(7), gridCells(6));
+    this.addChild(rod);
 
     // Collision Preperation
     const wallDefinitions = {
