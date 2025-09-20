@@ -28,6 +28,8 @@ export class Rod extends GameObject {
         roundedHeroY === this.position.y
       ) {
         // Hit the Item
+        console.log("Rod: ", events.HERO_POSTION, pos);
+
         this.onCollideWithHero();
       }
     });

@@ -13,14 +13,14 @@ export class Inventory extends GameObject {
     this.nextId = 0;
 
     this.items = [
-      //   {
-      //     id: -1,
-      //     image: resources.images.rod,
-      //   },
-      //   {
-      //     id: -2,
-      //     image: resources.images.rod,
-      //   },
+      // {
+      //   id: -1,
+      //   image: resources.images.rod,
+      // },
+      // {
+      //   id: -2,
+      //   image: resources.images.rod,
+      // },
     ];
 
     // Inventory add item

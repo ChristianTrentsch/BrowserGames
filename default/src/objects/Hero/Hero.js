@@ -1,8 +1,6 @@
 import { GameObject } from "../../GameObject.js";
 import { Vector2 } from "../../Vector2.js";
 import { DOWN, LEFT, RIGHT, UP } from "../../Input.js";
-import { isSpaceFree } from "../../helpers/grid.js";
-import { walls } from "../../levels/level1.js";
 import { Sprite } from "../../Sprite.js";
 import { resources } from "../../Resource.js";
 import { Animations } from "../../Animations.js";
@@ -19,7 +17,7 @@ import {
   PICK_UP_DOWN,
 } from "./heroAnimations.js";
 import { moveTowards } from "../../helpers/moveTowards.js";
-import { TILE_SIZE } from "../../helpers/grid.js";
+import { TILE_SIZE, isSpaceFree } from "../../helpers/grid.js";
 import { events } from "../../Events.js";
 
 export class Hero extends GameObject {
@@ -99,7 +97,7 @@ export class Hero extends GameObject {
   }
 
   tryMove(root) {
-    const { input } = root;
+    const { input, level } = root;
 
     // No input
     if (!input.direction) {
@@ -147,7 +145,7 @@ export class Hero extends GameObject {
     this.facingDirection = input.direction ?? this.facingDirection;
 
     // Collision Detection
-    if (isSpaceFree(walls, nextX, nextY)) {
+    if (isSpaceFree(level.walls, nextX, nextY)) {
       // update postion of hero
       this.destinationPosition.x = nextX;
       this.destinationPosition.y = nextY;

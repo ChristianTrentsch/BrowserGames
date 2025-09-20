@@ -4,6 +4,9 @@ class Events {
 
   HERO_POSTION = "HERO_POSTION";
   HERO_PICKS_UP_ITEM = "HERO_PICKS_UP_ITEM";
+  HERO_EXITS = "HERO_EXITS";
+  
+  CHANGE_LEVEL = "CHANGE_LEVEL";
 
   // emit event
   emit(eventName, value) {

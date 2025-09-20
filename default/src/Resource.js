@@ -2,12 +2,18 @@ class Resources {
   constructor() {
     // Everything we want to load
     this.toLoad = {
-      ground: "./images/sprites/ground.png",
       hero: "./images/sprites/hero-sheet.png",
       rod: "./images/sprites/rod.png",
       shadow: "./images/sprites/shadow.png",
+      exit: "./images/sprites/exit.png",
+
+      // Startlevel Images
+      ground: "./images/sprites/ground.png",
       sky: "./images/sprites/sky.png",
-      spritesheet: "./images/sprites/spritesheet.png",
+
+      // Cave Images
+      cave: "./images/sprites/cave.png",
+      caveGround: "./images/sprites/cave-ground.png",
     };
 
     // A bucket to store all of our images
