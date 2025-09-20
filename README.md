@@ -47,7 +47,7 @@ Statische Browsergames. Übersichtlich, modern und responsiv gestaltet mit HTML,
 - node muss installiert sein
 - Projektordner mit VSC öffnen
 - in VSC Terminal öffnen
-- Server starten ``node .\server.js``
+- Server starten ``npm start``
 - http://localhost:3000 öffnen und los gehts
 
 ### ℹ️ Warum löst das mein CORS-Problem?

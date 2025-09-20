@@ -16,7 +16,9 @@ export class Rod extends GameObject {
     });
 
     this.addChild(sprite);
+  }
 
+  ready() {
     events.on(events.HERO_POSTION, this, (pos) => {
       // detect overlap...
       const roundedHeroX = Math.round(pos.x);

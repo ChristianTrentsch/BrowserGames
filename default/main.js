@@ -8,7 +8,7 @@ import { GameObject } from "./src/GameObject.js";
 import { Hero } from "./src/objects/Hero/Hero.js";
 import { Camera } from "./src/Camera.js";
 import { Rod } from "./src/objects/Rod/Rod.js";
-// import {Inventory} from "./src/objects/Inventory/Inventory.js";
+import { Inventory } from "./src/objects/Inventory/Inventory.js";
 
 // Canvas und Context holen
 const canvas = document.querySelector("#game-canvas");
@@ -42,6 +42,8 @@ mainScene.addChild(camera);
 const rod = new Rod(gridCells(7), gridCells(6));
 mainScene.addChild(rod);
 
+const inventory = new Inventory();
+
 // Input handler
 mainScene.input = new Input();
 
@@ -68,6 +70,9 @@ const draw = () => {
 
   // Restore the context to its original state
   ctx.restore();
+
+  // Draw anything above the game world
+  inventory.draw(ctx, 0, 0);
 };
 
 // Start the game

@@ -62,6 +62,7 @@ export class Hero extends GameObject {
     this.itemPickUpTime = 0;
     this.itemPickUpShell = null;
 
+    // Hero picks up item
     events.on(events.HERO_PICKS_UP_ITEM, this, (data) => {
       this.onPickUpItem(data);
     });
