@@ -5,11 +5,16 @@ import { resources } from "../../Resource.js";
 import { events, HERO_POSTION, HERO_PICKS_UP_ITEM } from "../../Events.js";
 
 export class Rod extends GameObject {
-  constructor(x: number, y: number) {
+
+  imageKey: keyof typeof resources.images;
+  
+  constructor(x: number, y: number, imageKey: keyof typeof resources.images) {
     super(new Vector2(x, y));
 
+    this.imageKey = imageKey;
+
     const sprite = new Sprite({
-      resource: resources.images.rod,
+      resource: resources.images[imageKey],
       position: new Vector2(0, -5), // nudge upwards visually
     });
 
@@ -37,9 +42,10 @@ export class Rod extends GameObject {
 
     // console.log("ITEM TAKEN");
 
-    // Alert other things that we picked up a rod
+    // Alert that we picked up a rod
     events.emit(HERO_PICKS_UP_ITEM, {
-      image: resources.images.rod,
+      imageKey: this.imageKey,
+      image: resources.images[this.imageKey],
       position: this.position,
     });
   }
