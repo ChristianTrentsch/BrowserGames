@@ -1,4 +1,7 @@
-export function moveTowards(person, destinationPosition, speed) {
+import { GameObject } from "../GameObject.js";
+import { Vector2 } from "../Vector2.js";
+
+export function moveTowards(person: GameObject, destinationPosition: Vector2, speed: number) {
   let distanceToTravelX = destinationPosition.x - person.position.x;
   let distanceToTravelY = destinationPosition.y - person.position.y;
 

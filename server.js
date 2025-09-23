@@ -12,15 +12,19 @@
 import http from "http";
 import fs from "fs";
 import path from "path";
-import url from "url";
+import { fileURLToPath } from "url";
 
 const PORT = 3000;
-const __dirname = path.resolve(); // aktuelles Projektverzeichnis
+
+// __dirname sauber für ESM konstruieren
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename); // aktuelles Projektverzeichnis
 
 http
   .createServer((req, res) => {
-    const parsedUrl = url.parse(req.url);
-    let pathname = path.join(__dirname, parsedUrl.pathname);
+    // URL-Objekt statt url.parse (deprecated)
+    const requestUrl = new URL(req.url, `http://${req.headers.host}`);
+    let pathname = path.join(__dirname, requestUrl.pathname);
 
     // Prüfen ob Pfad existiert
     if (fs.existsSync(pathname) && fs.statSync(pathname).isDirectory()) {
@@ -37,9 +41,9 @@ http
       // Content-Type bestimmen
       const ext = path.extname(pathname).toLowerCase();
       const map = {
-        ".html": "text/html",
-        ".css": "text/css",
-        ".js": "application/javascript",
+        ".html": "text/html; charset=utf-8",
+        ".css": "text/css; charset=utf-8",
+        ".js": "application/javascript; charset=utf-8",
         ".png": "image/png",
         ".jpg": "image/jpeg",
         ".jpeg": "image/jpeg",

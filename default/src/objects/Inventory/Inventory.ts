@@ -1,30 +1,30 @@
-import { GameObject } from "../../GameObject.js";
-import { resources } from "../../Resource.js";
+import { GameObject, HUD } from "../../GameObject.js";
+import { ResourceImageOptions, resources } from "../../Resource.js";
 import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
-import { events } from "../../Events.js";
+import { events, HERO_PICKS_UP_ITEM } from "../../Events.js";
 
 export class Inventory extends GameObject {
+  nextId: number;
+  items: {
+    id: number
+    image: ResourceImageOptions
+  }[];
+
   constructor() {
-    super({
-      position: new Vector2(0, 1),
-    });
+    super(new Vector2(0, 1));
 
+    this.drawLayer = HUD;
     this.nextId = 0;
-
     this.items = [
       // {
       //   id: -1,
       //   image: resources.images.rod,
-      // },
-      // {
-      //   id: -2,
-      //   image: resources.images.rod,
-      // },
+      // }
     ];
 
     // Inventory add item
-    events.on(events.HERO_PICKS_UP_ITEM, this, (data) => {
+    events.on(HERO_PICKS_UP_ITEM, this, (data) => {
       // Show Item on Screen
       this.nextId += 1;
       this.items.push({
@@ -57,7 +57,7 @@ export class Inventory extends GameObject {
     });
   }
 
-  removeFromInventory(id) {
+  removeFromInventory(id: number) {
     this.items = this.items.filter((item) => item.id !== id);
     this.renderInventory();
   }

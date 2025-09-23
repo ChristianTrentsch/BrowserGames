@@ -2,13 +2,11 @@ import { GameObject } from "../../GameObject.js";
 import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
 import { resources } from "../../Resource.js";
-import { events } from "../../Events.js";
+import { events, HERO_POSTION, HERO_PICKS_UP_ITEM } from "../../Events.js";
 
 export class Rod extends GameObject {
-  constructor(x, y) {
-    super({
-      position: new Vector2(x, y),
-    });
+  constructor(x: number, y: number) {
+    super(new Vector2(x, y));
 
     const sprite = new Sprite({
       resource: resources.images.rod,
@@ -19,7 +17,7 @@ export class Rod extends GameObject {
   }
 
   ready() {
-    events.on(events.HERO_POSTION, this, (pos) => {
+    events.on(HERO_POSTION, this, (pos) => {
       // detect overlap...
       const roundedHeroX = Math.round(pos.x);
       const roundedHeroY = Math.round(pos.y);
@@ -28,8 +26,6 @@ export class Rod extends GameObject {
         roundedHeroY === this.position.y
       ) {
         // Hit the Item
-        console.log("Rod: ", events.HERO_POSTION, pos);
-
         this.onCollideWithHero();
       }
     });
@@ -42,7 +38,7 @@ export class Rod extends GameObject {
     // console.log("ITEM TAKEN");
 
     // Alert other things that we picked up a rod
-    events.emit(events.HERO_PICKS_UP_ITEM, {
+    events.emit(HERO_PICKS_UP_ITEM, {
       image: resources.images.rod,
       position: this.position,
     });

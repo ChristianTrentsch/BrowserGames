@@ -1,0 +1,67 @@
+import { GameObject } from "./GameObject.js";
+import { ResourceImageOptions } from "./Resource.js";
+import { EventName, } from "./types.js";
+import { Vector2 } from "./Vector2.js";
+
+export interface EventCallbackItem {
+  id: number;
+  eventName: EventName;
+  caller: GameObject; // Optional: kannst du präziser typisieren, z.B. `object` oder `this`-Typ
+  callback: (...args: any[]) => void; // Callback-Funktion mit beliebigen Parametern
+}
+
+export interface EventItem {
+  position?: Vector2
+  image?: ResourceImageOptions
+}
+
+export const HERO_POSTION = "HERO_POSTION";
+export const HERO_PICKS_UP_ITEM = "HERO_PICKS_UP_ITEM";
+export const HERO_EXITS = "HERO_EXITS";
+export const HERO_REQUESTS_ACTION = "HERO_REQUESTS_ACTION";
+export const CHANGE_LEVEL = "CHANGE_LEVEL";
+export const TEXTBOX_START = "TEXTBOX_START";
+export const TEXTBOX_END = "TEXTBOX_END";
+
+class Events {
+  private nextId = 0;
+  private callbacks: EventCallbackItem[] = [];
+
+  constructor() {
+    console.log(`Events LOADED`, this);
+  }
+
+  // emit event
+  emit(eventName: EventName, caller?: GameObject | Vector2 | EventItem) {
+    this.callbacks.forEach((stored: { eventName: EventName, callback: (...args: any[]) => void }) => {
+      if (stored.eventName === eventName) {
+        stored.callback(caller);
+      }
+    });
+  }
+
+  // subscribe to something happening
+  on(eventName: EventName, caller: GameObject, callback: (...args: any[]) => void) {
+    this.nextId += 1;
+    this.callbacks.push({
+      id: this.nextId,
+      eventName,
+      caller,
+      callback,
+    });
+    return this.nextId;
+  }
+
+  // remove a subscription
+  off(id: number) {
+    this.callbacks = this.callbacks.filter((stored) => stored.id !== id);
+  }
+
+  unsubscribe(caller: GameObject) {
+    this.callbacks = this.callbacks.filter(
+      (stored) => stored.caller !== caller
+    );
+  }
+}
+
+export const events = new Events();

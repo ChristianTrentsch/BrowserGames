@@ -6,22 +6,35 @@ import { Level } from "../objects/Level/Level.js";
 import { Exit } from "../objects/Exit/Exit.js";
 import { Hero } from "../objects/Hero/Hero.js";
 import { Rod } from "../objects/Rod/Rod.js";
-import { events } from "../Events.js";
+import { events, HERO_EXITS, CHANGE_LEVEL } from "../Events.js";
 import { CaveLevel1 } from "./CaveLevel1.js";
 
 export class OutdoorLevel1 extends Level {
-  constructor(params = {}) {
-    super({});
+
+  background: Sprite;
+  walls: Set<string>;
+  heroStartPosition: Vector2;
+
+  constructor({ position, heroPosition }: {
+    position: Vector2;
+    heroPosition: Vector2;
+  }) {
+    super(position);
+
+    console.log(`OutdoorLevel1 LOADED`, this);
+
     // Choose Background Image of your Level
     this.background = new Sprite({
       resource: resources.images.sky,
       frameSize: new Vector2(320, 180),
+      position: new Vector2(0, 0)
     });
 
     // Choose actual Level Ground
     const groundSprite = new Sprite({
       resource: resources.images.ground,
       frameSize: new Vector2(320, 180),
+      position: new Vector2(0, 0)
     });
     this.addChild(groundSprite);
 
@@ -29,11 +42,11 @@ export class OutdoorLevel1 extends Level {
     this.addChild(exit);
 
     // Create Hero and add to scene
-    const heroStartPosition = params.heroPosition ?? this.defaultHeroPosition;
-    const hero = new Hero(heroStartPosition.x, heroStartPosition.y);
+    this.heroStartPosition = heroPosition ?? this.defaultHeroPosition;
+    const hero = new Hero(this.heroStartPosition.x, this.heroStartPosition.y);
     this.addChild(hero);
 
-    /* ADD ITEMS TO SCENE */
+    // erzeuge rod und lege position fest
     const rod = new Rod(gridCells(7), gridCells(6));
     this.addChild(rod);
 
@@ -81,13 +94,12 @@ export class OutdoorLevel1 extends Level {
   }
 
   ready() {
-    events.on(events.HERO_EXITS, this, () => {
-      console.log("OutdoorLevel1: ", events.HERO_EXITS);
-
+    events.on(HERO_EXITS, this, () => {
       events.emit(
-        events.CHANGE_LEVEL,
+        CHANGE_LEVEL,
         new CaveLevel1({
-          heroPosition: new Vector2(gridCells(5), gridCells(2)),
+          position: new Vector2(gridCells(0), gridCells(0)),
+          heroPosition: new Vector2(gridCells(6), gridCells(1)),
         })
       );
     });

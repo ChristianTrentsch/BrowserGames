@@ -1,18 +1,36 @@
 import { Vector2 } from "./Vector2.js";
 import { events } from "./Events.js";
 
+export type DrawLayer = "HUD" | "FLOOR";
+
+export const HUD = "HUD";
+export const FLOOR = "FLOOR";
+
 export class GameObject {
-  constructor({ position }) {
+
+  position: Vector2;
+  children: Array<GameObject>;
+  parent: null | GameObject;
+  hasReadyBeenCalled: boolean;
+  isSolid: null | boolean;
+  drawLayer: null | DrawLayer;
+
+  constructor(position: Vector2) {
     this.position = position ?? new Vector2(0, 0);
     this.children = [];
     this.parent = null;
     this.hasReadyBeenCalled = false;
+
+    this.isSolid = false; // use to check if player gets blocked by npc , etc.
+    this.drawLayer = null; // kinda like z-index
   }
 
   // First entry point of the loop
-  stepEntry(delta, root) {
+  stepEntry(delta: number, root: GameObject) {
     // Call updates on all children first
-    this.children.forEach((child) => child.stepEntry(delta, root));
+    if (this.children) {
+      this.children.forEach((child) => child.stepEntry(delta, root));
+    }
 
     // Call ready on the first frame
     if (!this.hasReadyBeenCalled) {
@@ -30,12 +48,12 @@ export class GameObject {
   }
 
   // Called once every frame
-  step(_delta) {
+  step(delta: number, root: GameObject) {
     // ...
   }
 
   /* draw entry */
-  draw(ctx, x, y) {
+  draw(ctx: CanvasRenderingContext2D, x: number, y: number) {
     const drawPosX = x + this.position.x;
     const drawPosY = y + this.position.y;
 
@@ -43,10 +61,23 @@ export class GameObject {
     this.drawImage(ctx, drawPosX, drawPosY);
 
     // Pass on to children
-    this.children.forEach((child) => child.draw(ctx, drawPosX, drawPosY));
+    this.getDrawChildrenOrdered().forEach((child) =>
+      child.draw(ctx, drawPosX, drawPosY)
+    );
   }
 
-  drawImage(ctx, drawPosX, drawPosY) {
+  getDrawChildrenOrdered() {
+    return [...this.children].sort((a, b) => {
+      // always under feet
+      if (b.drawLayer === FLOOR) {
+        return 1;
+      }
+
+      return a.position.y > b.position.y ? 1 : -1;
+    });
+  }
+
+  drawImage(ctx: CanvasRenderingContext2D, x: number, y: number) {
     //...
   }
 
@@ -55,16 +86,19 @@ export class GameObject {
     this.children.forEach((child) => {
       child.destroy();
     });
-    this.parent.removeChild(this);
+
+    if (this.parent) {
+      this.parent.removeChild(this);
+    }
   }
 
   /* Other Game Objects are nestable inside this one */
-  addChild(gameObject) {
+  addChild(gameObject: GameObject) {
     gameObject.parent = this;
     this.children.push(gameObject);
   }
 
-  removeChild(gameObject) {
+  removeChild(gameObject: GameObject) {
     // console.log("GameObject.removeChild ", gameObject);
     events.unsubscribe(gameObject);
     this.children = this.children.filter((g) => {

@@ -1,27 +1,50 @@
 import { Vector2 } from "./Vector2.js";
 import { GameObject } from "./GameObject.js";
+import { Animations } from "./Animations.js";
+import { ResourceImageOptions } from "./Resource.js";
 
 export class Sprite extends GameObject {
+
+  resource: ResourceImageOptions;
+  position: Vector2;
+  frameSize: Vector2;
+  hFrames: number;
+  vFrames: number;
+  frame: number;
+  frameMap: Map<number, Vector2>;
+  scale: number;
+  animations: Animations | null;
+
   constructor({
-    resource, // image we want to use
-    frameSize, // size of each frame
-    hFrames, // how is the sprite arranged horizontally
-    vFrames, // how is the sprite arranged vertically
-    frame, // which frame to show
-    scale, // how large to draw the sprite
-    position, // where to draw the sprite
-    animations, // animation pattern to use
+    resource,
+    position,
+    frameSize,
+    hFrames,
+    vFrames,
+    frame,
+    scale,
+    animations,
+  }: {
+    resource: ResourceImageOptions;   // image we want to use
+    position: Vector2;                // where to draw the sprite
+    frameSize?: Vector2;              // size of each frame
+    hFrames?: number;                 // how is the sprite arranged horizontally
+    vFrames?: number;                 // how is the sprite arranged vertically
+    frame?: number;                   // which frame to show
+    scale?: number;                   // how large to draw the sprite
+    animations?: Animations | null;   // animation pattern to use
   }) {
-    super({});
+
+    super(position);
 
     this.resource = resource;
+    this.position = position ?? new Vector2(0, 0);
     this.frameSize = frameSize ?? new Vector2(16, 16);
     this.hFrames = hFrames ?? 1;
     this.vFrames = vFrames ?? 1;
     this.frame = frame ?? 0;
     this.frameMap = new Map();
     this.scale = scale ?? 1;
-    this.position = position ?? new Vector2(0, 0);
     this.animations = animations ?? null;
 
     this.buildFrameMap();
@@ -40,7 +63,7 @@ export class Sprite extends GameObject {
     }
   }
 
-  step(delta) {
+  step(delta: number) {
     if (!this.animations) {
       return;
     }
@@ -49,7 +72,7 @@ export class Sprite extends GameObject {
     this.frame = this.animations.frame;
   }
 
-  drawImage(ctx, x, y) {
+  drawImage(ctx: CanvasRenderingContext2D, x: number, y: number) {
     if (!this.resource.isLoaded) {
       return;
     }

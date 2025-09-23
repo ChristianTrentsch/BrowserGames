@@ -1,5 +1,16 @@
+import { } from "./types";
+
 export class GameLoop {
-  constructor(update, render) {
+  lastFrameTime: number;
+  accumulatedTime: number;
+  timeStep: number;
+  update: (delta: number) => void;
+  render: () => void;
+  rafId: null | number;
+  isRunning: boolean;
+
+  constructor(update: (delta: number) => void, render: () => void) {
+
     this.lastFrameTime = 0;
     this.accumulatedTime = 0;
     this.timeStep = 1000 / 60; // 60 FPS
@@ -11,7 +22,7 @@ export class GameLoop {
     this.isRunning = false;
   }
 
-  mainLoop = (timestamp) => {
+  mainLoop = (timestamp: number) => {
     if (!this.isRunning) return;
 
     let deltaTime = timestamp - this.lastFrameTime;
@@ -41,7 +52,7 @@ export class GameLoop {
   stop() {
     if (this.rafId) {
       cancelAnimationFrame(this.rafId);
+      this.isRunning = false;
     }
-    this.isRunning = false;
   }
 }
