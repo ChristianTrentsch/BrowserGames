@@ -6,4 +6,4 @@ eslint.config.mjs
 .vscode
 
 # Build output
-dist/
+# dist/

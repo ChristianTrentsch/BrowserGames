@@ -1,0 +1,1 @@
+"use strict";export class Animations{constructor(t){this.patterns=t,this.activeKey=Object.keys(this.patterns)[0]}get frame(){return this.patterns[this.activeKey].frame}play(t,e=0){this.activeKey!==t&&(this.activeKey=t,this.patterns[this.activeKey].currentTime=e)}step(t){this.patterns[this.activeKey].step(t)}}

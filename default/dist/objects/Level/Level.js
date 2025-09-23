@@ -1,0 +1,1 @@
+"use strict";import{GameObject as o}from"../../GameObject.js";import{Vector2 as e}from"../../Vector2.js";import{gridCells as t}from"../../helpers/grid.js";export class Level extends o{constructor(r){super(r),this.defaultHeroPosition=new e(t(8),t(8))}}

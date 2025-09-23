@@ -1,0 +1,1 @@
+"use strict";export function moveTowards(t,l,e){let r=l.x-t.position.x,c=l.y-t.position.y,m=Math.sqrt(r**2+c**2);if(m<=e)t.position.x=l.x,t.position.y=l.y;else{let o=r/m,x=c/m;t.position.x+=o*e,t.position.y+=x*e,r=l.x-t.position.x,c=l.y-t.position.y,m=Math.sqrt(r**2+c**2)}return m}

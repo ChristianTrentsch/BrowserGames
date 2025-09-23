@@ -1,0 +1,1 @@
+"use strict";export class FrameIndexPattern{constructor(r){this.currentTime=0,this.frames=r.frames,this.duration=r.duration??500}get frame(){for(let r=this.frames.length-1;r>=0;r--){const e=this.frames[r];if(e&&this.currentTime>=e.time)return e.frame}throw"Time is befor the first frame!"}step(r){this.currentTime+=r,this.currentTime>=this.duration&&(this.currentTime=0)}}

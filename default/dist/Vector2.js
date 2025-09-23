@@ -1,0 +1,1 @@
+"use strict";import{LEFT as i,RIGHT as s,UP as a,DOWN as c}from"./Input.js";export class Vector2{constructor(t=0,e=0){this.x=t,this.y=e}duplicate(){return new Vector2(this.x,this.y)}matches(t){return this.x===t.x&&this.y===t.y}toNeighbor(t){let e=this.x,r=this.y;switch(t){case i:e-=16;break;case s:e+=16;break;case a:r-=16;break;case c:r+=16;break}return new Vector2(e,r)}}

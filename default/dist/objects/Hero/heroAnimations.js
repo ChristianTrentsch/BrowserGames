@@ -1,0 +1,1 @@
+"use strict";const e=(t=0)=>({duration:400,frames:[{time:0,frame:t}]}),r=(t=0)=>({duration:400,frames:[{time:0,frame:t+1},{time:100,frame:t},{time:200,frame:t+1},{time:300,frame:t+2}]});export const STAND_DOWN=e(1),STAND_RIGHT=e(4),STAND_UP=e(7),STAND_LEFT=e(10),WALK_DOWN=r(0),WALK_RIGHT=r(3),WALK_UP=r(6),WALK_LEFT=r(9),PICK_UP_DOWN={duration:400,frames:[{time:0,frame:12}]};
