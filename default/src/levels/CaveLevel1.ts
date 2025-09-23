@@ -5,10 +5,10 @@ import { Sprite } from "../Sprite.js";
 import { Level } from "../objects/Level/Level.js";
 import { Exit } from "../objects/Exit/Exit.js";
 import { Hero } from "../objects/Hero/Hero.js";
-import { Rod } from "../objects/Rod/Rod.js";
 import { events, HERO_EXITS, CHANGE_LEVEL } from "../Events.js";
 import { OutdoorLevel1 } from "./OutdoorLevel1.js";
 import { Npc } from "../objects/Npc/Npc.js";
+import { Rod } from "../objects/Rod/Rod.js";
 
 export class CaveLevel1 extends Level {
 
@@ -40,10 +40,6 @@ export class CaveLevel1 extends Level {
     });
     this.addChild(groundSprite);
 
-    // 1. links/rechts
-    // 2. - oben/ + unten
-    // gridCells(10), gridCells(3)
-
     const exit = new Exit(gridCells(5), gridCells(1));
     this.addChild(exit);
 
@@ -52,9 +48,12 @@ export class CaveLevel1 extends Level {
     const hero = new Hero(this.heroStartPosition.x, this.heroStartPosition.y);
     this.addChild(hero);
 
-    /* ADD ITEMS TO SCENE */
-    const rod = new Rod(gridCells(9), gridCells(6));
-    this.addChild(rod);
+    // Prüfen, ob Item schon im Inventar ist
+    if (!this.isInInventory("rodRed")) {
+      // erzeuge rod und lege position fest
+      const rod = new Rod(gridCells(10), gridCells(6), "rodRed");
+      this.addChild(rod);
+    }
 
     const npc1 = new Npc(gridCells(5), gridCells(5), "Ich bin der Uwe und ich bin auch dabei!");
     this.addChild(npc1);

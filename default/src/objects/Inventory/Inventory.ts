@@ -2,13 +2,16 @@ import { GameObject, HUD } from "../../GameObject.js";
 import { ResourceImageOptions, resources } from "../../Resource.js";
 import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
-import { events, HERO_PICKS_UP_ITEM } from "../../Events.js";
+import { events, HERO_PICKS_UP_ITEM, HERO_USE_ITEM } from "../../Events.js";
+
+export const inventoryStorageKey = 'inventory';
 
 export class Inventory extends GameObject {
   nextId: number;
   items: {
-    id: number
-    image: ResourceImageOptions
+    id: number;
+    image: ResourceImageOptions;
+    imageKey: keyof typeof resources.images;
   }[];
 
   constructor() {
@@ -16,23 +19,15 @@ export class Inventory extends GameObject {
 
     this.drawLayer = HUD;
     this.nextId = 0;
-    this.items = [
-      // {
-      //   id: -1,
-      //   image: resources.images.rod,
-      // }
-    ];
+    this.items = [];
 
-    // Inventory add item
-    events.on(HERO_PICKS_UP_ITEM, this, (data) => {
-      // Show Item on Screen
-      this.nextId += 1;
-      this.items.push({
-        id: this.nextId,
-        image: resources.images.rod,
-      });
-      this.renderInventory();
-    });
+    // Inventar laden
+    this.loadInventory();
+
+    // nextId auf den höchsten bestehenden ID-Wert setzen
+    if (this.items.length > 0) {
+      this.nextId = Math.max(...this.items.map(item => item.id));
+    }
 
     // Demo to show removing from inventroy
     // setTimeout(() => {
@@ -43,6 +38,47 @@ export class Inventory extends GameObject {
     this.renderInventory();
   }
 
+  ready() {
+    // Inventory add item
+    events.on(HERO_PICKS_UP_ITEM, this, (data: { imageKey: keyof typeof resources.images }) => {
+      const { imageKey } = data;
+
+      // Prüfen, ob Item schon vorhanden ist
+      const alreadyHasItem = this.items.some(item => item.imageKey === imageKey);
+      if (alreadyHasItem) {
+        console.warn(`Item ${imageKey} ist bereits im Inventar`);
+        return;
+      }
+
+      // Show Item on Screen
+      this.nextId += 1;
+      this.items.push({
+        id: this.nextId,
+        image: resources.images[imageKey],
+        imageKey: imageKey
+      });
+
+      // Save inventory in localStorage
+      this.saveInventory();
+
+      // Draw initial state
+      this.renderInventory();
+    });
+
+
+    // Inventory use item
+    events.on(HERO_USE_ITEM, this, (data: { imageKey: keyof typeof resources.images }) => {
+      const { imageKey } = data;
+
+
+      // Save inventory in localStorage
+      this.loadInventory();
+
+      // Draw initial state
+      this.removeFromInventory(imageKey);
+    });
+  }
+
   renderInventory() {
     // Remove old drawings
     this.children.forEach((child) => child.destroy());
@@ -50,15 +86,28 @@ export class Inventory extends GameObject {
     // Draw fresh inventory items
     this.items.forEach((item, index) => {
       const sprite = new Sprite({
-        resource: item.image,
+        // resource: item.image,
+        resource: resources.images[item.imageKey],
         position: new Vector2(index * 12, 0),
       });
       this.addChild(sprite);
     });
   }
 
-  removeFromInventory(id: number) {
-    this.items = this.items.filter((item) => item.id !== id);
+  removeFromInventory(imageKey: keyof typeof resources.images) {
+    this.items = this.items.filter((item) => item.imageKey !== imageKey);
     this.renderInventory();
   }
+
+  saveInventory() {
+    localStorage.setItem(inventoryStorageKey, JSON.stringify(this.items));
+  }
+
+  loadInventory() {
+    const raw = localStorage.getItem(inventoryStorageKey);
+    if (raw) {
+      this.items = JSON.parse(raw);
+    }
+  }
+
 }

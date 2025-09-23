@@ -46,9 +46,12 @@ export class OutdoorLevel1 extends Level {
     const hero = new Hero(this.heroStartPosition.x, this.heroStartPosition.y);
     this.addChild(hero);
 
-    // erzeuge rod und lege position fest
-    const rod = new Rod(gridCells(7), gridCells(6));
-    this.addChild(rod);
+    // Prüfen, ob Item schon im Inventar ist
+    if (!this.isInInventory("rodPurple")) {
+      // erzeuge rod und lege position fest
+      const rod = new Rod(gridCells(7), gridCells(6), "rodPurple");
+      this.addChild(rod);
+    }
 
     // Collision Preperation
     const wallDefinitions = {
