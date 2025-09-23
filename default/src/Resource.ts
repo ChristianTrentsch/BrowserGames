@@ -1,6 +1,7 @@
 export interface ResourceOptions {
   hero: string;
-  rod: string;
+  rodPurple: string;
+  rodRed: string;
   shadow: string;
   exit: string;
   ground: string;
@@ -28,10 +29,10 @@ class Resources {
 
     // Everything we want to load
     this.toLoad = {
+      // Player/Npc
       hero: "./images/sprites/hero-sheet.png",
-      rod: "./images/sprites/rod.png",
       shadow: "./images/sprites/shadow.png",
-      exit: "./images/sprites/exit.png",
+      knight: "./images/sprites/knight-sheet-1.png",
 
       // Startlevel Images
       ground: "./images/sprites/ground.png",
@@ -41,13 +42,17 @@ class Resources {
       cave: "./images/sprites/cave.png",
       caveGround: "./images/sprites/cave-ground.png",
 
-      // NPCs
-      knight: "./images/sprites/knight-sheet-1.png",
+      // FLOOR
+      exit: "./images/sprites/exit.png",
 
       // HUD
       textBox: "./images/sprites/text-box.png",
       fontWhite: "./images/sprites/sprite-font-white.png",
-      portraits: "./images/sprites/portraits-sheet.png"
+      portraits: "./images/sprites/portraits-sheet.png",
+
+      // Items
+      rodPurple: "./images/sprites/rod-lila.png",
+      rodRed: "./images/sprites/rod-rot.png",
     };
 
     // A bucket to store all of our images
