@@ -1,7 +1,16 @@
 import { GameObject } from "./GameObject.js";
-import { ResourceImageOptions } from "./Resource.js";
-import { EventName, } from "./types.js";
+import { ResourceImageOptions, resources } from "./Resource.js";
 import { Vector2 } from "./Vector2.js";
+
+export type EventName =
+  "HERO_POSTION" |
+  "HERO_PICKS_UP_ITEM" |
+  "HERO_USE_ITEM" |
+  "HERO_EXITS" |
+  "HERO_REQUESTS_ACTION" |
+  "CHANGE_LEVEL" |
+  "TEXTBOX_START" |
+  "TEXTBOX_END";
 
 export interface EventCallbackItem {
   id: number;
@@ -11,12 +20,14 @@ export interface EventCallbackItem {
 }
 
 export interface EventItem {
+  imageKey: keyof typeof resources.images
   position?: Vector2
   image?: ResourceImageOptions
 }
 
 export const HERO_POSTION = "HERO_POSTION";
 export const HERO_PICKS_UP_ITEM = "HERO_PICKS_UP_ITEM";
+export const HERO_USE_ITEM = "HERO_USE_ITEM";
 export const HERO_EXITS = "HERO_EXITS";
 export const HERO_REQUESTS_ACTION = "HERO_REQUESTS_ACTION";
 export const CHANGE_LEVEL = "CHANGE_LEVEL";
