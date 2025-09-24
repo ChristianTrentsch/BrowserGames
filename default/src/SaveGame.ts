@@ -105,7 +105,6 @@ export class SaveGame {
         localStorage.removeItem(this.overlayKey);
     }
 
-
     // --------- ALL SAVE DATA ----------
     static clearAll() {
         this.clearOverlay();
