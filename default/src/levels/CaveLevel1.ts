@@ -1,4 +1,4 @@
-import { gridCells } from "../helpers/grid.js";
+import { gridCells, TILE_SIZE } from "../helpers/grid.js";
 import { resources } from "../Resource.js";
 import { Vector2 } from "../Vector2.js";
 import { Sprite } from "../Sprite.js";
@@ -10,16 +10,15 @@ import { OutdoorLevel1 } from "./OutdoorLevel1.js";
 import { Npc } from "../objects/Npc/Npc.js";
 import { Rod } from "../objects/Rod/Rod.js";
 import { SaveGame } from "../SaveGame.js";
+import { LevelId } from "../helpers/levelRegistry.js";
 
 export class CaveLevel1 extends Level {
 
-  // declare Stuff
   background: Sprite;
   walls: Set<string>;
   heroStartPosition: Vector2;
-
-  levelId = "CaveLevel1";   // eindeutige ID
   defaultHeroPosition = new Vector2(gridCells(6), gridCells(1));
+  levelId: LevelId = "CaveLevel1";   // eindeutige ID
 
   constructor({ position, heroPosition }: {
     position: Vector2;
@@ -44,41 +43,41 @@ export class CaveLevel1 extends Level {
     });
     this.addChild(groundSprite);
 
+    // change level gameobject
     const exit = new Exit(gridCells(5), gridCells(1));
     this.addChild(exit);
 
-    // Create Hero and add to scene
-    // this.heroStartPosition = heroPosition ?? this.defaultHeroPosition;
-
+    //** --- Create Hero and add to scene --- */
     // entweder geladene Position (Reload) oder die übergebene Startposition (Levelwechsel)
     this.heroStartPosition = SaveGame.loadHero(this.levelId, heroPosition ?? this.defaultHeroPosition);
     const hero = new Hero(this.heroStartPosition.x, this.heroStartPosition.y);
     this.addChild(hero);
 
-    // Prüfen, ob Item schon im Inventar ist
+    //** --- Prüfen, ob Item schon im Inventar ist, ansonsten erzeugen --- */
     if (!SaveGame.isInInventory("rodRed")) {
-      // erzeuge rod und lege position fest
+      // erzeuge Item und lege position fest
       const rod = new Rod(gridCells(10), gridCells(6), "rodRed");
       this.addChild(rod);
     }
 
+    //** --- Create Npc and add to scene --- */
     const npc1 = new Npc(gridCells(5), gridCells(5), "Ich bin der Uwe und ich bin auch dabei!");
     this.addChild(npc1);
-
     const npc2 = new Npc(gridCells(10), gridCells(4), "Ich will hier raauuuusss!");
     this.addChild(npc2);
 
+
+
     // Collision Preperation
     const wallDefinitions = {
-      right: [],
-      left: [],
-      top: [],
-      bottom: [],
-      tree: [],
-      stone: [],
-      squares: [],
-      water: [],
-      house: [],
+      right: this.generateWall(new Vector2(288, 16), new Vector2(288, 112), TILE_SIZE, "right"),
+      left: this.generateWall(new Vector2(16, 16), new Vector2(16, 112), TILE_SIZE, "left"),
+      top: this.generateWall(new Vector2(32, 0), new Vector2(272, 0), TILE_SIZE, "top"),
+      bottom: this.generateWall(new Vector2(32, 128), new Vector2(272, 128), TILE_SIZE, "bottom"),
+      stone: ["144,16", "192,32", "208,32", "208,48", "256,80", "32,64",],
+      littleStone: ["48,64", "48,80",],
+      squares: ["48,13", "64,16", "80,48", "96,48", "128,48", "112,64", "96,64", "192,80", "208,80", "224,96",],
+      water: ["240,32", "256,32", "208,96", "192,96", "176,96", "128,96", "112,96", "96,96",],
     };
 
     this.walls = new Set(Object.values(wallDefinitions).flat());

@@ -16,4 +16,35 @@ export abstract class Level extends GameObject {
   constructor(position: Vector2) {
     super(position);
   }
+
+  /**
+   * Erzeugt ein Array mit Koordinatenstrings für Spielfeldbegrenzungen.
+   * - direction: "top", "bottom", "left", "right"
+   */
+  protected generateWall(
+    start: Vector2,
+    end: Vector2,
+    step: number,
+    direction: "top" | "bottom" | "left" | "right"
+  ): string[] {
+    const coords: string[] = [];
+
+    switch (direction) {
+      case "top":
+      case "bottom":
+        for (let x = start.x; x <= end.x; x += step) {
+          coords.push(`${x},${start.y}`);
+        }
+        break;
+
+      case "left":
+      case "right":
+        for (let y = start.y; y <= end.y; y += step) {
+          coords.push(`${start.x},${y}`);
+        }
+        break;
+    }
+
+    return coords;
+  }
 }

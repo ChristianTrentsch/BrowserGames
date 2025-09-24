@@ -1,1 +1,1 @@
-"use strict";import{GameObject as r}from"../../GameObject.js";export class Level extends r{constructor(t){super(t)}}
+"use strict";import{GameObject as a}from"../../GameObject.js";export class Level extends a{constructor(r){super(r)}generateWall(r,o,c,s){const e=[];switch(s){case"top":case"bottom":for(let t=r.x;t<=o.x;t+=c)e.push(`${t},${r.y}`);break;case"left":case"right":for(let t=r.y;t<=o.y;t+=c)e.push(`${r.x},${t}`);break}return e}}
