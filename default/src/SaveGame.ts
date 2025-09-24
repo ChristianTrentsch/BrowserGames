@@ -11,6 +11,7 @@ export class SaveGame {
     private static inventoryKey = "inventory";
     private static heroKey = "heroPosition";
     private static levelKey = "currentLevel";
+    private static overlayKey = "overlaySeen";
 
     // --------- INVENTORY ----------
     static saveInventory(items: InventoryItemData[]) {
@@ -91,8 +92,23 @@ export class SaveGame {
         localStorage.removeItem(this.levelKey);
     }
 
+    // --------- OVERLAY ----------
+    static saveOverlay(seen: string) {
+        localStorage.setItem(this.overlayKey, seen);
+    }
+
+    static loadOverlay() {
+        return localStorage.getItem(this.overlayKey);
+    }
+
+    static clearOverlay() {
+        localStorage.removeItem(this.overlayKey);
+    }
+
+
     // --------- ALL SAVE DATA ----------
     static clearAll() {
+        this.clearOverlay();
         this.clearInventory();
         this.clearHero();
         this.clearLevel();
