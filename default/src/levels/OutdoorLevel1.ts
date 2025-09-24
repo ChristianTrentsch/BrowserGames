@@ -8,6 +8,7 @@ import { Hero } from "../objects/Hero/Hero.js";
 import { Rod } from "../objects/Rod/Rod.js";
 import { events, HERO_EXITS, CHANGE_LEVEL } from "../Events.js";
 import { CaveLevel1 } from "./CaveLevel1.js";
+import { SaveGame } from "../SaveGame.js";
 
 export class OutdoorLevel1 extends Level {
 
@@ -15,9 +16,12 @@ export class OutdoorLevel1 extends Level {
   walls: Set<string>;
   heroStartPosition: Vector2;
 
+  levelId = "OutdoorLevel1";   // eindeutige ID
+  defaultHeroPosition = new Vector2(gridCells(11), gridCells(3));
+
   constructor({ position, heroPosition }: {
     position: Vector2;
-    heroPosition: Vector2;
+    heroPosition?: Vector2;
   }) {
     super(position);
 
@@ -42,12 +46,15 @@ export class OutdoorLevel1 extends Level {
     this.addChild(exit);
 
     // Create Hero and add to scene
-    this.heroStartPosition = heroPosition ?? this.defaultHeroPosition;
+    // this.heroStartPosition = heroPosition ?? this.defaultHeroPosition;
+
+    // entweder geladene Position (Reload) oder die übergebene Startposition (Levelwechsel)
+    this.heroStartPosition = SaveGame.loadHero(this.levelId, heroPosition ?? this.defaultHeroPosition);
     const hero = new Hero(this.heroStartPosition.x, this.heroStartPosition.y);
     this.addChild(hero);
 
     // Prüfen, ob Item schon im Inventar ist
-    if (!this.isInInventory("rodPurple")) {
+    if (!SaveGame.isInInventory("rodPurple")) {
       // erzeuge rod und lege position fest
       const rod = new Rod(gridCells(7), gridCells(6), "rodPurple");
       this.addChild(rod);
@@ -102,7 +109,7 @@ export class OutdoorLevel1 extends Level {
         CHANGE_LEVEL,
         new CaveLevel1({
           position: new Vector2(gridCells(0), gridCells(0)),
-          heroPosition: new Vector2(gridCells(6), gridCells(1)),
+          heroPosition: new Vector2(gridCells(6), gridCells(1)), // feste Startposition
         })
       );
     });

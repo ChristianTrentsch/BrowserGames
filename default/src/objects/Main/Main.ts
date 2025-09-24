@@ -13,6 +13,7 @@ import { SpriteTextString } from "../SpriteTextString/SpriteTextString.js";
 import { Npc } from "../Npc/Npc.js";
 import { Level } from "../Level/Level.js";
 import { Vector2 } from "../../Vector2.js";
+import { SaveGame } from "../../SaveGame.js";
 
 export class Main extends GameObject {
   level: null | Level;
@@ -34,6 +35,7 @@ export class Main extends GameObject {
 
     // Change the level
     events.on(CHANGE_LEVEL, this, (newLevelInstance: Level) => {
+      SaveGame.saveLevel(newLevelInstance.levelId);
       this.setLevel(newLevelInstance);
     });
 

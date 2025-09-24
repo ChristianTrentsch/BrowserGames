@@ -1,5 +1,5 @@
 import { moveTowards } from "../../helpers/moveTowards.js";
-import { TILE_SIZE, isSpaceFree } from "../../helpers/grid.js";
+import { TILE_SIZE, gridCells, isSpaceFree } from "../../helpers/grid.js";
 
 import {
   STAND_DOWN,
@@ -27,11 +27,12 @@ import { GameObject } from "../../GameObject.js";
 import { Vector2 } from "../../Vector2.js";
 import { DOWN, LEFT, RIGHT, UP } from "../../Input.js";
 import { Sprite } from "../../Sprite.js";
-import { ResourceImageOptions, resources } from "../../Resource.js";
+import { resources } from "../../Resource.js";
 import { Animations } from "../../Animations.js";
 import { FrameIndexPattern } from "../../FrameIndexPattern.js";
 import { Main } from "../Main/Main.js";
 import { Direction } from "../../types.js";
+import { SaveGame } from "../../SaveGame.js";
 
 export class Hero extends GameObject {
 
@@ -99,6 +100,16 @@ export class Hero extends GameObject {
 
   step(delta: number, root: Main) {
     // Implement Hero specific logic here
+
+    // Position im localStorage speichern
+    const level = root.level
+    if (level) {
+      SaveGame.saveHero(
+        level.levelId,
+        // level.defaultHeroPosition
+        this.destinationPosition
+      );
+    }
 
     // locked movement while in conversation with npc, etc.
     if (this.isLocked) {
@@ -264,4 +275,32 @@ export class Hero extends GameObject {
       this.itemPickUpShell = null;
     }
   }
+
+  //** TODO: localStorage stuff */
+  // saveHeroPosition() {
+  //   const pos = {
+  //     x: this.position.x,
+  //     y: this.position.y,
+  //   };
+  //   localStorage.setItem("heroPosition", JSON.stringify(pos));
+  // }
+
+  //** TODO: localStorage stuff */
+  // loadHeroPosition() {
+  //   const raw = localStorage.getItem("heroPosition");
+  //   if (raw) {
+  //     try {
+
+  //       // return JSON.parse(raw) as { x: number; y: number };
+
+  //       const pos = JSON.parse(raw) as { x: number; y: number };
+  //       this.position.x = Math.round(pos.x);
+  //       this.position.y = Math.round(pos.y);
+
+  //       // this.position = new Vector2(pos.x, pos.y);
+  //     } catch (e) {
+  //       console.warn("Konnte heroPosition nicht laden:", e);
+  //     }
+  //   }
+  // }
 }

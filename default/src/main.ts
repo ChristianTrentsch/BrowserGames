@@ -2,16 +2,29 @@ import { Main } from "./objects/Main/Main.js";
 import { Vector2 } from "./Vector2.js";
 import { OutdoorLevel1 } from "./levels/OutdoorLevel1.js";
 import { GameLoop } from "./GameLoop.js";
-import { } from "./types";
 import { gridCells } from "./helpers/grid.js";
+import { SaveGame } from "./SaveGame.js";
+import { levelRegistry } from "./helpers/levelRegistry.js";
 
 // Alpha Version 0.1 Hinweis
 const closeBtn = document.getElementById("closeOverlay");
 const overlay = document.getElementById("overlay");
+const reset = document.getElementById("reset");
 
+// Overlay einmal schließen
 if (closeBtn && overlay) {
   closeBtn.addEventListener("click", () => {
-    overlay.style.display = "none";
+    overlay.style.visibility = "hidden";
+  });
+}
+
+if (reset) {
+  reset.addEventListener("click", () => {
+    // Alles löschen (Inventar + Hero-Position)
+    SaveGame.clearAll();
+
+    // Optional: Hard-Reload, damit der Startzustand geladen wird
+    window.location.reload();
   });
 }
 
@@ -20,10 +33,10 @@ const canvas = document.querySelector<HTMLCanvasElement>("#game-canvas");
 if (canvas) {
   const ctx = canvas.getContext("2d");
   if (ctx) {
+    console.log(`ctx LOADED`, ctx);
+
     // Load the main scene
     const mainScene = new Main(new Vector2(0, 0));
-
-    console.log(`ctx LOADED`, ctx);
 
     // Update and Draw functions for the game loop
     const update = (delta: number) => {
@@ -58,13 +71,24 @@ if (canvas) {
 
     };
 
-    // Load start level 
-    mainScene.setLevel(new OutdoorLevel1(
-      {
+    // Load start level dynamic if localStorage have set a currentLevel
+    const savedLevelId = SaveGame.loadLevel();
+    let startLevel;
+    if (savedLevelId && levelRegistry[savedLevelId]) {
+      // Level aus Registry dynamisch laden
+      const LevelClass = levelRegistry[savedLevelId];
+      startLevel = new LevelClass({
+        position: new Vector2(0, 0),
+        // heroPosition wird automatisch aus SaveGame.loadHero gezogen
+      });
+    } else {
+      // Fallback: Startlevel Outdoor
+      startLevel = new OutdoorLevel1({
         position: new Vector2(0, 0),
         heroPosition: new Vector2(gridCells(8), gridCells(4))
-        // heroPosition: new Vector2(gridCells(1), gridCells(1))
-      }));
+      });
+    }
+    mainScene.setLevel(startLevel);
 
     // Start the game
     const gameLoop = new GameLoop(update, draw);

@@ -3,8 +3,7 @@ import { ResourceImageOptions, resources } from "../../Resource.js";
 import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
 import { events, HERO_PICKS_UP_ITEM, HERO_USE_ITEM } from "../../Events.js";
-
-export const inventoryStorageKey = 'inventory';
+import { SaveGame } from "../../SaveGame.js";
 
 export class Inventory extends GameObject {
   nextId: number;
@@ -19,10 +18,12 @@ export class Inventory extends GameObject {
 
     this.drawLayer = HUD;
     this.nextId = 0;
-    this.items = [];
 
     // Inventar laden
-    this.loadInventory();
+    this.items = SaveGame.loadInventory().map((item) => ({
+      ...item,
+      image: resources.images[item.imageKey],
+    }));
 
     // nextId auf den höchsten bestehenden ID-Wert setzen
     if (this.items.length > 0) {
@@ -59,24 +60,23 @@ export class Inventory extends GameObject {
       });
 
       // Save inventory in localStorage
-      this.saveInventory();
+      SaveGame.saveInventory(this.items.map((i) => ({
+        id: i.id,
+        imageKey: i.imageKey
+      })));
 
       // Draw initial state
       this.renderInventory();
     });
 
 
-    // Inventory use item
-    events.on(HERO_USE_ITEM, this, (data: { imageKey: keyof typeof resources.images }) => {
-      const { imageKey } = data;
+    // TODO: Inventory use item
+    // events.on(HERO_USE_ITEM, this, (data: { imageKey: keyof typeof resources.images }) => {
+    //   const { imageKey } = data;
 
-
-      // Save inventory in localStorage
-      this.loadInventory();
-
-      // Draw initial state
-      this.removeFromInventory(imageKey);
-    });
+    //   // Draw initial state
+    //   this.removeFromInventory(imageKey);
+    // });
   }
 
   renderInventory() {
@@ -98,16 +98,4 @@ export class Inventory extends GameObject {
     this.items = this.items.filter((item) => item.imageKey !== imageKey);
     this.renderInventory();
   }
-
-  saveInventory() {
-    localStorage.setItem(inventoryStorageKey, JSON.stringify(this.items));
-  }
-
-  loadInventory() {
-    const raw = localStorage.getItem(inventoryStorageKey);
-    if (raw) {
-      this.items = JSON.parse(raw);
-    }
-  }
-
 }
