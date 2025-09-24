@@ -66,8 +66,6 @@ export class CaveLevel1 extends Level {
     const npc2 = new Npc(gridCells(10), gridCells(4), "Ich will hier raauuuusss!");
     this.addChild(npc2);
 
-
-
     // Collision Preperation
     const wallDefinitions = {
       right: this.generateWall(new Vector2(288, 16), new Vector2(288, 112), TILE_SIZE, "right"),

@@ -22,7 +22,6 @@ export class Main extends GameObject {
 
   constructor(position: Vector2) {
     super(position);
-    // console.log(`Main LOADED`, this);
 
     this.level = null;
     this.input = new Input();

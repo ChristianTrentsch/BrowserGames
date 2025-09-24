@@ -27,7 +27,6 @@ export const getCharacterWidth = (char: string): number => {
 };
 
 // FRAMES
-
 const frameMap = new Map();
 [
   "abcdefghijklmnopqrstuvwxyz",

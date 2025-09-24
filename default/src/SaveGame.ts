@@ -1,14 +1,10 @@
-import { resources, ResourceImageOptions } from "./Resource.js";
+import { LevelId } from "./helpers/levelRegistry.js";
+import { resources } from "./Resource.js";
 import { Vector2 } from "./Vector2.js";
 
 export interface InventoryItemData {
     id: number;
     imageKey: keyof typeof resources.images;
-}
-
-export interface HeroPositionData {
-    x: number;
-    y: number;
 }
 
 export class SaveGame {
@@ -87,8 +83,8 @@ export class SaveGame {
         localStorage.setItem(this.levelKey, levelId);
     }
 
-    static loadLevel(): string | null {
-        return localStorage.getItem(this.levelKey);
+    static loadLevel(): LevelId | null {
+        return localStorage.getItem(this.levelKey) as LevelId | null;
     }
 
     static clearLevel() {

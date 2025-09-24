@@ -65,7 +65,6 @@ class Resources {
       return acc;
     }, {} as { [K in keyof ResourceOptions]: ResourceImageOptions });
 
-
     // Load all of the images
     (Object.keys(this.toLoad) as (keyof ResourceOptions)[]).forEach((key) => {
 
@@ -79,7 +78,6 @@ class Resources {
 
       img.onload = () => {
         this.images[key].isLoaded = true;
-        // console.log(`${key} loaded!`);
       };
     });
   }

@@ -9,8 +9,6 @@ export class Camera extends GameObject {
     events.on(HERO_POSTION, this, (heroPosition: Vector2) => {
       // Create a new position based on the heros's position
       this.centerPositionOnTarget(heroPosition);
-
-      // console.log("Hero position is now:", heroPosition);
     });
 
     // Camera knows when a new level starts

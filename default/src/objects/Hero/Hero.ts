@@ -271,32 +271,4 @@ export class Hero extends GameObject {
       this.itemPickUpShell = null;
     }
   }
-
-  //** TODO: localStorage stuff */
-  // saveHeroPosition() {
-  //   const pos = {
-  //     x: this.position.x,
-  //     y: this.position.y,
-  //   };
-  //   localStorage.setItem("heroPosition", JSON.stringify(pos));
-  // }
-
-  //** TODO: localStorage stuff */
-  // loadHeroPosition() {
-  //   const raw = localStorage.getItem("heroPosition");
-  //   if (raw) {
-  //     try {
-
-  //       // return JSON.parse(raw) as { x: number; y: number };
-
-  //       const pos = JSON.parse(raw) as { x: number; y: number };
-  //       this.position.x = Math.round(pos.x);
-  //       this.position.y = Math.round(pos.y);
-
-  //       // this.position = new Vector2(pos.x, pos.y);
-  //     } catch (e) {
-  //       console.warn("Konnte heroPosition nicht laden:", e);
-  //     }
-  //   }
-  // }
 }

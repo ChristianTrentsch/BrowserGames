@@ -10,8 +10,6 @@ export class Npc extends GameObject {
   constructor(x: number, y: number, textContent: string) {
     super(new Vector2(x, y));
 
-    // console.log(`Npc LOADED`, this);
-
     // npc block path as solid object
     this.isSolid = true;
 

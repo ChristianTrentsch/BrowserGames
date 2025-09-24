@@ -70,13 +70,13 @@ export class Inventory extends GameObject {
     });
 
 
-    // TODO: Inventory use item
-    // events.on(HERO_USE_ITEM, this, (data: { imageKey: keyof typeof resources.images }) => {
-    //   const { imageKey } = data;
+    // Listen for use Item event
+    events.on(HERO_USE_ITEM, this, (data: { imageKey: keyof typeof resources.images }) => {
+      const { imageKey } = data;
 
-    //   // Draw initial state
-    //   this.removeFromInventory(imageKey);
-    // });
+      // Draw initial state
+      this.removeFromInventory(imageKey);
+    });
   }
 
   renderInventory() {

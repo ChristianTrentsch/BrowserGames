@@ -68,10 +68,9 @@ if (canvas) {
 
       // Draw anything above the game world
       mainScene.drawForeground(ctx);
-
     };
 
-    // Load start level dynamic if localStorage have set a currentLevel
+    //** Dynamic level load if found in localStorage */
     const savedLevelId = SaveGame.loadLevel();
     let startLevel;
     if (savedLevelId && levelRegistry[savedLevelId]) {
