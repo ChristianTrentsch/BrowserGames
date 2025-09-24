@@ -23,7 +23,14 @@ export class OutdoorLevel1 extends Level {
     position: Vector2;
     heroPosition?: Vector2;
   }) {
-    super(position);
+    // Ohne Sound
+    // super(position);
+    
+    // mit Sound
+    super(position, "./sounds/levels/OutdoorLevel1.mp3", 0.4);
+    
+    // Initialisierung des Sounds (abhängig vom SaveGame)
+    this.initBackgroundSound();
 
     console.log(`OutdoorLevel1 LOADED`, this);
 
@@ -77,6 +84,10 @@ export class OutdoorLevel1 extends Level {
 
   ready() {
     events.on(HERO_EXITS, this, () => {
+
+      // Alten Level-Sound stoppen
+      this.stopBackgroundSound();
+
       events.emit(
         CHANGE_LEVEL,
         new CaveLevel1({
