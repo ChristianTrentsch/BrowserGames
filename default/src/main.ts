@@ -5,44 +5,9 @@ import { GameLoop } from "./GameLoop.js";
 import { gridCells } from "./helpers/grid.js";
 import { SaveGame } from "./SaveGame.js";
 import { levelRegistry } from "./helpers/levelRegistry.js";
+import { initUI } from "./helpers/uiManager.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Alpha Version 0.1 Hinweis
-  const closeBtn = document.getElementById("closeOverlay");
-  const overlay = document.getElementById("overlay");
-  const reset = document.getElementById("reset");
-
-  // Overlay einmal schließen
-  if (closeBtn && overlay) {
-    closeBtn.addEventListener("click", () => {
-      overlay.style.visibility = "hidden";
-    });
-
-    // Prüfen ob User das Overlay schon bestätigt hat
-    const overlaySeen = SaveGame.loadOverlay();
-
-    if (overlaySeen === "true") {
-      overlay.style.display = "none"; // Overlay verstecken
-    } else {
-      overlay.style.display = "flex"; // Overlay anzeigen
-    }
-
-    closeBtn.addEventListener("click", () => {
-      overlay.style.display = "none";
-      SaveGame.saveOverlay("true")// Speichern
-    });
-  }
-
-  if (reset) {
-    reset.addEventListener("click", () => {
-      // Alles löschen (Inventar + Hero-Position)
-      SaveGame.clearAll();
-
-      // Optional: Hard-Reload, damit der Startzustand geladen wird
-      window.location.reload();
-    });
-  }
-
   // Canvas und Context holen
   const canvas = document.querySelector<HTMLCanvasElement>("#game-canvas");
   if (canvas) {
@@ -52,6 +17,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Load the main scene
       const mainScene = new Main(new Vector2(0, 0));
+
+      /** init UI 
+       * 🎮 Zurück zur Startseite
+       * 🚧 Reset Game
+       * 🔊 Sound an/aus
+       * */
+      initUI(mainScene);
 
       // Update and Draw functions for the game loop
       const update = (delta: number) => {
@@ -112,5 +84,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
-
 
