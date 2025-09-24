@@ -101,16 +101,6 @@ export class Hero extends GameObject {
   step(delta: number, root: Main) {
     // Implement Hero specific logic here
 
-    // Position im localStorage speichern
-    const level = root.level
-    if (level) {
-      SaveGame.saveHero(
-        level.levelId,
-        // level.defaultHeroPosition
-        this.destinationPosition
-      );
-    }
-
     // locked movement while in conversation with npc, etc.
     if (this.isLocked) {
       return;
@@ -233,6 +223,12 @@ export class Hero extends GameObject {
           // update postion of hero
           this.destinationPosition.x = nextX;
           this.destinationPosition.y = nextY;
+
+          //** Ziel Position im localStorage speichern */ 
+          SaveGame.saveHero(
+            level.levelId,
+            this.destinationPosition
+          );
         }
       }
     }
