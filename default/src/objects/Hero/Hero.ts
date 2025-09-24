@@ -243,6 +243,12 @@ export class Hero extends GameObject {
       // Start the pickup animation
       this.itemPickUpTime = 1000; // ms
 
+      // Play pick up sound from Item
+      const isSoundOn = SaveGame.loadSound();
+      if (isSoundOn === "true") {
+        data.itemSound.play().catch(err => console.warn("Sound konnte nicht abgespielt werden:", err));
+      }
+
       const image = data.image;
       if (image) {
         // this.itemPickUpShell = new GameObject(position);

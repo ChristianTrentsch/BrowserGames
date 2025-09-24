@@ -7,17 +7,25 @@ import { events, HERO_POSTION, HERO_PICKS_UP_ITEM } from "../../Events.js";
 export class Rod extends GameObject {
 
   imageKey: keyof typeof resources.images;
-  
-  constructor(x: number, y: number, imageKey: keyof typeof resources.images) {
+  itemSound: HTMLAudioElement;
+
+  constructor(
+    x: number,
+    y: number,
+    imageKey: keyof typeof resources.images,
+    rodSoundSrc: string, // Pfad zur Sounddatei
+    volume: number = 0.7 // Standard-Lautstärke
+  ) {
     super(new Vector2(x, y));
 
     this.imageKey = imageKey;
+    this.itemSound = new Audio(rodSoundSrc);
+    this.itemSound.volume = volume; // Lautstärke setzen (0.0 - 1.0)
 
     const sprite = new Sprite({
       resource: resources.images[imageKey],
       position: new Vector2(0, -5), // nudge upwards visually
     });
-
     this.addChild(sprite);
   }
 
@@ -40,13 +48,12 @@ export class Rod extends GameObject {
     // Remove this instance from the scene
     this.destroy();
 
-    // console.log("ITEM TAKEN");
-
     // Alert that we picked up a rod
     events.emit(HERO_PICKS_UP_ITEM, {
       imageKey: this.imageKey,
       image: resources.images[this.imageKey],
       position: this.position,
+      itemSound: this.itemSound
     });
   }
 }

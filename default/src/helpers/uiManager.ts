@@ -23,6 +23,7 @@ export function initUI(mainScene: Main) {
     if (reset) {
         reset.addEventListener("click", () => {
             SaveGame.clearAll();
+            SaveGame.saveSound("true");
             window.location.reload();
         });
     }
@@ -30,8 +31,6 @@ export function initUI(mainScene: Main) {
     // --- Sound ---
     if (soundBtn) {
         // Initialstatus setzen
-        SaveGame.saveSound("true");
-
         const isSoundOn = SaveGame.loadSound() === "true";
         soundBtn.textContent = isSoundOn ? "🔊" : "🔇";
 

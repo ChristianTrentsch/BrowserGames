@@ -21,8 +21,9 @@ export interface EventCallbackItem {
 
 export interface EventItem {
   imageKey: keyof typeof resources.images
-  position?: Vector2
-  image?: ResourceImageOptions
+  position: Vector2
+  image: ResourceImageOptions
+  itemSound: HTMLAudioElement
 }
 
 export const HERO_POSTION = "HERO_POSTION";
