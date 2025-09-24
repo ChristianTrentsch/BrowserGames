@@ -12,6 +12,7 @@ export class SaveGame {
     private static heroKey = "heroPosition";
     private static levelKey = "currentLevel";
     private static overlayKey = "overlaySeen";
+    private static soundKey = "sound";
 
     // --------- INVENTORY ----------
     static saveInventory(items: InventoryItemData[]) {
@@ -105,11 +106,25 @@ export class SaveGame {
         localStorage.removeItem(this.overlayKey);
     }
 
+    // --------- SOUND ----------
+    static saveSound(status: string) {
+        localStorage.setItem(this.soundKey, status);
+    }
+
+    static loadSound() {
+        return localStorage.getItem(this.soundKey);
+    }
+
+    static clearSound() {
+        localStorage.removeItem(this.soundKey);
+    }
+
     // --------- ALL SAVE DATA ----------
     static clearAll() {
-        this.clearOverlay();
         this.clearInventory();
         this.clearHero();
+        this.clearOverlay();
+        this.clearSound();
         this.clearLevel();
     }
 }
