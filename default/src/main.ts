@@ -18,13 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
       // Load the main scene
       const mainScene = new Main(new Vector2(0, 0));
 
-      /** init UI 
-       * 🎮 Zurück zur Startseite
-       * 🚧 Reset Game
-       * 🔊 Sound an/aus
-       * */
-      initUI(mainScene);
-
       // Update and Draw functions for the game loop
       const update = (delta: number) => {
         mainScene.stepEntry(delta, mainScene);
@@ -65,16 +58,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const LevelClass = levelRegistry[savedLevelId];
         startLevel = new LevelClass({
           position: new Vector2(0, 0),
-          // heroPosition wird automatisch aus SaveGame.loadHero gezogen
         });
       } else {
-        // Fallback: Startlevel Outdoor
+        // Fallback: Startlevel Outdoor with initial value
+        SaveGame.initAll();
+
         startLevel = new OutdoorLevel1({
           position: new Vector2(0, 0),
-          heroPosition: new Vector2(gridCells(8), gridCells(4))
         });
       }
       mainScene.setLevel(startLevel);
+
+      /** init UI 
+       * 🎮 Zurück zur Startseite
+       * 🚧 Reset Game
+       * 🔊 Sound an/aus
+       * */
+      initUI(mainScene);
 
       // Start the game
       const gameLoop = new GameLoop(update, draw);
