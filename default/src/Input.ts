@@ -149,14 +149,14 @@ export class Input {
     if (gp.buttons[13]?.pressed) this.onArrowPressed("DOWN");  // D-Pad runter
 
     // 🎮 Buttons -> Aktionen (Xbox Mapping)
-    this.mapButton(gp.buttons[0], "Space");  // A -> Interact
-    this.mapButton(gp.buttons[1], "KeyF");   // B -> Attack
-    this.mapButton(gp.buttons[2], "KeyQ");   // X -> Item2
-    this.mapButton(gp.buttons[3], "KeyE");   // Y -> Item1
-    this.mapButton(gp.buttons[9], "KeyR");   // Start -> Reload
+    this.mapButton(gp.buttons[0], "Space", this.keyToDirection);  // A -> Interact
+    this.mapButton(gp.buttons[1], "KeyF", this.keyToDirection);   // B -> Attack
+    this.mapButton(gp.buttons[2], "KeyQ", this.keyToDirection);   // X -> Item2
+    this.mapButton(gp.buttons[3], "KeyE", this.keyToDirection);   // Y -> Item1
+    this.mapButton(gp.buttons[9], "KeyR", this.keyToDirection);   // Start -> Reload
   }
 
-  private mapButton(button: GamepadButton | undefined, key: InputKey) {
+  private mapButton(button: GamepadButton | undefined, key: InputKey, keyToDirection: Record<InputKey, Direction>) {
     if (!button) return;
 
     if (button.pressed) {
@@ -164,7 +164,7 @@ export class Input {
         this.keys[key] = true;
 
         // Wenn der Key auch eine Richtung ist → Richtung aktivieren
-        const dir = this.keyToDirection[key];
+        const dir = keyToDirection[key];
         if (dir) {
           this.onArrowPressed(dir);
         }
@@ -174,7 +174,7 @@ export class Input {
         this.keys[key] = false;
 
         // Richtung ggf. wieder freigeben
-        const dir = this.keyToDirection[key];
+        const dir = keyToDirection[key];
         if (dir) {
           this.onArrowReleased(dir);
         }
