@@ -1,5 +1,5 @@
 import { GameObject } from "./GameObject.js";
-import { ResourceImageOptions, resources } from "./Resource.js";
+import { InventoryEvent } from "./objects/Inventory/Inventory.js";
 import { Vector2 } from "./Vector2.js";
 
 export type EventName =
@@ -17,13 +17,6 @@ export interface EventCallbackItem {
   eventName: EventName;
   caller: GameObject; // Optional: kannst du präziser typisieren, z.B. `object` oder `this`-Typ
   callback: (...args: any[]) => void; // Callback-Funktion mit beliebigen Parametern
-}
-
-export interface EventItem {
-  imageKey: keyof typeof resources.images
-  position: Vector2
-  image: ResourceImageOptions
-  itemSound: HTMLAudioElement
 }
 
 export const HERO_POSTION = "HERO_POSTION";
@@ -44,7 +37,7 @@ class Events {
   }
 
   // emit event
-  emit(eventName: EventName, caller?: GameObject | Vector2 | EventItem) {
+  emit(eventName: EventName, caller?: GameObject | Vector2 | InventoryEvent) {
     this.callbacks.forEach((stored: { eventName: EventName, callback: (...args: any[]) => void }) => {
       if (stored.eventName === eventName) {
         stored.callback(caller);

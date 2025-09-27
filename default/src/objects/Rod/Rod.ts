@@ -3,16 +3,17 @@ import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
 import { resources } from "../../Resource.js";
 import { events, HERO_POSTION, HERO_PICKS_UP_ITEM } from "../../Events.js";
+import { InventoryItem } from "../Inventory/Inventory.js";
 
 export class Rod extends GameObject {
 
-  imageKey: keyof typeof resources.images;
+  imageKey: InventoryItem;
   itemSound: HTMLAudioElement;
 
   constructor(
     x: number,
     y: number,
-    imageKey: keyof typeof resources.images,
+    imageKey: InventoryItem,
     rodSoundSrc: string, // Pfad zur Sounddatei
     volume: number = 0.7 // Standard-Lautstärke
   ) {
