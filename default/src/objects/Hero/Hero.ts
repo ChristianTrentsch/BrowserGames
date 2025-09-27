@@ -1,5 +1,5 @@
 import { moveTowards } from "../../helpers/moveTowards.js";
-import { TILE_SIZE, gridCells, isSpaceFree } from "../../helpers/grid.js";
+import { TILE_SIZE, isSpaceFree } from "../../helpers/grid.js";
 
 import {
   STAND_DOWN,
@@ -20,7 +20,6 @@ import {
   HERO_REQUESTS_ACTION,
   TEXTBOX_START,
   TEXTBOX_END,
-  EventItem,
 } from "../../Events.js";
 
 import { GameObject } from "../../GameObject.js";
@@ -33,6 +32,7 @@ import { FrameIndexPattern } from "../../FrameIndexPattern.js";
 import { Main } from "../Main/Main.js";
 import { Direction } from "../../types.js";
 import { SaveGame } from "../../SaveGame.js";
+import { InventoryEvent } from "../Inventory/Inventory.js";
 
 export class Hero extends GameObject {
 
@@ -85,7 +85,7 @@ export class Hero extends GameObject {
 
   ready() {
     // Hero picks up item
-    events.on(HERO_PICKS_UP_ITEM, this, (data: EventItem) => {
+    events.on(HERO_PICKS_UP_ITEM, this, (data: InventoryEvent) => {
       this.onPickUpItem(data);
     });
 
@@ -234,7 +234,7 @@ export class Hero extends GameObject {
     }
   }
 
-  onPickUpItem(data: EventItem) {
+  onPickUpItem(data: InventoryEvent) {
     // Make sure we land right on the item
     const position = data.position;
     if (position) {
@@ -245,7 +245,7 @@ export class Hero extends GameObject {
 
       // Play pick up sound from Item
       const isSoundOn = SaveGame.loadSound();
-      if (isSoundOn === "true") {
+      if (isSoundOn === "on") {
         data.itemSound.play().catch(err => console.warn("Sound konnte nicht abgespielt werden:", err));
       }
 
