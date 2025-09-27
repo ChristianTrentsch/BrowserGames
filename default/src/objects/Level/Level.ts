@@ -1,4 +1,5 @@
 import { GameObject } from "../../GameObject.js";
+import { LevelId } from "../../helpers/levelRegistry.js";
 import { SaveGame } from "../../SaveGame.js";
 import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
@@ -11,7 +12,7 @@ export abstract class Level extends GameObject {
   // Subclasses MUST provide a Sprite for the background
   abstract background: Sprite;
   abstract walls: Set<string>;
-  abstract levelId: string; // jede Map muss eindeutige ID haben
+  abstract levelId: LevelId; // jede Map muss eindeutige ID haben
   abstract defaultHeroPosition: Vector2;
 
   backgroundSound?: HTMLAudioElement;
@@ -28,8 +29,8 @@ export abstract class Level extends GameObject {
 
   /** Initialisiert den Hintergrundsound basierend auf SaveGame */
   protected initBackgroundSound() {
-    const isSoundOn = SaveGame.loadSound();
-    if (isSoundOn === "true") {
+    const sound = SaveGame.loadSound();
+    if (sound === "on") {
       this.playBackgroundSound();
       // this.playBackgroundSoundFadeIn();
     } else {
@@ -82,7 +83,7 @@ export abstract class Level extends GameObject {
   protected stopBackgroundSound() {
     if (this.backgroundSound) {
       this.backgroundSound.pause();
-      this.backgroundSound.currentTime = 0;
+      // this.backgroundSound.currentTime = 0;
     }
   }
 
