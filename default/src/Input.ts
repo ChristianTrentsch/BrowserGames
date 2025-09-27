@@ -32,6 +32,8 @@ export class Input {
     KeyF: ATTACK,
   };
 
+  private currentInputMode: "keyboard" | "controller" = "keyboard";
+
   constructor() {
     this.heldDirections = [];
     this.keys = {
@@ -52,6 +54,7 @@ export class Input {
     this.lastKeys = { ...this.keys };
 
     document.addEventListener("keydown", (e: KeyboardEvent) => {
+      this.currentInputMode = "keyboard";
       const key = e.code as InputKey;
 
       // Leertaste + Pfeile
@@ -68,6 +71,7 @@ export class Input {
     });
 
     document.addEventListener("keyup", (e: KeyboardEvent) => {
+      this.currentInputMode = "keyboard";
       const key = e.code as InputKey;
       if (key in this.keys) {
         this.keys[key] = false;
@@ -92,6 +96,8 @@ export class Input {
   update() {
     // Diff the keys on previous frame to know when new ones are pressed
     this.lastKeys = { ...this.keys };
+
+    // console.log(this.currentInputMode);
 
     // Controller abfragen
     this.pollGamepad();
@@ -121,17 +127,32 @@ export class Input {
 
   /** Poll Gamepad state */
   private pollGamepad() {
+
     const gamepads = navigator.getGamepads();
     if (!gamepads) return;
 
-    const gp = gamepads[0]; // ersten Controller nehmen
+    // ersten Controller nehmen
+    const gp = gamepads[0];
     if (!gp) return;
 
-    // 🎮 D-Pad oder Stick -> Bewegung
-    const threshold = 0.4;
-    this.resetDirectionsFromGamepad();
-
+    // D-Pad oder Stick -> Bewegung
     const [xAxis, yAxis] = gp.axes;
+    const threshold = 0.4;
+    const controllerActive =
+      gp.buttons.some((btn) => btn.pressed) ||
+      Math.abs(xAxis as number) > threshold ||
+      Math.abs(yAxis as number) > threshold;
+
+    if (controllerActive) {
+      this.currentInputMode = "controller";
+    }
+
+    // Wenn Tastatur aktiv → Gamepad ignorieren
+    if (this.currentInputMode !== "controller") {
+      return;
+    }
+
+    this.resetDirectionsFromGamepad();
 
     if (xAxis) {
       if (xAxis < -threshold) this.onArrowPressed("LEFT");
