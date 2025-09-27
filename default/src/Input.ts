@@ -16,6 +16,22 @@ export class Input {
   keys: KeysState;
   lastKeys: KeysState;
 
+  private keyToDirection: Record<InputKey, Direction> = {
+    ArrowLeft: LEFT,
+    ArrowRight: RIGHT,
+    ArrowUp: UP,
+    ArrowDown: DOWN,
+    KeyA: LEFT,
+    KeyD: RIGHT,
+    KeyW: UP,
+    KeyS: DOWN,
+    Space: SPACE,
+    KeyE: ITEM1,
+    KeyQ: ITEM2,
+    KeyR: RELOAD,
+    KeyF: ATTACK,
+  };
+
   constructor() {
     this.heldDirections = [];
     this.keys = {
@@ -35,22 +51,6 @@ export class Input {
     };
     this.lastKeys = { ...this.keys };
 
-    const keyToDirection: Record<InputKey, Direction> = {
-      ArrowLeft: LEFT,
-      ArrowRight: RIGHT,
-      ArrowUp: UP,
-      ArrowDown: DOWN,
-      KeyA: LEFT,
-      KeyD: RIGHT,
-      KeyW: UP,
-      KeyS: DOWN,
-      Space: SPACE,
-      KeyE: ITEM1,
-      KeyQ: ITEM2,
-      KeyR: RELOAD,
-      KeyF: ATTACK,
-    };
-
     document.addEventListener("keydown", (e: KeyboardEvent) => {
       const key = e.code as InputKey;
 
@@ -63,7 +63,7 @@ export class Input {
 
       if (key in this.keys) {
         this.keys[key] = true;
-        this.onArrowPressed(keyToDirection[key]);
+        this.onArrowPressed(this.keyToDirection[key]);
       }
     });
 
@@ -71,7 +71,7 @@ export class Input {
       const key = e.code as InputKey;
       if (key in this.keys) {
         this.keys[key] = false;
-        this.onArrowReleased(keyToDirection[key]);
+        this.onArrowReleased(this.keyToDirection[key]);
       }
     });
 
@@ -158,13 +158,27 @@ export class Input {
 
   private mapButton(button: GamepadButton | undefined, key: InputKey) {
     if (!button) return;
+
     if (button.pressed) {
       if (!this.keys[key]) {
         this.keys[key] = true;
-        // KeyToDirection könntest du hier auch einbauen
+
+        // Wenn der Key auch eine Richtung ist → Richtung aktivieren
+        const dir = this.keyToDirection[key];
+        if (dir) {
+          this.onArrowPressed(dir);
+        }
       }
     } else {
-      this.keys[key] = false;
+      if (this.keys[key]) {
+        this.keys[key] = false;
+
+        // Richtung ggf. wieder freigeben
+        const dir = this.keyToDirection[key];
+        if (dir) {
+          this.onArrowReleased(dir);
+        }
+      }
     }
   }
 
