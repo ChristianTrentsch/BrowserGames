@@ -5,26 +5,26 @@ import { resources } from "../../Resource.js";
 import { events, HERO_POSTION, HERO_PICKS_UP_ITEM } from "../../Events.js";
 import { InventoryItem } from "../Inventory/Inventory.js";
 
-export class Rod extends GameObject {
+export class Item extends GameObject {
 
-  imageKey: InventoryItem;
+  itemKey: InventoryItem;
   itemSound: HTMLAudioElement;
 
   constructor(
     x: number,
     y: number,
-    imageKey: InventoryItem,
-    rodSoundSrc: string, // Pfad zur Sounddatei
+    itemKey: InventoryItem,
+    itemSoundSrc: string, // Pfad zur Sounddatei
     volume: number = 0.7 // Standard-Lautstärke
   ) {
     super(new Vector2(x, y));
 
-    this.imageKey = imageKey;
-    this.itemSound = new Audio(rodSoundSrc);
+    this.itemKey = itemKey;
+    this.itemSound = new Audio(itemSoundSrc);
     this.itemSound.volume = volume; // Lautstärke setzen (0.0 - 1.0)
 
     const sprite = new Sprite({
-      resource: resources.images[imageKey],
+      resource: resources.images[itemKey],
       position: new Vector2(0, -5), // nudge upwards visually
     });
     this.addChild(sprite);
@@ -51,8 +51,8 @@ export class Rod extends GameObject {
 
     // Alert that we picked up a rod
     events.emit(HERO_PICKS_UP_ITEM, {
-      imageKey: this.imageKey,
-      image: resources.images[this.imageKey],
+      imageKey: this.itemKey,
+      image: resources.images[this.itemKey],
       position: this.position,
       itemSound: this.itemSound
     });

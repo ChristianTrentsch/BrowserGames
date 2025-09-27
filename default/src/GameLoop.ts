@@ -1,5 +1,3 @@
-import { } from "./types";
-
 export class GameLoop {
   lastFrameTime: number;
   accumulatedTime: number;

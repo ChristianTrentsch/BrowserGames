@@ -5,7 +5,7 @@ import { Sprite } from "../Sprite.js";
 import { Level } from "../objects/Level/Level.js";
 import { Exit } from "../objects/Exit/Exit.js";
 import { Hero } from "../objects/Hero/Hero.js";
-import { Rod } from "../objects/Rod/Rod.js";
+import { Item } from "../objects/Item/Item.js";
 import { events, HERO_EXITS, CHANGE_LEVEL } from "../Events.js";
 import { CaveLevel1 } from "./CaveLevel1.js";
 import { SaveGame } from "../SaveGame.js";
@@ -61,8 +61,8 @@ export class OutdoorLevel1 extends Level {
     //** --- Prüfen, ob Item schon im Inventar ist, ansonsten erzeugen --- */
     if (!SaveGame.isInInventory("rodPurple")) {
       // erzeuge Item und lege position fest
-      const rod = new Rod(gridCells(7), gridCells(6), "rodPurple", "./sounds/items/item_01.mp3");
-      this.addChild(rod);
+      const rodPurple = new Item(gridCells(7), gridCells(6), "rodPurple", "./sounds/items/item_01.mp3");
+      this.addChild(rodPurple);
     }
 
     // Collision Preperation

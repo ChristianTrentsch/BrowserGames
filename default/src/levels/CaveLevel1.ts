@@ -8,7 +8,7 @@ import { Hero } from "../objects/Hero/Hero.js";
 import { events, HERO_EXITS, CHANGE_LEVEL } from "../Events.js";
 import { OutdoorLevel1 } from "./OutdoorLevel1.js";
 import { Npc } from "../objects/Npc/Npc.js";
-import { Rod } from "../objects/Rod/Rod.js";
+import { Item } from "../objects/Item/Item.js";
 import { SaveGame } from "../SaveGame.js";
 import { LevelId } from "../helpers/levelRegistry.js";
 
@@ -63,8 +63,8 @@ export class CaveLevel1 extends Level {
     //** --- Prüfen, ob Item schon im Inventar ist, ansonsten erzeugen --- */
     if (!SaveGame.isInInventory("rodRed")) {
       // erzeuge Item und lege position fest
-      const rod = new Rod(gridCells(10), gridCells(6), "rodRed", "./sounds/items/item_01.mp3");
-      this.addChild(rod);
+      const rodRed = new Item(gridCells(10), gridCells(6), "rodRed", "./sounds/items/item_01.mp3");
+      this.addChild(rodRed);
     }
 
     //** --- Create Npc and add to scene --- */
