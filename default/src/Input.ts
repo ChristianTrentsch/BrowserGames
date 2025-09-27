@@ -1,4 +1,4 @@
-import { InputKey, KeysState } from "./types.js";
+import { Direction, InputKey, KeysState } from "./types.js";
 
 export const LEFT = "LEFT";
 export const RIGHT = "RIGHT";
@@ -12,7 +12,7 @@ export const ATTACK = "ATTACK";
 
 export class Input {
 
-  heldDirections: (typeof LEFT | typeof RIGHT | typeof UP | typeof DOWN | typeof SPACE | typeof ATTACK | typeof RELOAD | typeof ITEM1 | typeof ITEM2)[];
+  heldDirections: Direction[];
   keys: KeysState;
   lastKeys: KeysState;
 
@@ -35,10 +35,7 @@ export class Input {
     };
     this.lastKeys = { ...this.keys };
 
-    const keyToDirection: Record<
-      InputKey,
-      typeof LEFT | typeof RIGHT | typeof UP | typeof DOWN | typeof SPACE | typeof ATTACK | typeof RELOAD | typeof ITEM1 | typeof ITEM2
-    > = {
+    const keyToDirection: Record<InputKey, Direction> = {
       ArrowLeft: LEFT,
       ArrowRight: RIGHT,
       ArrowUp: UP,
@@ -64,9 +61,6 @@ export class Input {
         e.preventDefault();
       }
 
-      // Read every Key from Keyboard
-      // console.log(`KEY PRESSED: ${key}`);
-
       if (key in this.keys) {
         this.keys[key] = true;
         this.onArrowPressed(keyToDirection[key]);
@@ -80,6 +74,15 @@ export class Input {
         this.onArrowReleased(keyToDirection[key]);
       }
     });
+
+    // Events für Gamepad
+    window.addEventListener("gamepadconnected", (e) => {
+      console.log("Gamepad verbunden:", e.gamepad);
+    });
+
+    window.addEventListener("gamepaddisconnected", (e) => {
+      console.log("Gamepad getrennt:", e.gamepad);
+    });
   }
 
   get direction() {
@@ -89,6 +92,9 @@ export class Input {
   update() {
     // Diff the keys on previous frame to know when new ones are pressed
     this.lastKeys = { ...this.keys };
+
+    // Controller abfragen
+    this.pollGamepad();
   }
 
   getActionJustPressed(keyCode: InputKey) {
@@ -100,16 +106,69 @@ export class Input {
     return justPressed;
   }
 
-  onArrowPressed(direction: typeof LEFT | typeof RIGHT | typeof UP | typeof DOWN | typeof SPACE | typeof ATTACK | typeof RELOAD | typeof ITEM1 | typeof ITEM2) {
+  onArrowPressed(direction: Direction) {
     // Add this arrow to the queue if it's new
     if (this.heldDirections.indexOf(direction) === -1) {
       this.heldDirections.unshift(direction);
     }
   }
 
-  onArrowReleased(direction: typeof LEFT | typeof RIGHT | typeof UP | typeof DOWN | typeof SPACE | typeof ATTACK | typeof RELOAD | typeof ITEM1 | typeof ITEM2) {
+  onArrowReleased(direction: Direction) {
     const index = this.heldDirections.indexOf(direction);
     // Remove this key from the list
     if (index !== -1) this.heldDirections.splice(index, 1);
+  }
+
+  /** Poll Gamepad state */
+  private pollGamepad() {
+    const gamepads = navigator.getGamepads();
+    if (!gamepads) return;
+
+    const gp = gamepads[0]; // ersten Controller nehmen
+    if (!gp) return;
+
+    // 🎮 D-Pad oder Stick -> Bewegung
+    const threshold = 0.4;
+    this.resetDirectionsFromGamepad();
+
+    const [xAxis, yAxis] = gp.axes;
+
+    if (xAxis) {
+      if (xAxis < -threshold) this.onArrowPressed("LEFT");
+      if (xAxis > threshold) this.onArrowPressed("RIGHT");
+    }
+
+    if (yAxis) {
+      if (yAxis < -threshold) this.onArrowPressed("LEFT");
+      if (yAxis > threshold) this.onArrowPressed("RIGHT");
+    }
+
+    if (gp.buttons[14]?.pressed) this.onArrowPressed("LEFT");  // D-Pad links
+    if (gp.buttons[15]?.pressed) this.onArrowPressed("RIGHT"); // D-Pad rechts
+    if (gp.buttons[12]?.pressed) this.onArrowPressed("UP");    // D-Pad hoch
+    if (gp.buttons[13]?.pressed) this.onArrowPressed("DOWN");  // D-Pad runter
+
+    // 🎮 Buttons -> Aktionen (Xbox Mapping)
+    this.mapButton(gp.buttons[0], "Space");  // A -> Interact
+    this.mapButton(gp.buttons[1], "KeyF");   // B -> Attack
+    this.mapButton(gp.buttons[2], "KeyQ");   // X -> Item2
+    this.mapButton(gp.buttons[3], "KeyE");   // Y -> Item1
+    this.mapButton(gp.buttons[9], "KeyR");   // Start -> Reload
+  }
+
+  private mapButton(button: GamepadButton | undefined, key: InputKey) {
+    if (!button) return;
+    if (button.pressed) {
+      if (!this.keys[key]) {
+        this.keys[key] = true;
+        // KeyToDirection könntest du hier auch einbauen
+      }
+    } else {
+      this.keys[key] = false;
+    }
+  }
+
+  private resetDirectionsFromGamepad() {
+    ["LEFT", "RIGHT", "UP", "DOWN"].forEach((dir) => this.onArrowReleased(dir as Direction));
   }
 }
