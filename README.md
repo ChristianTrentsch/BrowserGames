@@ -29,15 +29,18 @@ Statische Browsergames. Übersichtlich, modern und responsiv gestaltet mit HTML,
 ## ✨ Features
 
 - 🎮 Interaktives Gameplay direkt im Browser
+- 🕹️ Steuerung mit Tastatur oder Controller
 - 🗂️ Lokaler Retro Highscore
-- 📱 Responsives Design für Desktop
+- 📱 Responsives Design für Desktop und Mobile
 - ⚡ Schnelle Ladezeiten durch statische Struktur
 
 ---
 
 ## 🛠️ Technologien
 
-- HTML5 / CSS3 / JavaScript
+- HTML5
+- CSS3
+- Typescript 5.9
 - Bootstrap 5.3
 - Fontawesome 6.4
 - GitHub Pages für Hosting
@@ -47,7 +50,7 @@ Statische Browsergames. Übersichtlich, modern und responsiv gestaltet mit HTML,
 - node muss installiert sein
 - Projektordner mit VSC öffnen
 - in VSC Terminal öffnen
-- Server starten ``npm start``
+- Server starten `npm start`
 - http://localhost:3000 öffnen und los gehts
 
 ### ℹ️ Warum löst das mein CORS-Problem?
