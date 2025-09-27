@@ -139,8 +139,8 @@ export class Input {
     }
 
     if (yAxis) {
-      if (yAxis < -threshold) this.onArrowPressed("LEFT");
-      if (yAxis > threshold) this.onArrowPressed("RIGHT");
+      if (yAxis < -threshold) this.onArrowPressed("UP");
+      if (yAxis > threshold) this.onArrowPressed("DOWN");
     }
 
     if (gp.buttons[14]?.pressed) this.onArrowPressed("LEFT");  // D-Pad links
