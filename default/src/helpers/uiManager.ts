@@ -23,7 +23,6 @@ export function initUI(mainScene: Main) {
     if (reset) {
         reset.addEventListener("click", () => {
             SaveGame.clearAll();
-            SaveGame.saveSound("true");
             window.location.reload();
         });
     }
@@ -31,7 +30,7 @@ export function initUI(mainScene: Main) {
     // --- Sound ---
     if (soundBtn) {
         // Initialstatus setzen
-        const isSoundOn = SaveGame.loadSound() === "true";
+        const isSoundOn = SaveGame.loadSound() === "on";
         soundBtn.textContent = isSoundOn ? "🔊" : "🔇";
 
         soundBtn.addEventListener("click", () => {
@@ -44,17 +43,17 @@ export function initUI(mainScene: Main) {
 // Sound Umschalten
 // --------------------------
 function toggleSound(mainScene: Main, soundBtn: HTMLButtonElement) {
-    let isSoundOn = SaveGame.loadSound();
+    let sound = SaveGame.loadSound();
 
     if (mainScene.level?.backgroundSound instanceof HTMLAudioElement) {
-        if (isSoundOn === "false") {
+        if (sound === "off") {
             soundBtn.textContent = "🔊";
             mainScene.level.backgroundSound.play().catch(err => console.warn(err));
-            SaveGame.saveSound("true");
+            SaveGame.saveSound("on");
         } else {
             soundBtn.textContent = "🔇";
             mainScene.level.backgroundSound.pause();
-            SaveGame.saveSound("false");
+            SaveGame.saveSound("off");
         }
     }
 }
