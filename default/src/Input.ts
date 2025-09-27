@@ -19,10 +19,10 @@ export class Input {
   constructor() {
     this.heldDirections = [];
     this.keys = {
-      ArrowLeft: false,
-      ArrowRight: false,
-      ArrowUp: false,
-      ArrowDown: false,
+      // ArrowLeft: false,
+      // ArrowRight: false,
+      // ArrowUp: false,
+      // ArrowDown: false,
       KeyW: false,
       KeyA: false,
       KeyS: false,
@@ -39,10 +39,10 @@ export class Input {
       InputKey,
       typeof LEFT | typeof RIGHT | typeof UP | typeof DOWN | typeof SPACE | typeof ATTACK | typeof RELOAD | typeof ITEM1 | typeof ITEM2
     > = {
-      ArrowLeft: LEFT,
-      ArrowRight: RIGHT,
-      ArrowUp: UP,
-      ArrowDown: DOWN,
+      // ArrowLeft: LEFT,
+      // ArrowRight: RIGHT,
+      // ArrowUp: UP,
+      // ArrowDown: DOWN,
       KeyA: LEFT,
       KeyD: RIGHT,
       KeyW: UP,

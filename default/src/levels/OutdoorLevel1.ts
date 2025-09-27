@@ -25,10 +25,10 @@ export class OutdoorLevel1 extends Level {
   }) {
     // Ohne Sound
     // super(position);
-    
+
     // mit Sound
     super(position, "./sounds/levels/OutdoorLevel1.mp3", 0.4);
-    
+
     // Initialisierung des Sounds (abhängig vom SaveGame)
     this.initBackgroundSound();
 
@@ -61,7 +61,7 @@ export class OutdoorLevel1 extends Level {
     //** --- Prüfen, ob Item schon im Inventar ist, ansonsten erzeugen --- */
     if (!SaveGame.isInInventory("rodPurple")) {
       // erzeuge Item und lege position fest
-      const rodPurple = new Item(gridCells(7), gridCells(6), "rodPurple", "./sounds/items/item_01.mp3");
+      const rodPurple = new Item(gridCells(7), gridCells(6), "rodPurple");
       this.addChild(rodPurple);
     }
 
