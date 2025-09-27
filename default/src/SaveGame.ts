@@ -2,8 +2,9 @@ import { LevelId } from "./helpers/levelRegistry.js";
 import { InventoryItem, InventoryItemData } from "./objects/Inventory/Inventory.js";
 import { Vector2 } from "./Vector2.js";
 
-export type Overlay = "true" | "false";
-export type Sound = "on" | "off";
+export type OverlayType = "true" | "false";
+export type SoundType = "on" | "off";
+export type InputType = "keyboard" | "controller";
 
 export class SaveGame {
     private static inventoryKey = "inventory";
@@ -11,6 +12,7 @@ export class SaveGame {
     private static levelKey = "currentLevel";
     private static overlayKey = "overlaySeen";
     private static soundKey = "sound";
+    private static inputKey = "input";
 
     // --------- INVENTORY ----------
     static saveInventory(items: InventoryItemData[]) {
@@ -89,12 +91,12 @@ export class SaveGame {
     }
 
     // --------- OVERLAY ----------
-    static saveOverlay(seen: Overlay) {
+    static saveOverlay(seen: OverlayType) {
         localStorage.setItem(this.overlayKey, seen);
     }
 
     static loadOverlay() {
-        return localStorage.getItem(this.overlayKey) as Overlay;
+        return localStorage.getItem(this.overlayKey) as OverlayType;
     }
 
     static clearOverlay() {
@@ -102,16 +104,29 @@ export class SaveGame {
     }
 
     // --------- SOUND ----------
-    static saveSound(status: Sound) {
+    static saveSound(status: SoundType) {
         localStorage.setItem(this.soundKey, status);
     }
 
     static loadSound() {
-        return localStorage.getItem(this.soundKey) as Sound;
+        return localStorage.getItem(this.soundKey) as SoundType;
     }
 
     static clearSound() {
         localStorage.removeItem(this.soundKey);
+    }
+
+    // --------- INPUT ----------
+    static saveInput(status: InputType) {
+        localStorage.setItem(this.inputKey, status);
+    }
+
+    static loadInput() {
+        return localStorage.getItem(this.inputKey) as InputType;
+    }
+
+    static clearInput() {
+        localStorage.removeItem(this.inputKey);
     }
 
     // --------- ALL SAVE DATA ----------
@@ -121,11 +136,13 @@ export class SaveGame {
         this.clearOverlay();
         this.clearSound();
         this.clearLevel();
+        this.clearInput();
     }
 
     static initAll() {
         this.saveSound("on");
         this.saveLevel("OutdoorLevel1");
         this.saveOverlay("false");
+        this.saveInput("keyboard");
     }
 }
