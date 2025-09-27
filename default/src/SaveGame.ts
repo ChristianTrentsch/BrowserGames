@@ -1,11 +1,9 @@
 import { LevelId } from "./helpers/levelRegistry.js";
-import { resources } from "./Resource.js";
+import { InventoryItem, InventoryItemData } from "./objects/Inventory/Inventory.js";
 import { Vector2 } from "./Vector2.js";
 
-export interface InventoryItemData {
-    id: number;
-    imageKey: keyof typeof resources.images;
-}
+export type Overlay = "true" | "false";
+export type Sound = "on" | "off";
 
 export class SaveGame {
     private static inventoryKey = "inventory";
@@ -34,15 +32,12 @@ export class SaveGame {
     }
 
     // Prüft, ob ein Item mit dem angegebenen imageKey bereits im Inventar vorhanden ist
-    static isInInventory(imageKey: keyof typeof resources.images): boolean {
+    static isInInventory(imageKey: InventoryItem): boolean {
         const raw = localStorage.getItem(this.inventoryKey);
         if (!raw) return false;
 
         try {
-            const items: {
-                id: number;
-                imageKey: keyof typeof resources.images;
-            }[] = JSON.parse(raw);
+            const items = JSON.parse(raw) as InventoryItemData[];
 
             return items.some(item => item.imageKey === imageKey);
         } catch (err) {
@@ -52,7 +47,7 @@ export class SaveGame {
     }
 
     // --------- HERO POSITION ----------
-    static saveHero(levelId: string, pos: Vector2) {
+    static saveHero(levelId: LevelId, pos: Vector2) {
         const data = {
             levelId,
             x: pos.x,
@@ -61,12 +56,12 @@ export class SaveGame {
         localStorage.setItem(this.heroKey, JSON.stringify(data));
     }
 
-    static loadHero(expectedLevelId: string, defaultPos: Vector2): Vector2 {
+    static loadHero(expectedLevelId: LevelId, defaultPos: Vector2): Vector2 {
         const raw = localStorage.getItem(this.heroKey);
         if (!raw) return defaultPos;
 
         try {
-            const data = JSON.parse(raw) as { levelId: string; x: number; y: number };
+            const data = JSON.parse(raw) as { levelId: LevelId; x: number; y: number };
             if (data.levelId === expectedLevelId) {
                 return new Vector2(data.x, data.y);
             }
@@ -81,7 +76,7 @@ export class SaveGame {
     }
 
     // --------- LEVEL ----------
-    static saveLevel(levelId: string) {
+    static saveLevel(levelId: LevelId) {
         localStorage.setItem(this.levelKey, levelId);
     }
 
@@ -94,12 +89,12 @@ export class SaveGame {
     }
 
     // --------- OVERLAY ----------
-    static saveOverlay(seen: string) {
+    static saveOverlay(seen: Overlay) {
         localStorage.setItem(this.overlayKey, seen);
     }
 
     static loadOverlay() {
-        return localStorage.getItem(this.overlayKey);
+        return localStorage.getItem(this.overlayKey) as Overlay;
     }
 
     static clearOverlay() {
@@ -107,12 +102,12 @@ export class SaveGame {
     }
 
     // --------- SOUND ----------
-    static saveSound(status: string) {
+    static saveSound(status: Sound) {
         localStorage.setItem(this.soundKey, status);
     }
 
     static loadSound() {
-        return localStorage.getItem(this.soundKey);
+        return localStorage.getItem(this.soundKey) as Sound;
     }
 
     static clearSound() {
@@ -126,5 +121,11 @@ export class SaveGame {
         this.clearOverlay();
         this.clearSound();
         this.clearLevel();
+    }
+
+    static initAll() {
+        this.saveSound("on");
+        this.saveLevel("OutdoorLevel1");
+        this.saveOverlay("false");
     }
 }
