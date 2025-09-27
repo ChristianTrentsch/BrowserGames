@@ -5,12 +5,26 @@ import { Vector2 } from "../../Vector2.js";
 import { events, HERO_PICKS_UP_ITEM, HERO_USE_ITEM } from "../../Events.js";
 import { SaveGame } from "../../SaveGame.js";
 
+export type InventoryItem = "rodPurple" | "rodRed";
+
+export interface InventoryItemData {
+  id: number;
+  imageKey: InventoryItem;
+}
+
+export interface InventoryEvent {
+  imageKey: InventoryItem
+  position: Vector2
+  image: ResourceImageOptions
+  itemSound: HTMLAudioElement
+}
+
 export class Inventory extends GameObject {
   nextId: number;
   items: {
     id: number;
     image: ResourceImageOptions;
-    imageKey: keyof typeof resources.images;
+    imageKey: InventoryItem;
   }[];
 
   constructor() {
@@ -41,7 +55,7 @@ export class Inventory extends GameObject {
 
   ready() {
     // Inventory add item
-    events.on(HERO_PICKS_UP_ITEM, this, (data: { imageKey: keyof typeof resources.images }) => {
+    events.on(HERO_PICKS_UP_ITEM, this, (data: { imageKey: InventoryItem }) => {
       const { imageKey } = data;
 
       // Prüfen, ob Item schon vorhanden ist
