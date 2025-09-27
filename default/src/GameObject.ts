@@ -3,9 +3,6 @@ import { events } from "./Events.js";
 
 export type DrawLayer = "HUD" | "FLOOR";
 
-export const HUD = "HUD";
-export const FLOOR = "FLOOR";
-
 export class GameObject {
 
   position: Vector2;
@@ -69,7 +66,7 @@ export class GameObject {
   getDrawChildrenOrdered() {
     return [...this.children].sort((a, b) => {
       // always under feet
-      if (b.drawLayer === FLOOR) {
+      if (b.drawLayer === "FLOOR") {
         return 1;
       }
 

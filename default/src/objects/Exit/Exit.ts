@@ -1,4 +1,4 @@
-import { GameObject, FLOOR } from "../../GameObject.js";
+import { GameObject } from "../../GameObject.js";
 import { resources } from "../../Resource.js";
 import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
@@ -16,7 +16,7 @@ export class Exit extends GameObject {
       })
     );
 
-    this.drawLayer = FLOOR;
+    this.drawLayer = "FLOOR";
   }
 
   ready() {

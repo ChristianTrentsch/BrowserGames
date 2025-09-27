@@ -1,4 +1,4 @@
-import { GameObject, HUD } from "../../GameObject.js";
+import { GameObject } from "../../GameObject.js";
 import { ResourceImageOptions, resources } from "../../Resource.js";
 import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
@@ -30,7 +30,7 @@ export class Inventory extends GameObject {
   constructor() {
     super(new Vector2(0, 1));
 
-    this.drawLayer = HUD;
+    this.drawLayer = "HUD";
     this.nextId = 0;
 
     // Inventar laden

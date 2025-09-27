@@ -1,4 +1,4 @@
-import { GameObject, HUD } from "../../GameObject.js";
+import { GameObject } from "../../GameObject.js";
 import { resources } from "../../Resource.js";
 import { Vector2 } from "../../Vector2.js";
 import { Sprite } from "../../Sprite.js";
@@ -28,7 +28,7 @@ export class SpriteTextString extends GameObject {
     console.log(`SpriteTextString LOADED`, this);
 
     // Draw on top layer
-    this.drawLayer = HUD;
+    this.drawLayer = "HUD";
 
     // Create an array of words (because it helps with line wrapping later)
     const content = string ?? "Default";

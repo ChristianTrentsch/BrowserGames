@@ -2,7 +2,6 @@ import { Main } from "./objects/Main/Main.js";
 import { Vector2 } from "./Vector2.js";
 import { OutdoorLevel1 } from "./levels/OutdoorLevel1.js";
 import { GameLoop } from "./GameLoop.js";
-import { gridCells } from "./helpers/grid.js";
 import { SaveGame } from "./SaveGame.js";
 import { levelRegistry } from "./helpers/levelRegistry.js";
 import { initUI } from "./helpers/uiManager.js";

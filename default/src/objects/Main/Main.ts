@@ -1,4 +1,4 @@
-import { GameObject, HUD } from "../../GameObject.js";
+import { GameObject } from "../../GameObject.js";
 import { Camera } from "../../Camera.js";
 import { Input } from "../../Input.js";
 import { Inventory } from "../Inventory/Inventory.js";
@@ -75,7 +75,7 @@ export class Main extends GameObject {
 
   drawObjects(ctx: CanvasRenderingContext2D) {
     this.children.forEach((child) => {
-      if (child.drawLayer !== HUD) {
+      if (child.drawLayer !== "HUD") {
         child.draw(ctx, child.position.x, child.position.x);
       }
     });
@@ -83,7 +83,7 @@ export class Main extends GameObject {
 
   drawForeground(ctx: CanvasRenderingContext2D) {
     this.children.forEach((child) => {
-      if (child.drawLayer === HUD) {
+      if (child.drawLayer === "HUD") {
         child.draw(ctx, child.position.x, child.position.x);
       }
     });
