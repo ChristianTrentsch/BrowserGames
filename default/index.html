@@ -22,44 +22,12 @@
         Hier sind Bugs, unfertige Features und wackelige Pixel inklusive.
         Viel Spaß beim <strong>Testen</strong>!
       </p>
-
-      <h3 class="mt-3">Aktuelle Features</h3>
-
-      <ul class="list-group text-start mx-auto" style="max-width: 300px;">
-        <li class="list-group-item bg-dark text-light">
-          <strong>Player</strong>
-          <ul class="list-group list-group-flush ms-1">
-            <li class="list-group-item bg-dark text-light">Movement</li>
-            <li class="list-group-item bg-dark text-light">Item collect</li>
-            <li class="list-group-item bg-dark text-light">Interact with Npc</li>
-          </ul>
-        </li>
-        <li class="list-group-item bg-dark text-light">
-          <strong>NPC</strong>
-          <ul class="list-group list-group-flush ms-1">
-            <li class="list-group-item bg-dark text-light">Dialog start/skip </li>
-            <li class="list-group-item bg-dark text-light">Path block</li>
-          </ul>
-        </li>
-        <li class="list-group-item bg-dark text-light">
-          <strong>Spielwelt</strong>
-          <ul class="list-group list-group-flush ms-1">
-            <li class="list-group-item bg-dark text-light">Item show/hide</li>
-            <li class="list-group-item bg-dark text-light">Inventory show/save</li>
-            <li class="list-group-item bg-dark text-light">Heroposition save</li>
-            <li class="list-group-item bg-dark text-light">Level change/save</li>
-            <li class="list-group-item bg-dark text-light">Game reset</li>
-            <li class="list-group-item bg-dark text-light">Sound on/off</li>
-          </ul>
-        </li>
-      </ul>
-
       <button id="closeOverlay" class="btn btn-outline-light mt-3">Okay, los geht’s!</button>
     </div>
   </div>
 
   <!-- Spielfeld -->
-  <canvas class="mt-4" id="game-canvas" width="320" height="180"></canvas>
+  <canvas class="mt-3" id="game-canvas" width="320" height="180"></canvas>
 
   <!-- Steuerungserklärung -->
   <div class="p-2 steuerung bg-gradient text-light mx-auto">
@@ -72,15 +40,49 @@
     </p>
   </div>
 
-  <!-- Startseite -->
+  <!-- Startseite/Reset/Sound -->
   <div class="mt-4">
-    <a id="start" href="../index.html" class=" btn btn-outline-info btn-lg">
+    <a id="start" href="../index.html" class="btn btn-outline-info btn-lg m-1">
       🎮 Zurück zur Startseite
     </a>
-    <a id="reset" href="../default/index.html" class="btn btn-outline-danger btn-lg ms-2">
+    <a id="reset" href="../default/index.html" class="btn btn-outline-danger btn-lg m-1">
       🚧 Reset Game
     </a>
-    <button id="sound" class="btn btn-outline-light btn-lg ms-2">🔊</button>
+    <button id="sound" class="btn btn-outline-light btn-lg m-1">🔊</button>
+  </div>
+
+  <!-- aktuelle Features -->
+  <div class="mt-4 mb-4">
+    <h1 class="mt-3 text-light">aktuelle Features</h1>
+
+    <ul class="list-group text-start mx-auto" style="max-width: 300px;">
+      <li class="list-group-item bg-dark text-light">
+        <strong>Player</strong>
+        <ul class="list-group list-group-flush ms-1">
+          <li class="list-group-item bg-dark text-light">Movement/Animation</li>
+          <li class="list-group-item bg-dark text-light">Item collect</li>
+          <li class="list-group-item bg-dark text-light">Interact with Npc</li>
+        </ul>
+      </li>
+      <li class="list-group-item bg-dark text-light">
+        <strong>NPC</strong>
+        <ul class="list-group list-group-flush ms-1">
+          <li class="list-group-item bg-dark text-light">Dialog start/skip </li>
+          <li class="list-group-item bg-dark text-light">Path block</li>
+        </ul>
+      </li>
+      <li class="list-group-item bg-dark text-light">
+        <strong>Spielwelt</strong>
+        <ul class="list-group list-group-flush ms-1">
+          <li class="list-group-item bg-dark text-light">Item show/hide</li>
+          <li class="list-group-item bg-dark text-light">Inventory show/save</li>
+          <li class="list-group-item bg-dark text-light">Heroposition save</li>
+          <li class="list-group-item bg-dark text-light">Level change/save</li>
+          <li class="list-group-item bg-dark text-light">Game reset</li>
+          <li class="list-group-item bg-dark text-light">Sound on/off</li>
+        </ul>
+      </li>
+    </ul>
   </div>
 
   <script type="module" src="./dist/main.js"></script>
