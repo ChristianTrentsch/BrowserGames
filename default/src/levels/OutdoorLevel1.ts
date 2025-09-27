@@ -16,7 +16,7 @@ export class OutdoorLevel1 extends Level {
   background: Sprite;
   walls: Set<string>;
   heroStartPosition: Vector2;
-  defaultHeroPosition = new Vector2(gridCells(11), gridCells(3));
+  defaultHeroPosition = new Vector2(gridCells(8), gridCells(4));
   levelId: LevelId = "OutdoorLevel1";   // eindeutige ID
 
   constructor({ position, heroPosition }: {
