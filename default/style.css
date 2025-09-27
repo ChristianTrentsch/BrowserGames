@@ -3,6 +3,7 @@
   src: url("./images/fonts/Retro Gaming.ttf");
 }
 
+/* Extra small (xs) – default */
 @media (min-width: 0) {
   canvas,
   .steuerung {
@@ -10,6 +11,23 @@
   }
 }
 
+/* Small (sm) – ab 576px (Smartphones quer, kleine Tablets) */
+@media (min-width: 576px) {
+  canvas,
+  .steuerung {
+    width: 80% !important;
+  }
+}
+
+/* Medium (md) – ab 768px (Tablets hochkant) */
+@media (min-width: 768px) {
+  canvas,
+  .steuerung {
+    width: 75% !important;
+  }
+}
+
+/* Large (lg) – ab 992px (kleine Laptops, Standard-Desktops) */
 @media (min-width: 992px) {
   canvas,
   .steuerung {
@@ -17,17 +35,19 @@
   }
 }
 
-/* @media (min-width: 1200px) {
+/* Extra Large (xl) – ab 1200px (große Desktops) */
+@media (min-width: 1200px) {
   canvas,
   .steuerung {
-    width: 80% !important;
+    width: 90% !important;
   }
-} */
+}
 
+/* XXL – ab 1400px (sehr große Bildschirme) */
 @media (min-width: 1400px) {
   canvas,
   .steuerung {
-    width: 70% !important;
+    width: 80% !important;
   }
 }
 
