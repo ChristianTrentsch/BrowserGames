@@ -25,7 +25,7 @@ export class SpriteTextString extends GameObject {
   constructor(portraitFrame: number, string: string) {
     super(new Vector2(16, 96));
 
-    console.log(`SpriteTextString LOADED`, this);
+    // console.log(`SpriteTextString LOADED`, this);
 
     // Draw on top layer
     this.drawLayer = "HUD";
