@@ -1,17 +1,26 @@
 export interface ResourceOptions {
+  caveGround: string;
+  caveSky: string;
+  exit: string;
   hero: string;
+  knight: string;
+  nothing: string;
+  outdoorBush: string;
+  outdoorGround: string;
+  outdoorHouse: string;
+  outdoorSky: string;
+  outdoorSquare: string;
+  outdoorStone: string;
+  outdoorSwamp: string;
+  outdoorTree: string;
+  outdoorWater: string;
+  portraits: string;
   rodPurple: string;
   rodRed: string;
   shadow: string;
-  exit: string;
-  ground: string;
-  sky: string;
-  cave: string;
-  caveGround: string;
-  knight: string;
-  textBox: string;
   fontWhite: string;
-  portraits: string;
+  startGround: string;
+  textBox: string;
 };
 
 export interface ResourceImageOptions {
@@ -34,13 +43,25 @@ class Resources {
       shadow: "./images/sprites/shadow.png",
       knight: "./images/sprites/knight-sheet-1.png",
 
+      nothing: "./images/sprites/nothing.png",
+
       // Startlevel Images
-      ground: "./images/sprites/ground.png",
-      sky: "./images/sprites/sky.png",
+      startGround: "./images/sprites/start-ground.png",
+
+      // Outdoor Images
+      outdoorBush: "./images/sprites/outdoor-bush.png",
+      outdoorGround: "./images/sprites/outdoor-ground.png",
+      outdoorHouse: "./images/sprites/outdoor-house.png",
+      outdoorSky: "./images/sprites/outdoor-sky.png",
+      outdoorSquare: "./images/sprites/outdoor-square.png",
+      outdoorStone: "./images/sprites/outdoor-stone.png",
+      outdoorSwamp: "./images/sprites/outdoor-swamp.png",
+      outdoorTree: "./images/sprites/outdoor-tree.png",
+      outdoorWater: "./images/sprites/outdoor-water.png",
 
       // Cave Images
-      cave: "./images/sprites/cave.png",
       caveGround: "./images/sprites/cave-ground.png",
+      caveSky: "./images/sprites/cave-sky.png",
 
       // FLOOR
       exit: "./images/sprites/exit.png",
@@ -51,8 +72,8 @@ class Resources {
       portraits: "./images/sprites/portraits-sheet.png",
 
       // Items
-      rodPurple: "./images/sprites/rod-lila.png",
-      rodRed: "./images/sprites/rod-rot.png",
+      rodPurple: "./images/sprites/rod-purple.png",
+      rodRed: "./images/sprites/rod-red.png",
     };
 
     // A bucket to store all of our images
