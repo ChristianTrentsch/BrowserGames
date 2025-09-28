@@ -8,12 +8,16 @@ import {
   HERO_REQUESTS_ACTION,
   TEXTBOX_START,
   TEXTBOX_END,
+  HERO_ATTACK_ACTION,
 } from "../../Events.js";
 import { SpriteTextString } from "../SpriteTextString/SpriteTextString.js";
 import { Npc } from "../Npc/Npc.js";
 import { Level } from "../Level/Level.js";
 import { Vector2 } from "../../Vector2.js";
 import { SaveGame } from "../../SaveGame.js";
+import { Tree } from "../../levels/parts/Tree/Tree.js";
+import { Bush } from "../../levels/parts/Bush/Bush.js";
+import { Stone } from "../../levels/parts/Stone/Stone.js";
 
 export class Main extends GameObject {
   level: null | Level;
@@ -39,10 +43,11 @@ export class Main extends GameObject {
     });
 
     // Check for hero action
-    events.on(HERO_REQUESTS_ACTION, this, (withObject: Npc) => {
+    events.on(HERO_REQUESTS_ACTION, this, (withObject) => {
       if (typeof withObject.getContent === "function") {
-        const content = withObject.getContent();
+
         // max content length to fit in textbox sprite is 153
+        const content = withObject.getContent();
         const textbox = new SpriteTextString(content.portraitFrame, content.string);
 
         this.addChild(textbox);
@@ -54,6 +59,14 @@ export class Main extends GameObject {
           events.off(endingSub);
         });
       }
+    });
+
+    events.on(HERO_ATTACK_ACTION, this, (withObject) => {
+
+      if (withObject instanceof Tree || withObject instanceof Stone || withObject instanceof Bush) {
+        withObject.destroy();
+      }
+
     });
   }
 
