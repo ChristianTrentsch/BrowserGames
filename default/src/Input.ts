@@ -1,4 +1,4 @@
-import { Direction, InputKey, KeysState } from "./types.js";
+import { ActionKey, ArrowKey, Direction, InputKey, KeysState, WASDKey } from "./types.js";
 
 export const LEFT = "LEFT";
 export const RIGHT = "RIGHT";
@@ -16,7 +16,7 @@ export class Input {
   keys: KeysState;
   lastKeys: KeysState;
 
-  private keyToDirection: Record<InputKey, Direction> = {
+  private keyToDirection: Record<ArrowKey | WASDKey, Direction> = {
     ArrowLeft: LEFT,
     ArrowRight: RIGHT,
     ArrowUp: UP,
@@ -25,11 +25,6 @@ export class Input {
     KeyD: RIGHT,
     KeyW: UP,
     KeyS: DOWN,
-    Space: SPACE,
-    KeyE: ITEM1,
-    KeyQ: ITEM2,
-    KeyR: RELOAD,
-    KeyF: ATTACK,
   };
 
   private currentInputMode: "keyboard" | "controller" = "keyboard";
@@ -66,7 +61,11 @@ export class Input {
 
       if (key in this.keys) {
         this.keys[key] = true;
-        this.onArrowPressed(this.keyToDirection[key]);
+
+        // Nur wenn es eine Richtung ist
+        if (key in this.keyToDirection) {
+          this.onArrowPressed(this.keyToDirection[key as ArrowKey | WASDKey]);
+        }
       }
     });
 
@@ -75,7 +74,11 @@ export class Input {
       const key = e.code as InputKey;
       if (key in this.keys) {
         this.keys[key] = false;
-        this.onArrowReleased(this.keyToDirection[key]);
+
+        // Nur wenn es eine Richtung ist
+        if (key in this.keyToDirection) {
+          this.onArrowReleased(this.keyToDirection[key as ArrowKey | WASDKey]);
+        }
       }
     });
 
@@ -89,7 +92,7 @@ export class Input {
     });
   }
 
-  get direction() {
+  get direction(): Direction | undefined {
     return this.heldDirections[0];
   }
 
@@ -97,13 +100,11 @@ export class Input {
     // Diff the keys on previous frame to know when new ones are pressed
     this.lastKeys = { ...this.keys };
 
-    // console.log(this.currentInputMode);
-
     // Controller abfragen
     this.pollGamepad();
   }
 
-  getActionJustPressed(keyCode: InputKey) {
+  getActionJustPressed(keyCode: ActionKey) {
     let justPressed = false;
     if (this.keys[keyCode] && !this.lastKeys[keyCode]) {
       justPressed = true;
@@ -170,34 +171,32 @@ export class Input {
     if (gp.buttons[13]?.pressed) this.onArrowPressed("DOWN");  // D-Pad runter
 
     // 🎮 Buttons -> Aktionen (Xbox Mapping)
-    this.mapButton(gp.buttons[0], "Space", this.keyToDirection);  // A -> Interact
-    this.mapButton(gp.buttons[1], "KeyF", this.keyToDirection);   // B -> Attack
-    this.mapButton(gp.buttons[2], "KeyQ", this.keyToDirection);   // X -> Item2
-    this.mapButton(gp.buttons[3], "KeyE", this.keyToDirection);   // Y -> Item1
-    this.mapButton(gp.buttons[9], "KeyR", this.keyToDirection);   // Start -> Reload
+    this.mapButton(gp.buttons[0], "Space");  // A -> Interact
+    this.mapButton(gp.buttons[1], "KeyF");   // B -> Attack
+    this.mapButton(gp.buttons[2], "KeyQ");   // X -> Item2
+    this.mapButton(gp.buttons[3], "KeyE");   // Y -> Item1
+    this.mapButton(gp.buttons[9], "KeyR");   // Start -> Reload
   }
 
-  private mapButton(button: GamepadButton | undefined, key: InputKey, keyToDirection: Record<InputKey, Direction>) {
+  private mapButton(button: GamepadButton | undefined, key: InputKey) {
     if (!button) return;
 
     if (button.pressed) {
       if (!this.keys[key]) {
         this.keys[key] = true;
 
-        // Wenn der Key auch eine Richtung ist → Richtung aktivieren
-        const dir = keyToDirection[key];
-        if (dir) {
-          this.onArrowPressed(dir);
+        // Nur wenn es eine Richtung ist
+        if (key in this.keyToDirection) {
+          this.onArrowPressed(this.keyToDirection[key as ArrowKey | WASDKey]);
         }
       }
     } else {
       if (this.keys[key]) {
         this.keys[key] = false;
 
-        // Richtung ggf. wieder freigeben
-        const dir = keyToDirection[key];
-        if (dir) {
-          this.onArrowReleased(dir);
+        // Nur wenn es eine Richtung ist
+        if (key in this.keyToDirection) {
+          this.onArrowPressed(this.keyToDirection[key as ArrowKey | WASDKey]);
         }
       }
     }
