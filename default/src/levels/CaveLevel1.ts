@@ -37,7 +37,7 @@ export class CaveLevel1 extends Level {
 
     // Choose Background Image of your Level
     this.background = new Sprite({
-      resource: resources.images.cave,
+      resource: resources.images.caveSky,
       frameSize: new Vector2(320, 180),
       position: new Vector2(0, 0)
     });

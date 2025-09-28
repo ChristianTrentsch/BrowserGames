@@ -36,14 +36,14 @@ export class OutdoorLevel1 extends Level {
 
     // Choose Background Image of your Level
     this.background = new Sprite({
-      resource: resources.images.sky,
+      resource: resources.images.outdoorSky,
       frameSize: new Vector2(320, 180),
       position: new Vector2(0, 0)
     });
 
     // Choose actual Level Ground
     const groundSprite = new Sprite({
-      resource: resources.images.ground,
+      resource: resources.images.outdoorGround,
       frameSize: new Vector2(320, 180),
       position: new Vector2(0, 0)
     });
