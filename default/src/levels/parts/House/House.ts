@@ -2,10 +2,9 @@ import { GameObject } from "../../../GameObject.js";
 import { Sprite } from "../../../Sprite.js";
 import { Vector2 } from "../../../Vector2.js";
 import { resources } from "../../../Resource.js";
+import { getNextText, getRandomText } from "../../../helpers/levelPartsText.js";
 
 export class House extends GameObject {
-
-    textContent: string = "Ich bin ein Haus!";
 
     constructor(x: number, y: number) {
         super(new Vector2(x, y));
@@ -27,7 +26,8 @@ export class House extends GameObject {
         // Maybe expand with story flag logic, etc.
         return {
             portraitFrame: 1, // show first frame of npc sprite
-            string: this.textContent,
+            // string: getRandomText("House"),
+            string: getNextText("House"),
         };
     }
 }

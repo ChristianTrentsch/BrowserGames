@@ -34,9 +34,6 @@ import { Main } from "../Main/Main.js";
 import { Direction } from "../../types.js";
 import { SaveGame } from "../../SaveGame.js";
 import { InventoryEvent } from "../Inventory/Inventory.js";
-import { Npc } from "../Npc/Npc.js";
-import { Tree } from "../../levels/parts/Tree/Tree.js";
-import { Level } from "../Level/Level.js";
 
 export class Hero extends GameObject {
 
@@ -153,7 +150,7 @@ export class Hero extends GameObject {
         
         if (objAtPosition && !(objAtPosition instanceof Hero)) {
           // TODO: debug entfernen
-          console.log(this.facingDirection, objAtPosition);
+          // console.log(this.facingDirection, objAtPosition);
           events.emit(HERO_REQUESTS_ACTION, objAtPosition);
         }
       }
@@ -172,7 +169,7 @@ export class Hero extends GameObject {
         
         if (objAtPosition && !(objAtPosition instanceof Hero)) {
           // TODO: debug entfernen
-          console.log(this.facingDirection, objAtPosition);
+          // console.log(this.facingDirection, objAtPosition);
           events.emit(HERO_ATTACK_ACTION, objAtPosition);
         }
       }
