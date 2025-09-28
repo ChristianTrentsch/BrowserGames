@@ -93,9 +93,18 @@ export class Hero extends GameObject {
     events.on(TEXTBOX_START, this, () => {
       // Spieler sofort fixieren
       this.isLocked = true;
+    });
 
-      // Hero auf das aktuelle Tile snappen
-      this.destinationPosition = this.position.duplicate();
+    events.on(TEXTBOX_END, this, () => {
+      this.isLocked = false;
+    });
+  }
+
+  step(delta: number, root: Main) {
+    // Implement Hero specific logic here
+
+    // locked movement while in conversation with npc, etc.
+    if (this.isLocked) {
 
       // Held in Stand-Animation bringen
       if (this.body.animations) {
@@ -114,18 +123,6 @@ export class Hero extends GameObject {
             break;
         }
       }
-    });
-
-    events.on(TEXTBOX_END, this, () => {
-      this.isLocked = false;
-    });
-  }
-
-  step(delta: number, root: Main) {
-    // Implement Hero specific logic here
-
-    // locked movement while in conversation with npc, etc.
-    if (this.isLocked) {
       return;
     }
 
@@ -147,7 +144,7 @@ export class Hero extends GameObject {
           );
         });
 
-        
+
         if (objAtPosition && !(objAtPosition instanceof Hero)) {
           // TODO: debug entfernen
           // console.log(this.facingDirection, objAtPosition);
@@ -155,9 +152,9 @@ export class Hero extends GameObject {
         }
       }
     }
-    
+
     if (input.getActionJustPressed("KeyF")) {
-      
+
       // Look for an object at the next space (according to where Hero is facing)
       if (this.parent) {
         const objAtPosition = this.parent.children.find((child) => {
@@ -166,7 +163,7 @@ export class Hero extends GameObject {
           );
         });
 
-        
+
         if (objAtPosition && !(objAtPosition instanceof Hero)) {
           // TODO: debug entfernen
           // console.log(this.facingDirection, objAtPosition);
