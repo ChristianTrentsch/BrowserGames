@@ -32,7 +32,7 @@ const frameMap = new Map();
   "abcdefghijklmnopqrstuvwxyz",
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
   "0123456789 __",
-  ".!-,?'",
+  ".!-,?'äüöÄÜÖß",
 ]
   .join("")
   .split("")
