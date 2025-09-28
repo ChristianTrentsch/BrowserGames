@@ -1,1 +1,1 @@
-"use strict";import{OutdoorLevel1 as e}from"../levels/OutdoorLevel1.js";import{CaveLevel1 as o}from"../levels/CaveLevel1.js";export const levelRegistry={OutdoorLevel1:e,CaveLevel1:o};
+"use strict";import{OutdoorLevel1 as e}from"../levels/OutdoorLevel1.js";import{CaveLevel1 as o}from"../levels/CaveLevel1.js";import{StartLevel as t}from"../levels/StartLevel.js";export const levelRegistry={OutdoorLevel1:e,CaveLevel1:o,StartLevel:t};

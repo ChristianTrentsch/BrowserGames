@@ -142,6 +142,7 @@ export class SaveGame {
     static initAll() {
         this.saveSound("on");
         this.saveLevel("OutdoorLevel1");
+        // this.saveLevel("StartLevel");
         this.saveOverlay("false");
         this.saveInput("keyboard");
     }
