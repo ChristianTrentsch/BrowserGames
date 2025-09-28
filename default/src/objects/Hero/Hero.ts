@@ -20,6 +20,7 @@ import {
   HERO_REQUESTS_ACTION,
   TEXTBOX_START,
   TEXTBOX_END,
+  HERO_ATTACK_ACTION,
 } from "../../Events.js";
 
 import { GameObject } from "../../GameObject.js";
@@ -33,6 +34,9 @@ import { Main } from "../Main/Main.js";
 import { Direction } from "../../types.js";
 import { SaveGame } from "../../SaveGame.js";
 import { InventoryEvent } from "../Inventory/Inventory.js";
+import { Npc } from "../Npc/Npc.js";
+import { Tree } from "../../levels/parts/Tree/Tree.js";
+import { Level } from "../Level/Level.js";
 
 export class Hero extends GameObject {
 
@@ -90,7 +94,29 @@ export class Hero extends GameObject {
     });
 
     events.on(TEXTBOX_START, this, () => {
+      // Spieler sofort fixieren
       this.isLocked = true;
+
+      // Hero auf das aktuelle Tile snappen
+      this.destinationPosition = this.position.duplicate();
+
+      // Held in Stand-Animation bringen
+      if (this.body.animations) {
+        switch (this.facingDirection) {
+          case LEFT:
+            this.body.animations.play("standLeft");
+            break;
+          case RIGHT:
+            this.body.animations.play("standRight");
+            break;
+          case UP:
+            this.body.animations.play("standUp");
+            break;
+          case DOWN:
+            this.body.animations.play("standDown");
+            break;
+        }
+      }
     });
 
     events.on(TEXTBOX_END, this, () => {
@@ -115,7 +141,6 @@ export class Hero extends GameObject {
     // Check for input
     const input = root.input;
     if (input.getActionJustPressed("Space")) {
-      // console.log("HERO: Spacebar pressed");
 
       // Look for an object at the next space (according to where Hero is facing)
       if (this.parent) {
@@ -125,8 +150,30 @@ export class Hero extends GameObject {
           );
         });
 
-        if (objAtPosition) {
+        
+        if (objAtPosition && !(objAtPosition instanceof Hero)) {
+          // TODO: debug entfernen
+          console.log(this.facingDirection, objAtPosition);
           events.emit(HERO_REQUESTS_ACTION, objAtPosition);
+        }
+      }
+    }
+    
+    if (input.getActionJustPressed("KeyF")) {
+      
+      // Look for an object at the next space (according to where Hero is facing)
+      if (this.parent) {
+        const objAtPosition = this.parent.children.find((child) => {
+          return child.position.matches(
+            this.position.toNeighbor(this.facingDirection)
+          );
+        });
+
+        
+        if (objAtPosition && !(objAtPosition instanceof Hero)) {
+          // TODO: debug entfernen
+          console.log(this.facingDirection, objAtPosition);
+          events.emit(HERO_ATTACK_ACTION, objAtPosition);
         }
       }
     }
