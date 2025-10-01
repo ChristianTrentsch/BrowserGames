@@ -171,6 +171,7 @@ export class Hero extends GameObject {
     if (input.getActionJustPressed("KeyF")) {
 
       const slash = new SwordSlash(this.position, this.facingDirection);
+      // this.parent?.addChild(slash);
       this.addChild(slash);
 
       // console.log("Hero.ts | create SwordSlash", slash);

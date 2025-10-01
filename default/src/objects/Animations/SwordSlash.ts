@@ -17,9 +17,11 @@ export class SwordSlash extends GameObject {
     constructor(heroPosition: Vector2, facingDirection: Direction) {
         // Position abhängig von Hero + FacingDirection
         // const slashPos = heroPosition.toNeighbor(facing);
+        // super(heroPosition);
         super(new Vector2(0, 0));
         this.facingDirection = facingDirection;
 
+        this.drawLayer = "HUD";
         // console.log(resources.images.sword);
 
 
@@ -48,6 +50,8 @@ export class SwordSlash extends GameObject {
             }),
         });
         this.addChild(this.body);
+
+        this.playSoundSlice(0.2, 0.6);
 
         // Start-Animation abspielen
         if (this.body.animations) {
@@ -84,5 +88,27 @@ export class SwordSlash extends GameObject {
         // Cleanup
         super.destroy();
         // console.log("SwordSlash removed");
+    }
+
+    async playSoundSlice(startTime: number, endTime: number) {
+        const response = await fetch("./sounds/items/sword_attack01.mp3");
+        const arrayBuffer = await response.arrayBuffer();
+
+        const audioCtx = new AudioContext();
+        const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+        const source = audioCtx.createBufferSource();
+        source.buffer = audioBuffer;
+
+        // Lautstärkeregler (GainNode) erstellen
+        const gainNode = audioCtx.createGain();
+        gainNode.gain.value = 0.1; // 0.0 = stumm, 1.0 = volle Lautstärke
+
+        // Quelle → Gain → Lautsprecher
+        source.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        // slice ab startTime, für (endTime - startTime) Sekunden abspielen
+        source.start(0, startTime, endTime - startTime);
     }
 }
