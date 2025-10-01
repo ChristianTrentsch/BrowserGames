@@ -6,6 +6,9 @@ import { getNextText, getRandomText } from "../../../helpers/levelPartsText.js";
 
 export class Tree extends GameObject {
 
+    healthPoints = 4;
+    treeSprite: Sprite;
+
     constructor(x: number, y: number) {
         super(new Vector2(x, y));
 
@@ -16,12 +19,15 @@ export class Tree extends GameObject {
         });
         this.addChild(shadow);
 
-        const tree = new Sprite({
+        this.treeSprite = new Sprite({
             resource: resources.images.outdoorTree,
             frameSize: new Vector2(16, 32),
             position: new Vector2(0, -15),
+            hFrames: 4,
+            vFrames: 1,
+            frame: 0 // intakter Baum
         })
-        this.addChild(tree);
+        this.addChild(this.treeSprite);
 
         this.isSolid = true;
         // this.drawLayer = "FLOOR";
@@ -29,6 +35,61 @@ export class Tree extends GameObject {
     }
 
     ready() { }
+
+    step(delta: number) {
+        if (this.healthPoints === 3) {
+            // Sprite wechseln wenn nur noch 3 HP
+            this.removeChild(this.treeSprite);
+
+            this.treeSprite = new Sprite({
+                resource: resources.images.outdoorTree,
+                frameSize: new Vector2(16, 32),
+                position: new Vector2(0, -15),
+                hFrames: 4,
+                vFrames: 1,
+                frame: 1 // leicht beschädigter Baum
+            });
+            this.addChild(this.treeSprite);
+        }
+        else if (this.healthPoints === 2) {
+            // Sprite wechseln wenn nur noch 2 HP
+            this.removeChild(this.treeSprite);
+
+            this.treeSprite = new Sprite({
+                resource: resources.images.outdoorTree,
+                frameSize: new Vector2(16, 32),
+                position: new Vector2(0, -15),
+                hFrames: 4,
+                vFrames: 1,
+                frame: 2 // beschädigter Baum
+            });
+            this.addChild(this.treeSprite);
+        }
+        else if (this.healthPoints === 1) {
+            // Sprite wechseln wenn nur noch 1 HP
+            this.removeChild(this.treeSprite);
+
+            this.treeSprite = new Sprite({
+                resource: resources.images.outdoorTree,
+                frameSize: new Vector2(16, 32),
+                position: new Vector2(0, -15),
+                hFrames: 4,
+                vFrames: 1,
+                frame: 3 // kaputter Baum
+            });
+            this.addChild(this.treeSprite);
+        }
+        
+
+        if (this.healthPoints <= 0) {
+            this.destroy();
+        }
+    }
+
+    destroy() {
+        // Cleanup
+        super.destroy();
+    }
 
     getContent() {
         // Maybe expand with story flag logic, etc.

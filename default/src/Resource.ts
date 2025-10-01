@@ -50,14 +50,14 @@ class Resources {
       startGround: "./images/sprites/start-ground.png",
 
       // Outdoor Images
-      outdoorBush: "./images/sprites/outdoor/outdoor-bush.png",
+      outdoorBush: "./images/sprites/outdoor/outdoor-bush_new.png",
       outdoorGround: "./images/sprites/outdoor/outdoor-ground-big.png",
       outdoorHouse: "./images/sprites/outdoor/outdoor-house.png",
       outdoorSky: "./images/sprites/outdoor/outdoor-sky.png",
       outdoorSquare: "./images/sprites/outdoor/outdoor-square.png",
-      outdoorStone: "./images/sprites/outdoor/outdoor-stone.png",
+      outdoorStone: "./images/sprites/outdoor/outdoor-stone_new.png",
       outdoorSwamp: "./images/sprites/outdoor/outdoor-swamp.png",
-      outdoorTree: "./images/sprites/outdoor/outdoor-tree.png",
+      outdoorTree: "./images/sprites/outdoor/outdoor-tree_new.png",
       outdoorWater: "./images/sprites/outdoor/outdoor-water.png",
 
       // Cave Images

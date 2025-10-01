@@ -62,9 +62,7 @@ export class Main extends GameObject {
 
     events.on(HERO_ATTACK_ACTION, this, (withObject) => {
       if (withObject instanceof Tree || withObject instanceof Stone || withObject instanceof Bush) {
-        console.log("Main.ts | events.on HERO_ATTACK_ACTION", withObject);
-
-        withObject.destroy();
+        withObject.healthPoints -= 1;
       }
     });
   }

@@ -58,15 +58,35 @@ export class OutdoorLevel1 extends Level {
     const exit = new Exit(gridCells(10), gridCells(3));
     this.addChild(exit);
 
+
+
     this.addChild(new Bush(80, 48));
+
+
+    this.addChild(new Bush(gridCells(4), gridCells(8)));
+    this.addChild(new Bush(gridCells(5), gridCells(8)));
+    this.addChild(new Bush(gridCells(7), gridCells(8)));
+    this.addChild(new Tree(gridCells(8), gridCells(8)));
+
+    this.addChild(new Tree(gridCells(8), gridCells(9)));
+    this.addChild(new Tree(gridCells(4), gridCells(9)));
+    this.addChild(new Tree(gridCells(5), gridCells(9)));
+
+    this.addChild(new Tree(gridCells(4), gridCells(10)));
+    this.addChild(new Bush(gridCells(5), gridCells(10)));
+    this.addChild(new Tree(gridCells(6), gridCells(10)));
+
+
 
     this.addChild(new Tree(64, 48));
     this.addChild(new Tree(208, 64));
     this.addChild(new Tree(224, 32));
     
-    this.addChild(new Stone(192, 96));
-    this.addChild(new Stone(208, 96));
-    this.addChild(new Stone(224, 96));
+    this.addChild(new Stone(gridCells(12), gridCells(6)));
+    this.addChild(new Stone(gridCells(13), gridCells(6)));
+    this.addChild(new Stone(gridCells(14), gridCells(6)));
+    this.addChild(new Water(gridCells(12), gridCells(7)));
+    this.addChild(new Water(gridCells(13), gridCells(7)));
     
     this.addChild(new Square(64, 64));
     this.addChild(new Square(64, 80));
@@ -76,8 +96,7 @@ export class OutdoorLevel1 extends Level {
     this.addChild(new Square(128, 48));
     this.addChild(new Square(144, 48));
 
-    this.addChild(new Water(128, 80));
-    this.addChild(new Water(144, 80));
+    
 
     this.addChild(new House(224, 64));
 

@@ -62,25 +62,28 @@ export class SwordSlash extends GameObject {
         });
         this.addChild(this.body);
 
-        // Zufällig einen Slice auswählen
-        const randomSlice = SwordSlash.attackSlices[
-            Math.floor(Math.random() * SwordSlash.attackSlices.length)
-        ];
+        // console.log(SwordSlash.attackSlices);
+        
 
-        // Check if sound is on
-        if (randomSlice && SaveGame.loadSound() === "on") {
-            this.playSoundSlice(randomSlice[0], randomSlice[1]);
-        }
+        // // Zufällig einen Slice auswählen
+        // const randomSlice = SwordSlash.attackSlices[
+        //     Math.floor(Math.random() * (SwordSlash.attackSlices.length - 1))
+        // ];
 
-        // // Nächsten Slice aus Array holen
-        // const slice = SwordSlash.attackSlices[SwordSlash.sliceIndex];
-        // if (slice) {
-        //     console.log(slice);
-        //     this.playSoundSlice(slice[0], slice[1]);
+        // // Check if sound is on
+        // if (randomSlice && SaveGame.loadSound() === "on") {
+        //     this.playSoundSlice(randomSlice[0], randomSlice[1]);
         // }
 
-        // // Index hochzählen + zurücksetzen wenn Ende erreicht
-        // SwordSlash.sliceIndex = (SwordSlash.sliceIndex + 1) % SwordSlash.attackSlices.length;
+        // Nächsten Slice aus Array holen
+        const slice = SwordSlash.attackSlices[SwordSlash.sliceIndex];
+        if (slice) {
+            console.log(slice);
+            this.playSoundSlice(slice[0], slice[1]);
+        }
+
+        // Index hochzählen + zurücksetzen wenn Ende erreicht
+        SwordSlash.sliceIndex = (SwordSlash.sliceIndex + 1) % SwordSlash.attackSlices.length;
 
         // Start-Animation abspielen
         if (this.body.animations) {

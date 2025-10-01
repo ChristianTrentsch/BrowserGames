@@ -6,6 +6,9 @@ import { getNextText, getRandomText } from "../../../helpers/levelPartsText.js";
 
 export class Bush extends GameObject {
 
+    healthPoints = 2;
+    bushSprite: Sprite;
+
     constructor(x: number, y: number) {
         super(new Vector2(x, y));
 
@@ -16,18 +19,47 @@ export class Bush extends GameObject {
         });
         this.addChild(shadow);
 
-        const tree = new Sprite({
+        this.bushSprite = new Sprite({
             resource: resources.images.outdoorBush,
             frameSize: new Vector2(16, 16),
-            position: new Vector2(0, -1),
+            position: new Vector2(0, 0),
+            hFrames: 2,
+            vFrames: 1,
+            frame: 0
         })
-        this.addChild(tree);
+        this.addChild(this.bushSprite);
 
         this.isSolid = true;
         // this.drawLayer = "FLOOR";
     }
 
     ready() { }
+
+    step(delta: number) {
+        if (this.healthPoints === 1) {
+            // Sprite wechseln wenn nur noch 1 HP
+            this.removeChild(this.bushSprite);
+
+            this.bushSprite = new Sprite({
+                resource: resources.images.outdoorBush,
+                frameSize: new Vector2(16, 16),
+                position: new Vector2(0, 0),
+                hFrames: 2,
+                vFrames: 1,
+                frame: 1 // kaputter Busch
+            });
+            this.addChild(this.bushSprite);
+        }
+
+        if (this.healthPoints <= 0) {
+            this.destroy();
+        }
+    }
+
+    destroy() {
+        // Cleanup
+        super.destroy();
+    }
 
     getContent() {
         // Maybe expand with story flag logic, etc.
