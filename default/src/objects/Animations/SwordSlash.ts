@@ -20,7 +20,7 @@ export class SwordSlash extends GameObject {
         super(new Vector2(0, 0));
         this.facingDirection = facingDirection;
 
-        console.log(resources.images.sword);
+        // console.log(resources.images.sword);
 
 
         // Sprite oder Animationszuweisung hier
@@ -85,6 +85,6 @@ export class SwordSlash extends GameObject {
     destroy() {
         // Cleanup
         super.destroy();
-        console.log("SwordSlash removed");
+        // console.log("SwordSlash removed");
     }
 }
