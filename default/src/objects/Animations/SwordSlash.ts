@@ -128,7 +128,7 @@ export class SwordSlash extends GameObject {
 
         // Lautstärkeregler (GainNode) erstellen
         const gainNode = audioCtx.createGain();
-        gainNode.gain.value = 0.3; // 0.0 = stumm, 1.0 = volle Lautstärke
+        gainNode.gain.value = 0.2; // 0.0 = stumm, 1.0 = volle Lautstärke
 
         // Quelle → Gain → Lautsprecher
         source.connect(gainNode);
