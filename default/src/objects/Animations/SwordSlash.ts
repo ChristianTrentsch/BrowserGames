@@ -14,6 +14,16 @@ export class SwordSlash extends GameObject {
     facingDirection: Direction;
     body: Sprite;
 
+    // Array mit Start/End-Zeiten (Sekunden) für jeden Sound
+    private static attackSlices: [number, number][] = [
+        [0.2, 0.6],  // Slice 1
+        [3.0, 3.4],  // Slice 2
+        [5.6, 6.0],  // Slice 3
+    ];
+
+    // Merkt sich den Index für die nächste Attacke
+    private static sliceIndex: number = 0;
+
     constructor(heroPosition: Vector2, facingDirection: Direction) {
         // Position abhängig von Hero + FacingDirection
         // const slashPos = heroPosition.toNeighbor(facing);
@@ -51,7 +61,23 @@ export class SwordSlash extends GameObject {
         });
         this.addChild(this.body);
 
-        this.playSoundSlice(0.2, 0.6);
+        // Zufällig einen Slice auswählen
+        const randomSlice = SwordSlash.attackSlices[
+            Math.floor(Math.random() * SwordSlash.attackSlices.length)
+        ];
+        if (randomSlice) {
+            this.playSoundSlice(randomSlice[0], randomSlice[1]);
+        }
+        
+        // // Nächsten Slice aus Array holen
+        // const slice = SwordSlash.attackSlices[SwordSlash.sliceIndex];
+        // if (slice) {
+        //     console.log(slice);
+        //     this.playSoundSlice(slice[0], slice[1]);
+        // }
+
+        // // Index hochzählen + zurücksetzen wenn Ende erreicht
+        // SwordSlash.sliceIndex = (SwordSlash.sliceIndex + 1) % SwordSlash.attackSlices.length;
 
         // Start-Animation abspielen
         if (this.body.animations) {
@@ -102,7 +128,7 @@ export class SwordSlash extends GameObject {
 
         // Lautstärkeregler (GainNode) erstellen
         const gainNode = audioCtx.createGain();
-        gainNode.gain.value = 0.1; // 0.0 = stumm, 1.0 = volle Lautstärke
+        gainNode.gain.value = 0.3; // 0.0 = stumm, 1.0 = volle Lautstärke
 
         // Quelle → Gain → Lautsprecher
         source.connect(gainNode);
