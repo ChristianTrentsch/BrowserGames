@@ -17,7 +17,7 @@ export class CaveLevel1 extends Level {
   background: Sprite;
   walls: Set<string>;
   heroStartPosition: Vector2;
-  defaultHeroPosition = new Vector2(gridCells(6), gridCells(1));
+  defaultHeroPosition = new Vector2(gridCells(5), gridCells(2));
   levelId: LevelId = "CaveLevel1";   // eindeutige ID
 
   constructor({ position, heroPosition }: {

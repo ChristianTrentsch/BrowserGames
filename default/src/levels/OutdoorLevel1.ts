@@ -50,7 +50,7 @@ export class OutdoorLevel1 extends Level {
     // Choose actual Level Ground
     const groundSprite = new Sprite({
       resource: resources.images.outdoorGround,
-      frameSize: new Vector2(320, 180),
+      frameSize: new Vector2(1600, 900),
       position: new Vector2(0, 0)
     });
     this.addChild(groundSprite);
@@ -95,20 +95,30 @@ export class OutdoorLevel1 extends Level {
     }
 
     // Collision Preperation
+    // const wallDefinitions = {
+    //   right: this.generateWall(new Vector2(256, 32), new Vector2(256, 96), TILE_SIZE, "right"),
+    //   left: this.generateWall(new Vector2(32, 32), new Vector2(32, 96), TILE_SIZE, "left"),
+    //   top: this.generateWall(new Vector2(48, 16), new Vector2(240, 16), TILE_SIZE, "top"),
+    //   bottom: this.generateWall(new Vector2(48, 112), new Vector2(240, 112), TILE_SIZE, "bottom"),
+    //   // tree: ["64,48", "208,64", "224,32"],
+    //   // stone: ["192,96", "208,96", "224,96"],
+    //   // squares: ["64,64", "64,80", "80,64", "80,80", "128,48", "144,48"],
+    //   // water: ["112,80", "128,80", "144,80", "160,80"],
+    //   // house: ["224,64"],
+    //   // nothing: ["240,32", "96,32", "80,32", "64,32", "48,32",],
+    // };
+
+    // BIG LEVEL WALLS
     const wallDefinitions = {
-      right: this.generateWall(new Vector2(256, 32), new Vector2(256, 96), TILE_SIZE, "right"),
-      left: this.generateWall(new Vector2(32, 32), new Vector2(32, 96), TILE_SIZE, "left"),
-      top: this.generateWall(new Vector2(48, 16), new Vector2(240, 16), TILE_SIZE, "top"),
-      bottom: this.generateWall(new Vector2(48, 112), new Vector2(240, 112), TILE_SIZE, "bottom"),
-      // tree: ["64,48", "208,64", "224,32"],
-      // stone: ["192,96", "208,96", "224,96"],
-      // squares: ["64,64", "64,80", "80,64", "80,80", "128,48", "144,48"],
-      // water: ["112,80", "128,80", "144,80", "160,80"],
-      // house: ["224,64"],
-      // nothing: ["240,32", "96,32", "80,32", "64,32", "48,32",],
+      right: this.generateWall(new Vector2(1568, 32), new Vector2(1568, 832), TILE_SIZE, "right"),
+      left: this.generateWall(new Vector2(16, 32), new Vector2(16, 832), TILE_SIZE, "left"),
+      top: this.generateWall(new Vector2(32, 16), new Vector2(1568, 16), TILE_SIZE, "top"),
+      bottom: this.generateWall(new Vector2(32, 848), new Vector2(1568, 848), TILE_SIZE, "bottom"),
     };
 
+    
     this.walls = new Set(Object.values(wallDefinitions).flat());
+    // this.walls = new Set();
   }
 
   ready() {
@@ -121,7 +131,7 @@ export class OutdoorLevel1 extends Level {
         CHANGE_LEVEL,
         new CaveLevel1({
           position: new Vector2(gridCells(0), gridCells(0)),
-          heroPosition: new Vector2(gridCells(6), gridCells(1)), // feste Startposition
+          heroPosition: new Vector2(gridCells(5), gridCells(2)), // feste Startposition
         })
       );
     });
