@@ -39,7 +39,7 @@ class Resources {
     // Everything we want to load
     this.toLoad = {
       // Player/Npc
-      hero: "./images/sprites/hero-sheet.png",
+      hero: "./images/sprites/new-hero-sheet.png",
       shadow: "./images/sprites/shadow.png",
       knight: "./images/sprites/knight-sheet-1.png",
 
@@ -49,19 +49,19 @@ class Resources {
       startGround: "./images/sprites/start-ground.png",
 
       // Outdoor Images
-      outdoorBush: "./images/sprites/outdoor-bush.png",
-      outdoorGround: "./images/sprites/outdoor-ground.png",
-      outdoorHouse: "./images/sprites/outdoor-house.png",
-      outdoorSky: "./images/sprites/outdoor-sky.png",
-      outdoorSquare: "./images/sprites/outdoor-square.png",
-      outdoorStone: "./images/sprites/outdoor-stone.png",
-      outdoorSwamp: "./images/sprites/outdoor-swamp.png",
-      outdoorTree: "./images/sprites/outdoor-tree.png",
-      outdoorWater: "./images/sprites/outdoor-water.png",
+      outdoorBush: "./images/sprites/outdoor/outdoor-bush.png",
+      outdoorGround: "./images/sprites/outdoor/outdoor-ground-big.png",
+      outdoorHouse: "./images/sprites/outdoor/outdoor-house.png",
+      outdoorSky: "./images/sprites/outdoor/outdoor-sky.png",
+      outdoorSquare: "./images/sprites/outdoor/outdoor-square.png",
+      outdoorStone: "./images/sprites/outdoor/outdoor-stone.png",
+      outdoorSwamp: "./images/sprites/outdoor/outdoor-swamp.png",
+      outdoorTree: "./images/sprites/outdoor/outdoor-tree.png",
+      outdoorWater: "./images/sprites/outdoor/outdoor-water.png",
 
       // Cave Images
-      caveGround: "./images/sprites/cave-ground.png",
-      caveSky: "./images/sprites/cave-sky.png",
+      caveGround: "./images/sprites/cave/cave-ground.png",
+      caveSky: "./images/sprites/cave/cave-sky.png",
 
       // FLOOR
       exit: "./images/sprites/exit.png",
