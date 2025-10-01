@@ -53,8 +53,6 @@ export class SwordSlash extends GameObject {
         if (this.body.animations) {
             switch (this.facingDirection) {
                 case LEFT:
-                    console.log("attackWalkLeft");
-
                     this.body.animations.play("attackWalkLeft");
                     break;
                 case RIGHT:
