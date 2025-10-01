@@ -17,7 +17,7 @@ export class Swamp extends GameObject {
         this.addChild(tree);
 
         this.isSolid = true;
-        // this.drawLayer = "FLOOR";
+        this.drawLayer = "FLOOR";
     }
 
     ready() { }
