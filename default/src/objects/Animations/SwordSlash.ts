@@ -8,6 +8,7 @@ import { resources } from "../../Resource.js";
 import { Animations } from "../../Animations.js";
 import { FrameIndexPattern } from "../../FrameIndexPattern.js";
 import { WALK_LEFT, WALK_DOWN, WALK_UP, WALK_RIGHT, STAND_LEFT, STAND_DOWN, STAND_UP, STAND_RIGHT, PICK_UP_DOWN, ATTACK_WALK_DOWN, ATTACK_WALK_LEFT, ATTACK_WALK_RIGHT, ATTACK_WALK_UP } from "../Hero/heroAnimations.js";
+import { SaveGame } from "../../SaveGame.js";
 
 export class SwordSlash extends GameObject {
     lifetime: number = 480; // lebt 250ms
@@ -65,10 +66,12 @@ export class SwordSlash extends GameObject {
         const randomSlice = SwordSlash.attackSlices[
             Math.floor(Math.random() * SwordSlash.attackSlices.length)
         ];
-        if (randomSlice) {
+
+        // Check if sound is on
+        if (randomSlice && SaveGame.loadSound() === "on") {
             this.playSoundSlice(randomSlice[0], randomSlice[1]);
         }
-        
+
         // // Nächsten Slice aus Array holen
         // const slice = SwordSlash.attackSlices[SwordSlash.sliceIndex];
         // if (slice) {
