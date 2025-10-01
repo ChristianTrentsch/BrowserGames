@@ -21,6 +21,7 @@ export interface ResourceOptions {
   fontWhite: string;
   startGround: string;
   textBox: string;
+  sword: string;
 };
 
 export interface ResourceImageOptions {
@@ -74,6 +75,7 @@ class Resources {
       // Items
       rodPurple: "./images/sprites/rod-purple.png",
       rodRed: "./images/sprites/rod-red.png",
+      sword: "./images/sprites/sword_experimental.png",
     };
 
     // A bucket to store all of our images
