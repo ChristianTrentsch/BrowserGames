@@ -1,6 +1,26 @@
 import { FrameIndexPattern } from "./FrameIndexPattern";
 
-export type AnimationKey = "walkLeft" | "walkDown" | "walkUp" | "walkRight" | "standLeft" | "standDown" | "standUp" | "standRight" | "pickUpDown"
+export type AnimationKey = "walkLeft"
+  | "walkDown"
+  | "walkUp"
+  | "walkRight"
+  | "standLeft"
+  | "standDown"
+  | "standUp"
+  | "standRight"
+  | "pickUpDown"
+  | "damageDown"
+  | "damageRight"
+  | "damageUp"
+  | "damageLeft"
+  | "attackWalkDown"
+  | "attackWalkRight"
+  | "attackWalkUp"
+  | "attackWalkLeft"
+  | "attackStandDown"
+  | "attackStandRight"
+  | "attackStandUp"
+  | "attackStandLeft"
 
 export class Animations {
   patterns: Record<AnimationKey, FrameIndexPattern>;
