@@ -11,7 +11,6 @@ import {
   HERO_ATTACK_ACTION,
 } from "../../Events.js";
 import { SpriteTextString } from "../SpriteTextString/SpriteTextString.js";
-import { Npc } from "../Npc/Npc.js";
 import { Level } from "../Level/Level.js";
 import { Vector2 } from "../../Vector2.js";
 import { SaveGame } from "../../SaveGame.js";
@@ -62,11 +61,11 @@ export class Main extends GameObject {
     });
 
     events.on(HERO_ATTACK_ACTION, this, (withObject) => {
-
       if (withObject instanceof Tree || withObject instanceof Stone || withObject instanceof Bush) {
+        console.log("Main.ts | events.on HERO_ATTACK_ACTION", withObject);
+
         withObject.destroy();
       }
-
     });
   }
 

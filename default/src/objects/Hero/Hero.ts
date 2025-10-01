@@ -11,6 +11,14 @@ import {
   WALK_RIGHT,
   WALK_UP,
   PICK_UP_DOWN,
+  DAMAGE_DOWN,
+  DAMAGE_RIGHT,
+  DAMAGE_UP,
+  DAMAGE_LEFT,
+  ATTACK_WALK_DOWN,
+  ATTACK_WALK_RIGHT,
+  ATTACK_WALK_UP,
+  ATTACK_WALK_LEFT,
 } from "./heroAnimations.js";
 
 import {
@@ -34,6 +42,7 @@ import { Main } from "../Main/Main.js";
 import { Direction } from "../../types.js";
 import { SaveGame } from "../../SaveGame.js";
 import { InventoryEvent } from "../Inventory/Inventory.js";
+import { SwordSlash } from "../Animations/SwordSlash.js";
 
 export class Hero extends GameObject {
 
@@ -61,7 +70,7 @@ export class Hero extends GameObject {
       position: new Vector2(-8, -19),
       frameSize: new Vector2(32, 32),
       hFrames: 3,
-      vFrames: 8,
+      vFrames: 12,
       frame: 1,
       animations: new Animations({
         walkLeft: new FrameIndexPattern(WALK_LEFT),
@@ -73,6 +82,14 @@ export class Hero extends GameObject {
         standUp: new FrameIndexPattern(STAND_UP),
         standRight: new FrameIndexPattern(STAND_RIGHT),
         pickUpDown: new FrameIndexPattern(PICK_UP_DOWN),
+        // damageDown: new FrameIndexPattern(DAMAGE_DOWN),
+        // damageRight: new FrameIndexPattern(DAMAGE_RIGHT),
+        // damageUp: new FrameIndexPattern(DAMAGE_UP),
+        // damageLeft: new FrameIndexPattern(DAMAGE_LEFT),
+        attackWalkDown: new FrameIndexPattern(ATTACK_WALK_DOWN),
+        attackWalkRight: new FrameIndexPattern(ATTACK_WALK_RIGHT),
+        attackWalkUp: new FrameIndexPattern(ATTACK_WALK_UP),
+        attackWalkLeft: new FrameIndexPattern(ATTACK_WALK_LEFT),
       }),
     });
     this.addChild(this.body);
@@ -144,18 +161,20 @@ export class Hero extends GameObject {
           );
         });
 
-
         if (objAtPosition && !(objAtPosition instanceof Hero)) {
-          // TODO: debug entfernen
-          // console.log(this.facingDirection, objAtPosition);
           events.emit(HERO_REQUESTS_ACTION, objAtPosition);
         }
       }
     }
 
+    // ATTACK Button
     if (input.getActionJustPressed("KeyF")) {
 
-      // Look for an object at the next space (according to where Hero is facing)
+      const slash = new SwordSlash(this.position, this.facingDirection);
+      this.addChild(slash);
+
+      // console.log("Hero.ts | create SwordSlash", slash);
+
       if (this.parent) {
         const objAtPosition = this.parent.children.find((child) => {
           return child.position.matches(
@@ -163,10 +182,7 @@ export class Hero extends GameObject {
           );
         });
 
-
-        if (objAtPosition && !(objAtPosition instanceof Hero)) {
-          // TODO: debug entfernen
-          // console.log(this.facingDirection, objAtPosition);
+        if (objAtPosition) {
           events.emit(HERO_ATTACK_ACTION, objAtPosition);
         }
       }
@@ -221,24 +237,23 @@ export class Hero extends GameObject {
 
     let nextX = this.destinationPosition.x;
     let nextY = this.destinationPosition.y;
-    const grideSize = TILE_SIZE;
 
     if (this.body.animations) {
       switch (input.direction) {
         case LEFT:
-          nextX -= grideSize;
+          nextX -= TILE_SIZE;
           this.body.animations.play("walkLeft");
           break;
         case RIGHT:
-          nextX += grideSize;
+          nextX += TILE_SIZE;
           this.body.animations.play("walkRight");
           break;
         case UP:
-          nextY -= grideSize;
+          nextY -= TILE_SIZE;
           this.body.animations.play("walkUp");
           break;
         case DOWN:
-          nextY += grideSize;
+          nextY += TILE_SIZE;
           this.body.animations.play("walkDown");
           break;
       }
