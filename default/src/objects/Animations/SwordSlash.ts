@@ -77,8 +77,8 @@ export class SwordSlash extends GameObject {
 
         // Nächsten Slice aus Array holen
         const slice = SwordSlash.attackSlices[SwordSlash.sliceIndex];
-        if (slice) {
-            console.log(slice);
+        if (slice && SaveGame.loadSound() === "on") {
+            // console.log(slice);
             this.playSoundSlice(slice[0], slice[1]);
         }
 
