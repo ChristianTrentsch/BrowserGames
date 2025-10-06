@@ -38,7 +38,7 @@ export class OutdoorLevel1 extends Level {
     // Initialisierung des Sounds (abhängig vom SaveGame)
     this.initBackgroundSound();
 
-    console.log(`OutdoorLevel1 LOADED`, this);
+    // console.log(`OutdoorLevel1 LOADED`, this);
 
     // Choose Background Image of your Level
     this.background = new Sprite({

@@ -33,7 +33,7 @@ export class CaveLevel1 extends Level {
     // Initialisierung des Sounds (abhängig vom SaveGame)
     this.initBackgroundSound();
 
-    console.log(`CaveLevel1 LOADED`, this);
+    // console.log(`CaveLevel1 LOADED`, this);
 
     // Choose Background Image of your Level
     this.background = new Sprite({
