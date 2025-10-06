@@ -5,6 +5,14 @@ import { Vector2 } from "./Vector2.js";
 export type OverlayType = "true" | "false";
 export type SoundType = "on" | "off";
 export type InputType = "keyboard" | "controller";
+export type ResourceType = "Tree" | "Stone" | "Bush";
+
+export interface ResourceSaveData {
+    type: ResourceType;
+    x: number;
+    y: number;
+    hp: number;
+}
 
 export class SaveGame {
     private static inventoryKey = "inventory";
@@ -13,6 +21,8 @@ export class SaveGame {
     private static overlayKey = "overlaySeen";
     private static soundKey = "sound";
     private static inputKey = "input";
+
+    private static ressourceKey = "ressources";
 
     // --------- INVENTORY ----------
     static saveInventory(items: InventoryItemData[]) {
@@ -129,6 +139,41 @@ export class SaveGame {
         localStorage.removeItem(this.inputKey);
     }
 
+    // --------- RESOURCES ----------
+    static saveResources(levelId: LevelId, ressources: ResourceSaveData[]) {
+        const raw = localStorage.getItem(this.ressourceKey);
+        let all: Partial<Record<LevelId, ResourceSaveData[]>> = {};
+
+        if (raw) {
+            try {
+                all = JSON.parse(raw);
+            } catch (e) {
+                console.warn("Fehler beim Parsen der Ressourcen:", e);
+            }
+        }
+
+        all[levelId] = ressources; // immer setzen
+
+        localStorage.setItem(this.ressourceKey, JSON.stringify(all));
+    }
+
+
+    static loadResources(levelId: LevelId): ResourceSaveData[] {
+        const raw = localStorage.getItem(this.ressourceKey);
+        if (!raw) return [];
+        try {
+            const all = JSON.parse(raw) as Record<LevelId, ResourceSaveData[]>;
+            return all[levelId] ?? []; // zum level passende ressource zurück geben
+        } catch (e) {
+            console.warn("Fehler beim Laden der Ressourcen:", e);
+            return [];
+        }
+    }
+
+    static clearResources() {
+        localStorage.removeItem(this.ressourceKey);
+    }
+
     // --------- ALL SAVE DATA ----------
     static clearAll() {
         this.clearInventory();
@@ -137,6 +182,7 @@ export class SaveGame {
         this.clearSound();
         this.clearLevel();
         this.clearInput();
+        this.clearResources();
     }
 
     static initAll() {
@@ -145,5 +191,6 @@ export class SaveGame {
         // this.saveLevel("StartLevel");
         this.saveOverlay("false");
         this.saveInput("keyboard");
+        this.saveResources("OutdoorLevel1", []);
     }
 }
