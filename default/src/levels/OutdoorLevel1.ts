@@ -8,7 +8,7 @@ import { Hero } from "../objects/Hero/Hero.js";
 import { Item } from "../objects/Item/Item.js";
 import { events, HERO_EXITS, CHANGE_LEVEL } from "../Events.js";
 import { CaveLevel1 } from "./CaveLevel1.js";
-import { SaveGame } from "../SaveGame.js";
+import { ResourceSaveData, SaveGame } from "../SaveGame.js";
 import { LevelId } from "../helpers/levelRegistry.js";
 import { Tree } from "./parts/Tree/Tree.js";
 import { Stone } from "./parts/Stone/Stone.js";
@@ -58,36 +58,11 @@ export class OutdoorLevel1 extends Level {
     const exit = new Exit(gridCells(10), gridCells(3));
     this.addChild(exit);
 
+    this.addChild(new House(224, 64));
 
-
-    this.addChild(new Bush(80, 48));
-
-
-    this.addChild(new Bush(gridCells(4), gridCells(8)));
-    this.addChild(new Bush(gridCells(5), gridCells(8)));
-    this.addChild(new Bush(gridCells(7), gridCells(8)));
-    this.addChild(new Tree(gridCells(8), gridCells(8)));
-
-    this.addChild(new Tree(gridCells(8), gridCells(9)));
-    this.addChild(new Tree(gridCells(4), gridCells(9)));
-    this.addChild(new Tree(gridCells(5), gridCells(9)));
-
-    this.addChild(new Tree(gridCells(4), gridCells(10)));
-    this.addChild(new Bush(gridCells(5), gridCells(10)));
-    this.addChild(new Tree(gridCells(6), gridCells(10)));
-
-
-
-    this.addChild(new Tree(64, 48));
-    this.addChild(new Tree(208, 64));
-    this.addChild(new Tree(224, 32));
-    
-    this.addChild(new Stone(gridCells(12), gridCells(6)));
-    this.addChild(new Stone(gridCells(13), gridCells(6)));
-    this.addChild(new Stone(gridCells(14), gridCells(6)));
     this.addChild(new Water(gridCells(12), gridCells(7)));
     this.addChild(new Water(gridCells(13), gridCells(7)));
-    
+
     this.addChild(new Square(64, 64));
     this.addChild(new Square(64, 80));
     this.addChild(new Square(80, 80));
@@ -96,9 +71,48 @@ export class OutdoorLevel1 extends Level {
     this.addChild(new Square(128, 48));
     this.addChild(new Square(144, 48));
 
-    
+    //** --- Ressourcen laden --- */
+    // Default-Resourcen-Definition im Level
+    const defaultResources: ResourceSaveData[] = [
+      { type: "Bush", x: gridCells(5), y: gridCells(3), hp: 2 },
+      { type: "Bush", x: gridCells(4), y: gridCells(8), hp: 2 },
+      { type: "Bush", x: gridCells(5), y: gridCells(8), hp: 2 },
+      { type: "Bush", x: gridCells(7), y: gridCells(8), hp: 2 },
+      { type: "Bush", x: gridCells(5), y: gridCells(10), hp: 2 },
 
-    this.addChild(new House(224, 64));
+      { type: "Tree", x: gridCells(8), y: gridCells(8), hp: 4 },
+      { type: "Tree", x: gridCells(8), y: gridCells(9), hp: 4 },
+      { type: "Tree", x: gridCells(4), y: gridCells(9), hp: 4 },
+      { type: "Tree", x: gridCells(5), y: gridCells(9), hp: 4 },
+      { type: "Tree", x: gridCells(4), y: gridCells(10), hp: 4 },
+      { type: "Tree", x: gridCells(6), y: gridCells(10), hp: 4 },
+      { type: "Tree", x: gridCells(4), y: gridCells(3), hp: 4 },
+      { type: "Tree", x: gridCells(15), y: gridCells(3), hp: 4 },
+      { type: "Tree", x: gridCells(14), y: gridCells(3), hp: 4 },
+      { type: "Tree", x: gridCells(14), y: gridCells(2), hp: 4 },
+
+      { type: "Stone", x: gridCells(12), y: gridCells(6), hp: 4 },
+      { type: "Stone", x: gridCells(13), y: gridCells(6), hp: 4 },
+      { type: "Stone", x: gridCells(14), y: gridCells(6), hp: 4 },
+    ];
+
+    // Geladene Savegame-Daten
+    const savedResources = SaveGame.loadResources(this.levelId);
+
+    // Merging Logik
+    const mergedResources = defaultResources.map(def => {
+      const saved = savedResources.find(s => s.x === def.x && s.y === def.y && s.type === def.type);
+      return saved ? { ...def, ...saved } : def;
+    });
+
+    // Ressourcen anhand der Daten setzen (saved Data / default Data)
+    for (const res of mergedResources) {
+      switch (res.type) {
+        case "Tree": this.addChild(new Tree(res.x, res.y, res.hp)); break;
+        case "Bush": this.addChild(new Bush(res.x, res.y, res.hp)); break;
+        case "Stone": this.addChild(new Stone(res.x, res.y, res.hp)); break;
+      }
+    }
 
     //** --- Create Hero and add to scene --- */
     // entweder geladene Position (Reload) oder die übergebene Startposition (Levelwechsel)
@@ -135,9 +149,8 @@ export class OutdoorLevel1 extends Level {
       bottom: this.generateWall(new Vector2(32, 848), new Vector2(1568, 848), TILE_SIZE, "bottom"),
     };
 
-    
+
     this.walls = new Set(Object.values(wallDefinitions).flat());
-    // this.walls = new Set();
   }
 
   ready() {
