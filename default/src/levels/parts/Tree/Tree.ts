@@ -9,8 +9,12 @@ export class Tree extends GameObject {
     healthPoints = 4;
     treeSprite: Sprite;
 
-    constructor(x: number, y: number) {
+    constructor(x: number, y: number, hp = 4) {
         super(new Vector2(x, y));
+
+        // this.drawLayer = "FLOOR";
+        this.isSolid = true;
+        this.healthPoints = hp;
 
         const shadow = new Sprite({
             resource: resources.images.shadow,
@@ -28,10 +32,6 @@ export class Tree extends GameObject {
             frame: 0 // intakter Baum
         })
         this.addChild(this.treeSprite);
-
-        this.isSolid = true;
-        // this.drawLayer = "FLOOR";
-
     }
 
     ready() { }
@@ -79,7 +79,7 @@ export class Tree extends GameObject {
             });
             this.addChild(this.treeSprite);
         }
-        
+
 
         if (this.healthPoints <= 0) {
             this.destroy();

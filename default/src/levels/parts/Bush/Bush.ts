@@ -9,8 +9,12 @@ export class Bush extends GameObject {
     healthPoints = 2;
     bushSprite: Sprite;
 
-    constructor(x: number, y: number) {
+    constructor(x: number, y: number, hp = 2) {
         super(new Vector2(x, y));
+
+        // this.drawLayer = "FLOOR";
+        this.isSolid = true;
+        this.healthPoints = hp;
 
         const shadow = new Sprite({
             resource: resources.images.shadow,
@@ -28,9 +32,6 @@ export class Bush extends GameObject {
             frame: 0
         })
         this.addChild(this.bushSprite);
-
-        this.isSolid = true;
-        // this.drawLayer = "FLOOR";
     }
 
     ready() { }

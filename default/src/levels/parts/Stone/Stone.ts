@@ -6,11 +6,15 @@ import { getNextText, getRandomText } from "../../../helpers/levelPartsText.js";
 
 export class Stone extends GameObject {
 
-    healthPoints = 5;
+    healthPoints = 4;
     stoneSprite: Sprite;
 
-    constructor(x: number, y: number) {
+    constructor(x: number, y: number, hp = 4) {
         super(new Vector2(x, y));
+
+        // this.drawLayer = "FLOOR";
+        this.isSolid = true;
+        this.healthPoints = hp;
 
         this.stoneSprite = new Sprite({
             resource: resources.images.outdoorStone,
@@ -21,15 +25,12 @@ export class Stone extends GameObject {
             frame: 0
         })
         this.addChild(this.stoneSprite);
-
-        this.isSolid = true;
-        // this.drawLayer = "FLOOR";
     }
 
     ready() { }
 
     step(delta: number) {
-        if (this.healthPoints === 4) {
+        if (this.healthPoints === 3) {
             // Sprite wechseln wenn nur noch 4 HP
             this.removeChild(this.stoneSprite);
 
@@ -43,7 +44,7 @@ export class Stone extends GameObject {
             });
             this.addChild(this.stoneSprite);
         }
-        else if(this.healthPoints === 3){
+        else if (this.healthPoints === 2) {
             // Sprite wechseln wenn nur noch 3 HP
             this.removeChild(this.stoneSprite);
 
@@ -57,7 +58,7 @@ export class Stone extends GameObject {
             });
             this.addChild(this.stoneSprite);
         }
-        else if(this.healthPoints === 1){
+        else if (this.healthPoints === 1) {
             // Sprite wechseln wenn nur noch 1 HP
             this.removeChild(this.stoneSprite);
 
