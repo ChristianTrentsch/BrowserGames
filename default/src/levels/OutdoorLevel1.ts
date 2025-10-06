@@ -16,6 +16,7 @@ import { Square } from "./parts/Square/Square.js";
 import { Water } from "./parts/Water/Water.js";
 import { Bush } from "./parts/Bush/Bush.js";
 import { House } from "./parts/House/House.js";
+import { generateDefaultResources } from "../helpers/generateResources.js";
 
 export class OutdoorLevel1 extends Level {
 
@@ -60,41 +61,36 @@ export class OutdoorLevel1 extends Level {
 
     this.addChild(new House(224, 64));
 
-    this.addChild(new Water(gridCells(12), gridCells(7)));
-    this.addChild(new Water(gridCells(13), gridCells(7)));
+    this.addChild(new Water(gridCells(4), gridCells(5)));
+    this.addChild(new Water(gridCells(5), gridCells(5)));
+    this.addChild(new Water(gridCells(6), gridCells(5)));
+    this.addChild(new Square(gridCells(4), gridCells(4)));
+    this.addChild(new Square(gridCells(6), gridCells(4)));
+    this.addChild(new Bush(gridCells(5), gridCells(3)));
 
-    this.addChild(new Square(64, 64));
-    this.addChild(new Square(64, 80));
-    this.addChild(new Square(80, 80));
-    this.addChild(new Square(96, 64));
-    this.addChild(new Square(96, 80));
-    this.addChild(new Square(128, 48));
-    this.addChild(new Square(144, 48));
+    this.addChild(new Square(gridCells(8), gridCells(3)));
+    this.addChild(new Square(gridCells(9), gridCells(3)));
 
     //** --- Ressourcen laden --- */
     // Default-Resourcen-Definition im Level
-    const defaultResources: ResourceSaveData[] = [
-      { type: "Bush", x: gridCells(5), y: gridCells(3), hp: 2 },
-      { type: "Bush", x: gridCells(4), y: gridCells(8), hp: 2 },
-      { type: "Bush", x: gridCells(5), y: gridCells(8), hp: 2 },
-      { type: "Bush", x: gridCells(7), y: gridCells(8), hp: 2 },
-      { type: "Bush", x: gridCells(5), y: gridCells(10), hp: 2 },
+    const defaultResources = generateDefaultResources({
+      levelId: "OutdoorLevel1",
+      width: 1600,
+      height: 900,
+      seed: 3, // bestimmter Seed = immer gleiche Karte
+      pathZones: [
+        { x1: 0, x2: 100, y1: 20, y2: 24 },  // horizontaler Pfad 1600/16 = 100 gridCells
+        { x1: 45, x2: 55, y1: 0, y2: 56 },    // vertikaler Pfad
+        { x1: 0, x2: 14, y1: 0, y2: 7 }, // linker oberer Bereich
+      ],
+      density: {
+        Tree: 0.200,
+        Bush: 0.100,
+        Stone: 0.020
+      },
+      border: 48
+    });
 
-      { type: "Tree", x: gridCells(8), y: gridCells(8), hp: 4 },
-      { type: "Tree", x: gridCells(8), y: gridCells(9), hp: 4 },
-      { type: "Tree", x: gridCells(4), y: gridCells(9), hp: 4 },
-      { type: "Tree", x: gridCells(5), y: gridCells(9), hp: 4 },
-      { type: "Tree", x: gridCells(4), y: gridCells(10), hp: 4 },
-      { type: "Tree", x: gridCells(6), y: gridCells(10), hp: 4 },
-      { type: "Tree", x: gridCells(4), y: gridCells(3), hp: 4 },
-      { type: "Tree", x: gridCells(15), y: gridCells(3), hp: 4 },
-      { type: "Tree", x: gridCells(14), y: gridCells(3), hp: 4 },
-      { type: "Tree", x: gridCells(14), y: gridCells(2), hp: 4 },
-
-      { type: "Stone", x: gridCells(12), y: gridCells(6), hp: 4 },
-      { type: "Stone", x: gridCells(13), y: gridCells(6), hp: 4 },
-      { type: "Stone", x: gridCells(14), y: gridCells(6), hp: 4 },
-    ];
 
     // Geladene Savegame-Daten
     const savedResources = SaveGame.loadResources(this.levelId);
@@ -107,10 +103,12 @@ export class OutdoorLevel1 extends Level {
 
     // Ressourcen anhand der Daten setzen (saved Data / default Data)
     for (const res of mergedResources) {
-      switch (res.type) {
-        case "Tree": this.addChild(new Tree(res.x, res.y, res.hp)); break;
-        case "Bush": this.addChild(new Bush(res.x, res.y, res.hp)); break;
-        case "Stone": this.addChild(new Stone(res.x, res.y, res.hp)); break;
+      if (res.hp > 0) {
+        switch (res.type) {
+          case "Tree": this.addChild(new Tree(res.x, res.y, res.hp)); break;
+          case "Bush": this.addChild(new Bush(res.x, res.y, res.hp)); break;
+          case "Stone": this.addChild(new Stone(res.x, res.y, res.hp)); break;
+        }
       }
     }
 
