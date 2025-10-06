@@ -13,7 +13,7 @@ import {
 import { SpriteTextString } from "../SpriteTextString/SpriteTextString.js";
 import { Level } from "../Level/Level.js";
 import { Vector2 } from "../../Vector2.js";
-import { SaveGame } from "../../SaveGame.js";
+import { ResourceSaveData, ResourceType, SaveGame } from "../../SaveGame.js";
 import { Tree } from "../../levels/parts/Tree/Tree.js";
 import { Bush } from "../../levels/parts/Bush/Bush.js";
 import { Stone } from "../../levels/parts/Stone/Stone.js";
@@ -23,12 +23,16 @@ export class Main extends GameObject {
   input: Input;
   camera: Camera;
 
+  savedResources: ResourceSaveData[];
+
   constructor(position: Vector2) {
     super(position);
 
     this.level = null;
     this.input = new Input();
     this.camera = new Camera(new Vector2(0, 0));
+
+    this.savedResources = [];
   }
 
   ready() {
@@ -62,9 +66,37 @@ export class Main extends GameObject {
 
     events.on(HERO_ATTACK_ACTION, this, (withObject) => {
       if (withObject instanceof Tree || withObject instanceof Stone || withObject instanceof Bush) {
+        
+        // HP ressource veringern
         withObject.healthPoints -= 1;
+
+        if (this.level) {
+          this.pushResource(withObject);
+          SaveGame.saveResources(this.level.levelId, this.savedResources);
+        }
       }
     });
+  }
+
+  pushResource(withObject: Tree | Stone | Bush) {
+    const existing = this.savedResources.find(
+      r => r.type === withObject.constructor.name &&
+        r.x === withObject.position.x &&
+        r.y === withObject.position.y
+    );
+
+    if (existing) {
+      // Wenn schon vorhanden, nur hp aktualisieren
+      existing.hp = withObject.healthPoints;
+    } else {
+      // Ansonsten neues Objekt speichern
+      this.savedResources.push({
+        type: withObject.constructor.name as ResourceType,
+        x: withObject.position.x,
+        y: withObject.position.y,
+        hp: withObject.healthPoints
+      });
+    }
   }
 
   setLevel(newLevelInstance: Level) {
@@ -74,6 +106,9 @@ export class Main extends GameObject {
     }
     this.level = newLevelInstance;
     this.addChild(this.level);
+
+    // Ressourcen des neuen Levels laden
+    this.savedResources = SaveGame.loadResources(this.level.levelId) ?? [];
   }
 
   drawBackground(ctx: CanvasRenderingContext2D) {
