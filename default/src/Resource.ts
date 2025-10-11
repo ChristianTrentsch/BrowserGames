@@ -22,6 +22,8 @@ export interface ResourceOptions {
   startGround: string;
   textBox: string;
   sword: string;
+  treeRessource: string;
+  inventoryItemFrame: string;
 };
 
 export interface ResourceImageOptions {
@@ -73,9 +75,11 @@ class Resources {
       portraits: "./images/sprites/portraits-sheet.png",
 
       // Items
+      inventoryItemFrame: "./images/sprites/inventory_item_frame.png",
       rodPurple: "./images/sprites/rod-purple.png",
       rodRed: "./images/sprites/rod-red.png",
       sword: "./images/sprites/sword_experimental.png",
+      treeRessource: "./images/sprites/outdoor/tree_ressource.png",
     };
 
     // A bucket to store all of our images
