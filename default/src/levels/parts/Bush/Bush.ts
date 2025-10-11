@@ -3,10 +3,11 @@ import { Sprite } from "../../../Sprite.js";
 import { Vector2 } from "../../../Vector2.js";
 import { resources } from "../../../Resource.js";
 import { getNextText, getRandomText } from "../../../helpers/levelPartsText.js";
+import { Item } from "../../../objects/Item/Item.js";
 
 export class Bush extends GameObject {
 
-    healthPoints = 2;
+    healthPoints: number;
     bushSprite: Sprite;
 
     constructor(x: number, y: number, hp = 2) {
@@ -37,7 +38,7 @@ export class Bush extends GameObject {
     ready() { }
 
     step(delta: number) {
-        if (this.healthPoints === 1) {
+        if (this.healthPoints <= 1) {
             // Sprite wechseln wenn nur noch 1 HP
             this.removeChild(this.bushSprite);
 
@@ -53,14 +54,26 @@ export class Bush extends GameObject {
         }
 
         if (this.healthPoints <= 0) {
-            this.destroy();
+            this.destroy(true);
         }
     }
 
-    destroy() {
+    destroy(killedByHero = false) {
+        if (killedByHero) {
+            this.spawnItem();
+        }
         // Cleanup
         super.destroy();
     }
+
+    spawnItem() {
+            const item = new Item(this.position.x, this.position.y, "bushRessource");
+    
+            if (this.parent) {
+                // füge das Item im übergeordnetem level hinzu
+                this.parent.addChild(item);
+            }
+        }
 
     getContent() {
         // Maybe expand with story flag logic, etc.
