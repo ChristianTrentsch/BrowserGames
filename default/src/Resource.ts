@@ -27,6 +27,8 @@ export interface ResourceOptions {
   stoneRessource: string;
   bushRessource: string;
   inventoryItemFrame: string;
+  equipmentItemFrame: string;
+  equipmentActiveFrame: string;
 };
 
 export interface ResourceImageOptions {
@@ -80,6 +82,8 @@ class Resources {
 
       // Items
       inventoryItemFrame: "./images/sprites/inventory_item_frame.png",
+      equipmentItemFrame: "./images/sprites/equipment_item_frame.png",
+      equipmentActiveFrame: "./images/sprites/equipment_active_frame.png",
       rodPurple: "./images/sprites/rod-purple.png",
       rodRed: "./images/sprites/rod-red.png",
       sword: "./images/sprites/sword_experimental.png",
