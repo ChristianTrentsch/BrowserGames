@@ -6,7 +6,12 @@ import { events, HERO_PICKS_UP_ITEM, HERO_USE_ITEM } from "../../Events.js";
 import { SaveGame } from "../../SaveGame.js";
 import { getCharacterFrame, getCharacterWidth } from "../SpriteTextString/spriteFontMap.js";
 
-export type InventoryItem = "rodPurple" | "rodRed" | "treeRessource";
+export type InventoryItem =
+  "rodPurple"
+  | "rodRed"
+  | "treeRessource"
+  | "stoneRessource"
+  | "bushRessource";
 
 export interface InventoryItemData {
   id: number;
@@ -44,11 +49,14 @@ export class Inventory extends GameObject {
 
     // Nur prüfen, wenn das Inventar nicht leer ist
     if (this.items.length > 0) {
-      const treeItem = this.items.find(item => item.imageKey === "treeRessource");
+      const ressourceItem = this.items.find(item =>
+        item.imageKey === "treeRessource"
+        || item.imageKey === "stoneRessource"
+        || item.imageKey === "bushRessource");
 
-      if (treeItem) {
+      if (ressourceItem) {
         // Wenn Baum, Menge erhöhen
-        treeItem.amount += 1;
+        ressourceItem.amount += 1;
       }
 
       // nextId auf höchsten ID-Wert setzen
@@ -72,7 +80,10 @@ export class Inventory extends GameObject {
       const existingItem = this.items.find(item => item.imageKey === imageKey);
       if (existingItem) {
 
-        if (existingItem.imageKey === "treeRessource") {
+        if (
+          existingItem.imageKey === "treeRessource"
+          || existingItem.imageKey === "stoneRessource"
+          || existingItem.imageKey === "bushRessource") {
           // Wenn Baum, Menge erhöhen
           existingItem.amount += 1;
         }
