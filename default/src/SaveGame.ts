@@ -1,4 +1,5 @@
 import { LevelId } from "./helpers/levelRegistry.js";
+import { EquipmentItem, EquipmentItemData } from "./objects/Equipment/Equipment.js";
 import { InventoryItem, InventoryItemData } from "./objects/Inventory/Inventory.js";
 import { Vector2 } from "./Vector2.js";
 
@@ -16,6 +17,7 @@ export interface ResourceSaveData {
 
 export class SaveGame {
     private static inventoryKey = "inventory";
+    private static equipmentKey = "equipment";
     private static heroKey = "heroPosition";
     private static levelKey = "currentLevel";
     private static overlayKey = "overlaySeen";
@@ -54,6 +56,40 @@ export class SaveGame {
             return items.some(item => item.imageKey === imageKey);
         } catch (err) {
             console.error("Fehler beim Lesen des Inventars:", err);
+            return false;
+        }
+    }
+
+    // --------- EQUIPMENT ----------
+    static saveEquipment(items: EquipmentItemData[]) {
+        localStorage.setItem(this.equipmentKey, JSON.stringify(items));
+    }
+
+    static loadEquipment(): EquipmentItemData[] {
+        const raw = localStorage.getItem(this.equipmentKey);
+        if (!raw) return [];
+        try {
+            return JSON.parse(raw) as EquipmentItemData[];
+        } catch {
+            return [];
+        }
+    }
+
+    static clearEquipment() {
+        localStorage.removeItem(this.equipmentKey);
+    }
+
+    // Prüft, ob ein Item mit dem angegebenen imageKey bereits im Equipment vorhanden ist
+    static isInEquipment(imageKey: EquipmentItem): boolean {
+        const raw = localStorage.getItem(this.equipmentKey);
+        if (!raw) return false;
+
+        try {
+            const items = JSON.parse(raw) as EquipmentItemData[];
+
+            return items.some(item => item.imageKey === imageKey);
+        } catch (err) {
+            console.error("Fehler beim Lesen des Equipment:", err);
             return false;
         }
     }
@@ -177,6 +213,7 @@ export class SaveGame {
     // --------- ALL SAVE DATA ----------
     static clearAll() {
         this.clearInventory();
+        this.clearEquipment();
         this.clearHero();
         this.clearOverlay();
         this.clearSound();

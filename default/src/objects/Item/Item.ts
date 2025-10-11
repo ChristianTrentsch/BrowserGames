@@ -4,16 +4,17 @@ import { Vector2 } from "../../Vector2.js";
 import { resources } from "../../Resource.js";
 import { events, HERO_POSTION, HERO_PICKS_UP_ITEM } from "../../Events.js";
 import { InventoryItem } from "../Inventory/Inventory.js";
+import { EquipmentItem } from "../Equipment/Equipment.js";
 
 export class Item extends GameObject {
 
-  itemKey: InventoryItem;
+  itemKey: InventoryItem | EquipmentItem;
   itemSound: HTMLAudioElement;
 
   constructor(
     x: number,
     y: number,
-    itemKey: InventoryItem,
+    itemKey: InventoryItem | EquipmentItem,
     itemSoundSrc: string = "./sounds/items/pick_up_item_01.mp3", // Pfad zur Standard Sounddatei
     volume: number = 0.7 // Standard-Lautstärke
   ) {

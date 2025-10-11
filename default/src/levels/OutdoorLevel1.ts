@@ -118,7 +118,7 @@ export class OutdoorLevel1 extends Level {
     this.addChild(hero);
 
     //** --- Prüfen, ob Item schon im Inventar ist, ansonsten erzeugen --- */
-    if (!SaveGame.isInInventory("rodPurple")) {
+    if (!SaveGame.isInEquipment("rodPurple")) {
       // erzeuge Item und lege position fest
       const rodPurple = new Item(gridCells(5), gridCells(4), "rodPurple");
       this.addChild(rodPurple);

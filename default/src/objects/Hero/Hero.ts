@@ -29,6 +29,7 @@ import {
   TEXTBOX_START,
   TEXTBOX_END,
   HERO_ATTACK_ACTION,
+  HERO_CHANGE_EQUIPMENT,
 } from "../../Events.js";
 
 import { GameObject } from "../../GameObject.js";
@@ -187,6 +188,11 @@ export class Hero extends GameObject {
           events.emit(HERO_ATTACK_ACTION, objAtPosition);
         }
       }
+    }
+
+    // Change Equipment
+    if (input.getActionJustPressed("KeyQ")) {
+      events.emit(HERO_CHANGE_EQUIPMENT, this);
     }
 
     const distance = moveTowards(this, this.destinationPosition, 1);

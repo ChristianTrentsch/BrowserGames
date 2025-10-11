@@ -17,6 +17,7 @@ import { ResourceSaveData, ResourceType, SaveGame } from "../../SaveGame.js";
 import { Tree } from "../../levels/parts/Tree/Tree.js";
 import { Bush } from "../../levels/parts/Bush/Bush.js";
 import { Stone } from "../../levels/parts/Stone/Stone.js";
+import { Equipment } from "../Equipment/Equipment.js";
 
 export class Main extends GameObject {
   level: null | Level;
@@ -38,6 +39,9 @@ export class Main extends GameObject {
   ready() {
     const inventory = new Inventory();
     this.addChild(inventory);
+
+    const equipment = new Equipment();
+    this.addChild(equipment);
 
     // Change the level
     events.on(CHANGE_LEVEL, this, (newLevelInstance: Level) => {

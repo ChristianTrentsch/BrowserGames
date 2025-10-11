@@ -1,4 +1,5 @@
 import { GameObject } from "./GameObject.js";
+import { EquipmentEvent } from "./objects/Equipment/Equipment.js";
 import { InventoryEvent } from "./objects/Inventory/Inventory.js";
 import { Vector2 } from "./Vector2.js";
 
@@ -9,6 +10,7 @@ export type EventName =
   "HERO_EXITS" |
   "HERO_REQUESTS_ACTION" |
   "HERO_ATTACK_ACTION" |
+  "HERO_CHANGE_EQUIPMENT" |
   "CHANGE_LEVEL" |
   "TEXTBOX_START" |
   "TEXTBOX_END";
@@ -26,6 +28,7 @@ export const HERO_USE_ITEM = "HERO_USE_ITEM";
 export const HERO_EXITS = "HERO_EXITS";
 export const HERO_REQUESTS_ACTION = "HERO_REQUESTS_ACTION";
 export const HERO_ATTACK_ACTION = "HERO_ATTACK_ACTION";
+export const HERO_CHANGE_EQUIPMENT = "HERO_CHANGE_EQUIPMENT";
 export const CHANGE_LEVEL = "CHANGE_LEVEL";
 export const TEXTBOX_START = "TEXTBOX_START";
 export const TEXTBOX_END = "TEXTBOX_END";
@@ -39,7 +42,7 @@ class Events {
   }
 
   // emit event
-  emit(eventName: EventName, caller?: GameObject | Vector2 | InventoryEvent) {
+  emit(eventName: EventName, caller?: GameObject | Vector2 | InventoryEvent | EquipmentEvent) {
     this.callbacks.forEach((stored: { eventName: EventName, callback: (...args: any[]) => void }) => {
       if (stored.eventName === eventName) {
         stored.callback(caller);

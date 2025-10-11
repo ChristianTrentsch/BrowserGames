@@ -61,7 +61,7 @@ export class CaveLevel1 extends Level {
     this.addChild(hero);
 
     //** --- Prüfen, ob Item schon im Inventar ist, ansonsten erzeugen --- */
-    if (!SaveGame.isInInventory("rodRed")) {
+    if (!SaveGame.isInEquipment("rodRed")) {
       // erzeuge Item und lege position fest
       const rodRed = new Item(gridCells(10), gridCells(6), "rodRed");
       this.addChild(rodRed);
