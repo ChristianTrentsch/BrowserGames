@@ -6,12 +6,8 @@ import { events, HERO_PICKS_UP_ITEM, HERO_USE_ITEM } from "../../Events.js";
 import { SaveGame } from "../../SaveGame.js";
 import { getCharacterFrame, getCharacterWidth } from "../SpriteTextString/spriteFontMap.js";
 
-export type InventoryItem =
-  "rodPurple"
-  | "rodRed"
-  | "treeRessource"
-  | "stoneRessource"
-  | "bushRessource";
+export const INVENTORY_ITEMS = ["treeRessource", "stoneRessource", "bushRessource"] as const;
+export type InventoryItem = typeof INVENTORY_ITEMS[number];
 
 export interface InventoryItemData {
   id: number;
@@ -49,10 +45,7 @@ export class Inventory extends GameObject {
 
     // Nur prüfen, wenn das Inventar nicht leer ist
     if (this.items.length > 0) {
-      const ressourceItem = this.items.find(item =>
-        item.imageKey === "treeRessource"
-        || item.imageKey === "stoneRessource"
-        || item.imageKey === "bushRessource");
+      const ressourceItem = this.items.find(item => INVENTORY_ITEMS.includes(item.imageKey));
 
       if (ressourceItem) {
         // Wenn Baum, Menge erhöhen
@@ -80,24 +73,27 @@ export class Inventory extends GameObject {
       const existingItem = this.items.find(item => item.imageKey === imageKey);
       if (existingItem) {
 
-        if (
-          existingItem.imageKey === "treeRessource"
-          || existingItem.imageKey === "stoneRessource"
-          || existingItem.imageKey === "bushRessource") {
+        if (INVENTORY_ITEMS.includes(existingItem.imageKey)) {
           // Wenn Baum, Menge erhöhen
           existingItem.amount += 1;
         }
 
       }
       else {
-        // neues Item hinzufügen
-        this.nextId += 1;
-        this.items.push({
-          id: this.nextId,
-          image: resources.images[imageKey],
-          imageKey: imageKey,
-          amount: 1
-        });
+
+        if (INVENTORY_ITEMS.includes(imageKey)) {
+
+          // neues Item hinzufügen
+          this.nextId += 1;
+          this.items.push({
+            id: this.nextId,
+            image: resources.images[imageKey],
+            imageKey: imageKey,
+            amount: 1
+          });
+
+        }
+
       }
 
       // Save inventory in localStorage
