@@ -3,10 +3,11 @@ import { Sprite } from "../../../Sprite.js";
 import { Vector2 } from "../../../Vector2.js";
 import { resources } from "../../../Resource.js";
 import { getNextText, getRandomText } from "../../../helpers/levelPartsText.js";
+import { Item } from "../../../objects/Item/Item.js";
 
 export class Stone extends GameObject {
 
-    healthPoints = 4;
+    healthPoints: number;
     stoneSprite: Sprite;
 
     constructor(x: number, y: number, hp = 4) {
@@ -30,58 +31,42 @@ export class Stone extends GameObject {
     ready() { }
 
     step(delta: number) {
-        if (this.healthPoints === 3) {
-            // Sprite wechseln wenn nur noch 4 HP
+        // Stein-Sprite basierend auf HP wechseln
+        const frame = 4 - this.healthPoints; // 0 = intakt, 3 = schwer beschädigt
+        if (frame >= 1 && frame <= 3) {
             this.removeChild(this.stoneSprite);
-
             this.stoneSprite = new Sprite({
                 resource: resources.images.outdoorStone,
                 frameSize: new Vector2(16, 16),
                 position: new Vector2(0, 0),
                 hFrames: 4,
                 vFrames: 1,
-                frame: 1 // kaputter Stein
-            });
-            this.addChild(this.stoneSprite);
-        }
-        else if (this.healthPoints === 2) {
-            // Sprite wechseln wenn nur noch 3 HP
-            this.removeChild(this.stoneSprite);
-
-            this.stoneSprite = new Sprite({
-                resource: resources.images.outdoorStone,
-                frameSize: new Vector2(16, 16),
-                position: new Vector2(0, 0),
-                hFrames: 4,
-                vFrames: 1,
-                frame: 2 // kaputter Stein
-            });
-            this.addChild(this.stoneSprite);
-        }
-        else if (this.healthPoints === 1) {
-            // Sprite wechseln wenn nur noch 1 HP
-            this.removeChild(this.stoneSprite);
-
-            this.stoneSprite = new Sprite({
-                resource: resources.images.outdoorStone,
-                frameSize: new Vector2(16, 16),
-                position: new Vector2(0, 0),
-                hFrames: 4,
-                vFrames: 1,
-                frame: 3 // kaputter Stein
+                frame: frame
             });
             this.addChild(this.stoneSprite);
         }
 
         if (this.healthPoints <= 0) {
-            this.destroy();
+            this.destroy(true);
         }
     }
 
-    destroy() {
+    destroy(killedByHero = false) {
+        if (killedByHero) {
+            this.spawnItem();
+        }
         // Cleanup
         super.destroy();
     }
+
+    spawnItem() {
+            const item = new Item(this.position.x, this.position.y, "stoneRessource");
+    
+            if (this.parent) {
+                // füge das Item dem level hinzu
+                this.parent.addChild(item);
+            }
+        }
 
     getContent() {
         // Maybe expand with story flag logic, etc.
