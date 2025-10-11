@@ -3,10 +3,11 @@ import { Sprite } from "../../../Sprite.js";
 import { Vector2 } from "../../../Vector2.js";
 import { resources } from "../../../Resource.js";
 import { getNextText, getRandomText } from "../../../helpers/levelPartsText.js";
+import { Item } from "../../../objects/Item/Item.js";
 
 export class Tree extends GameObject {
 
-    healthPoints = 4;
+    healthPoints: number;
     treeSprite: Sprite;
 
     constructor(x: number, y: number, hp = 4) {
@@ -37,58 +38,49 @@ export class Tree extends GameObject {
     ready() { }
 
     step(delta: number) {
-        if (this.healthPoints === 3) {
-            // Sprite wechseln wenn nur noch 3 HP
+        // Baum-Sprite basierend auf HP wechseln
+        const frame = 4 - this.healthPoints; // 0 = intakt, 3 = schwer beschädigt
+        if (frame >= 1 && frame <= 3) {
             this.removeChild(this.treeSprite);
-
             this.treeSprite = new Sprite({
                 resource: resources.images.outdoorTree,
                 frameSize: new Vector2(16, 32),
                 position: new Vector2(0, -15),
                 hFrames: 4,
                 vFrames: 1,
-                frame: 1 // leicht beschädigter Baum
+                frame: frame
             });
             this.addChild(this.treeSprite);
         }
-        else if (this.healthPoints === 2) {
-            // Sprite wechseln wenn nur noch 2 HP
-            this.removeChild(this.treeSprite);
-
-            this.treeSprite = new Sprite({
-                resource: resources.images.outdoorTree,
-                frameSize: new Vector2(16, 32),
-                position: new Vector2(0, -15),
-                hFrames: 4,
-                vFrames: 1,
-                frame: 2 // beschädigter Baum
-            });
-            this.addChild(this.treeSprite);
-        }
-        else if (this.healthPoints === 1) {
-            // Sprite wechseln wenn nur noch 1 HP
-            this.removeChild(this.treeSprite);
-
-            this.treeSprite = new Sprite({
-                resource: resources.images.outdoorTree,
-                frameSize: new Vector2(16, 32),
-                position: new Vector2(0, -15),
-                hFrames: 4,
-                vFrames: 1,
-                frame: 3 // kaputter Baum
-            });
-            this.addChild(this.treeSprite);
-        }
-
 
         if (this.healthPoints <= 0) {
-            this.destroy();
+            this.destroy(true); // Baum vom Spieler zerstört
         }
     }
 
-    destroy() {
+    destroy(killedByHero = false) {
+        if (killedByHero) {
+            this.spawnItem();
+        }
         // Cleanup
         super.destroy();
+    }
+
+    spawnItem() {
+        const item = new Item(this.position.x, this.position.y, "treeRessource");
+
+        if (this.parent) {
+            // füge das Item im übergeordnetem level hinzu
+            this.parent.addChild(item);
+        }
+
+
+        // const drops = ["treeRessource", "apple", null]; // null = keine Dropp
+        // const drop = drops[Math.floor(Math.random() * drops.length)];
+        // if (!drop) return;
+
+        // const item = new Item(this.x, this.y, drop);
+        // this.parent?.addChild(item);
     }
 
     getContent() {
