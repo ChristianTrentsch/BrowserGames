@@ -4,12 +4,14 @@ import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
 import { events, HERO_PICKS_UP_ITEM, HERO_USE_ITEM } from "../../Events.js";
 import { SaveGame } from "../../SaveGame.js";
+import { getCharacterFrame, getCharacterWidth } from "../SpriteTextString/spriteFontMap.js";
 
-export type InventoryItem = "rodPurple" | "rodRed";
+export type InventoryItem = "rodPurple" | "rodRed" | "treeRessource";
 
 export interface InventoryItemData {
   id: number;
   imageKey: InventoryItem;
+  amount: number;
 }
 
 export interface InventoryEvent {
@@ -25,10 +27,11 @@ export class Inventory extends GameObject {
     id: number;
     image: ResourceImageOptions;
     imageKey: InventoryItem;
+    amount: number;
   }[];
 
   constructor() {
-    super(new Vector2(0, 1));
+    super(new Vector2(1, 1));
 
     this.drawLayer = "HUD";
     this.nextId = 0;
@@ -39,8 +42,16 @@ export class Inventory extends GameObject {
       image: resources.images[item.imageKey],
     }));
 
-    // nextId auf den höchsten bestehenden ID-Wert setzen
+    // Nur prüfen, wenn das Inventar nicht leer ist
     if (this.items.length > 0) {
+      const treeItem = this.items.find(item => item.imageKey === "treeRessource");
+
+      if (treeItem) {
+        // Wenn Baum, Menge erhöhen
+        treeItem.amount += 1;
+      }
+
+      // nextId auf höchsten ID-Wert setzen
       this.nextId = Math.max(...this.items.map(item => item.id));
     }
 
@@ -54,29 +65,35 @@ export class Inventory extends GameObject {
   }
 
   ready() {
-    // Inventory add item
+    // Event Inventory add item
     events.on(HERO_PICKS_UP_ITEM, this, (data: { imageKey: InventoryItem }) => {
       const { imageKey } = data;
 
-      // Prüfen, ob Item schon vorhanden ist
-      const alreadyHasItem = this.items.some(item => item.imageKey === imageKey);
-      if (alreadyHasItem) {
-        console.warn(`Item ${imageKey} ist bereits im Inventar`);
-        return;
-      }
+      const existingItem = this.items.find(item => item.imageKey === imageKey);
+      if (existingItem) {
 
-      // Show Item on Screen
-      this.nextId += 1;
-      this.items.push({
-        id: this.nextId,
-        image: resources.images[imageKey],
-        imageKey: imageKey
-      });
+        if (existingItem.imageKey === "treeRessource") {
+          // Wenn Baum, Menge erhöhen
+          existingItem.amount += 1;
+        }
+
+      }
+      else {
+        // neues Item hinzufügen
+        this.nextId += 1;
+        this.items.push({
+          id: this.nextId,
+          image: resources.images[imageKey],
+          imageKey: imageKey,
+          amount: 1
+        });
+      }
 
       // Save inventory in localStorage
       SaveGame.saveInventory(this.items.map((i) => ({
         id: i.id,
-        imageKey: i.imageKey
+        imageKey: i.imageKey,
+        amount: i.amount
       })));
 
       // Draw initial state
@@ -99,12 +116,48 @@ export class Inventory extends GameObject {
 
     // Draw fresh inventory items
     this.items.forEach((item, index) => {
+
+      const baseX = index * 25;
+      const baseY = 0;
+
+      // Item Background zeichnen
+      const background = new Sprite({
+        resource: resources.images.inventoryItemFrame,
+        position: new Vector2(baseX - 0.01, baseY - 0.01), // funktioniert wie z-Index
+        frameSize: new Vector2(24, 24),
+      });
+      this.addChild(background);
+
+      // Item zeichnen
       const sprite = new Sprite({
-        // resource: item.image,
         resource: resources.images[item.imageKey],
-        position: new Vector2(index * 12, 0),
+        position: new Vector2(baseX + 4, baseY + 4),
       });
       this.addChild(sprite);
+
+      // Wenn Item von type Baum dann Zahl passend zum amount zeichnen 
+      if (item.amount > 1) {
+        const text = String(item.amount);
+        let xOffset = baseX + 8; // etwas nach rechts vom Item
+        const yOffset = baseY + 12; // leicht nach oben
+
+        // Jede Ziffer zeichnen
+        for (const char of text) {
+          const charWidth = getCharacterWidth(char);
+
+          const numberSprite = new Sprite({
+            position: new Vector2(xOffset, yOffset),
+            resource: resources.images.fontWhite, // Font-/Alphabet-SpriteSheet
+            hFrames: 13,
+            vFrames: 6,
+            frame: getCharacterFrame(char),
+            // scale: 0.9,
+          });
+
+          this.addChild(numberSprite);
+          xOffset += charWidth + 1; // etwas Abstand zwischen den Ziffern
+        }
+      }
     });
   }
 
