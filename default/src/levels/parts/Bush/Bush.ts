@@ -67,13 +67,19 @@ export class Bush extends GameObject {
     }
 
     spawnItem() {
-            const item = new Item(this.position.x, this.position.y, "bushRessource");
-    
-            if (this.parent) {
-                // füge das Item im übergeordnetem level hinzu
-                this.parent.addChild(item);
-            }
+        const item = new Item(
+            this.position.x,
+            this.position.y,
+            "bushRessource",
+            "./sounds/items/pick_up_item.mp3",
+            1
+        );
+
+        if (this.parent) {
+            // füge das Item im übergeordnetem level hinzu
+            this.parent.addChild(item);
         }
+    }
 
     getContent() {
         // Maybe expand with story flag logic, etc.

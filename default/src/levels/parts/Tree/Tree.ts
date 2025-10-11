@@ -67,7 +67,13 @@ export class Tree extends GameObject {
     }
 
     spawnItem() {
-        const item = new Item(this.position.x, this.position.y, "treeRessource");
+        const item = new Item(
+            this.position.x,
+            this.position.y,
+            "treeRessource",
+            "./sounds/items/pick_up_item.mp3",
+            1
+        );
 
         if (this.parent) {
             // füge das Item im übergeordnetem level hinzu

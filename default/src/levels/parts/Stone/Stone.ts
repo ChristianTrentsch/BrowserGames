@@ -60,13 +60,19 @@ export class Stone extends GameObject {
     }
 
     spawnItem() {
-            const item = new Item(this.position.x, this.position.y, "stoneRessource");
-    
-            if (this.parent) {
-                // füge das Item dem level hinzu
-                this.parent.addChild(item);
-            }
+        const item = new Item(
+            this.position.x,
+            this.position.y,
+            "stoneRessource",
+            "./sounds/items/pick_up_item.mp3",
+            1
+        );
+
+        if (this.parent) {
+            // füge das Item dem level hinzu
+            this.parent.addChild(item);
         }
+    }
 
     getContent() {
         // Maybe expand with story flag logic, etc.

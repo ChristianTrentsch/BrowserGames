@@ -19,6 +19,7 @@ export interface ResourceOptions {
   rodRed: string;
   shadow: string;
   fontWhite: string;
+  fontBlack: string;
   startGround: string;
   textBox: string;
   sword: string;
@@ -74,6 +75,7 @@ class Resources {
       // HUD
       textBox: "./images/sprites/text-box.png",
       fontWhite: "./images/sprites/sprite-font-white.png",
+      fontBlack: "./images/sprites/sprite-font-black.png",
       portraits: "./images/sprites/portraits-sheet.png",
 
       // Items

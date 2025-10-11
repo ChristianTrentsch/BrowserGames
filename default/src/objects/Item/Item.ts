@@ -14,7 +14,7 @@ export class Item extends GameObject {
     x: number,
     y: number,
     itemKey: InventoryItem,
-    itemSoundSrc: string = "./sounds/items/item_01.mp3", // Pfad zur Standard Sounddatei
+    itemSoundSrc: string = "./sounds/items/pick_up_item_01.mp3", // Pfad zur Standard Sounddatei
     volume: number = 0.7 // Standard-Lautstärke
   ) {
     super(new Vector2(x, y));

@@ -300,6 +300,13 @@ export class Hero extends GameObject {
       // Start the pickup animation
       this.itemPickUpTime = 1000; // ms
 
+      if (
+        data.imageKey === "treeRessource"
+        || data.imageKey === "stoneRessource"
+        || data.imageKey === "bushRessource") {
+        this.itemPickUpTime = 300; // ms
+      }
+
       // Play pick up sound from Item
       const isSoundOn = SaveGame.loadSound();
       if (isSoundOn === "on") {
