@@ -23,6 +23,8 @@ export interface ResourceOptions {
   textBox: string;
   sword: string;
   treeRessource: string;
+  stoneRessource: string;
+  bushRessource: string;
   inventoryItemFrame: string;
 };
 
@@ -79,7 +81,10 @@ class Resources {
       rodPurple: "./images/sprites/rod-purple.png",
       rodRed: "./images/sprites/rod-red.png",
       sword: "./images/sprites/sword_experimental.png",
+
       treeRessource: "./images/sprites/outdoor/tree_ressource.png",
+      stoneRessource: "./images/sprites/outdoor/stone_ressource.png",
+      bushRessource: "./images/sprites/outdoor/bush_ressource.png",
     };
 
     // A bucket to store all of our images
