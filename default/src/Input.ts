@@ -173,9 +173,9 @@ export class Input {
     // 🎮 Buttons -> Aktionen (Xbox Mapping)
     this.mapButton(gp.buttons[0], "Space");  // A -> Interact
     this.mapButton(gp.buttons[1], "KeyF");   // B -> Attack
-    this.mapButton(gp.buttons[2], "KeyQ");   // X -> Item2
-    this.mapButton(gp.buttons[3], "KeyE");   // Y -> Item1
-    this.mapButton(gp.buttons[9], "KeyR");   // Start -> Reload
+    this.mapButton(gp.buttons[2], "KeyR");   // X -> Item2
+    this.mapButton(gp.buttons[3], "KeyQ");   // Y -> Item1
+    this.mapButton(gp.buttons[9], "KeyE");   // Start -> Menü
   }
 
   private mapButton(button: GamepadButton | undefined, key: InputKey) {
