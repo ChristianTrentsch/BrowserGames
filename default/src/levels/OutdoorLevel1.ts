@@ -56,21 +56,6 @@ export class OutdoorLevel1 extends Level {
     });
     this.addChild(groundSprite);
 
-    const exit = new Exit(gridCells(10), gridCells(3));
-    this.addChild(exit);
-
-    this.addChild(new House(224, 64));
-
-    this.addChild(new Water(gridCells(4), gridCells(5)));
-    this.addChild(new Water(gridCells(5), gridCells(5)));
-    this.addChild(new Water(gridCells(6), gridCells(5)));
-    this.addChild(new Square(gridCells(4), gridCells(4)));
-    this.addChild(new Square(gridCells(6), gridCells(4)));
-    this.addChild(new Bush(gridCells(5), gridCells(3)));
-
-    this.addChild(new Square(gridCells(8), gridCells(3)));
-    this.addChild(new Square(gridCells(9), gridCells(3)));
-
     //** --- Ressourcen laden --- */
     // Default-Resourcen-Definition im Level
     const defaultResources = generateDefaultResources({
@@ -91,7 +76,6 @@ export class OutdoorLevel1 extends Level {
       border: 48
     });
 
-
     // Geladene Savegame-Daten
     const savedResources = SaveGame.loadResources(this.levelId);
 
@@ -111,6 +95,21 @@ export class OutdoorLevel1 extends Level {
         }
       }
     }
+
+    const exit = new Exit(gridCells(10), gridCells(3));
+    this.addChild(exit);
+
+    this.addChild(new House(224, 64));
+
+    this.addChild(new Water(gridCells(4), gridCells(5)));
+    this.addChild(new Water(gridCells(5), gridCells(5)));
+    this.addChild(new Water(gridCells(6), gridCells(5)));
+    this.addChild(new Square(gridCells(4), gridCells(4)));
+    this.addChild(new Square(gridCells(6), gridCells(4)));
+    this.addChild(new Bush(gridCells(5), gridCells(3)));
+
+    this.addChild(new Square(gridCells(8), gridCells(3)));
+    this.addChild(new Square(gridCells(9), gridCells(3)));
 
     //** --- Create Hero and add to scene --- */
     // entweder geladene Position (Reload) oder die übergebene Startposition (Levelwechsel)
@@ -146,7 +145,6 @@ export class OutdoorLevel1 extends Level {
       top: this.generateWall(new Vector2(32, 16), new Vector2(1568, 16), TILE_SIZE, "top"),
       bottom: this.generateWall(new Vector2(32, 848), new Vector2(1568, 848), TILE_SIZE, "bottom"),
     };
-
 
     this.walls = new Set(Object.values(wallDefinitions).flat());
   }
