@@ -46,6 +46,13 @@ export class Item extends GameObject {
   }
 
   onCollideWithHero() {
+    // Listener entfernen, damit kein mehrfaches Triggern passiert
+    events.unsubscribe(this);
+
+    // Audio stoppen
+    this.itemSound.pause();
+    this.itemSound.currentTime = 0;
+
     // Remove this instance from the scene
     this.destroy();
 
