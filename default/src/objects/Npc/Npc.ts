@@ -2,19 +2,39 @@ import { GameObject } from "../../GameObject.js";
 import { Vector2 } from "../../Vector2.js";
 import { Sprite } from "../../Sprite.js";
 import { resources } from "../../Resource.js";
+import { storyFlags, StoryFlagsParts } from "../../StoryFlags.js";
 
 export class Npc extends GameObject {
 
-  textContent: string;
+  portraitFrame: number;
+  content: {
+    string: string;
+    requires?: StoryFlagsParts[];
+    bypass?: StoryFlagsParts[];
+    storyFlag?: StoryFlagsParts;
+  }[];
 
-  constructor(x: number, y: number, textContent: string) {
+  constructor(
+    x: number,
+    y: number,
+    content: {
+      string: string,
+      requires?: StoryFlagsParts[],
+      bypass?: StoryFlagsParts[],
+      storyFlag?: StoryFlagsParts
+    }[],
+    portraitFrame: number = 1,
+  ) {
     super(new Vector2(x, y));
 
     // npc block path as solid object
     this.isSolid = true;
 
-    // Say individual Text
-    this.textContent = textContent;
+    // Get individual Content
+    this.content = content;
+
+    // Show individual Portrait
+    this.portraitFrame = portraitFrame;
 
     // Shadow under feet
     const shadow = new Sprite({
@@ -36,11 +56,23 @@ export class Npc extends GameObject {
     this.addChild(body);
   }
 
-  getContent() {
-    // Maybe expand with story flag logic, etc.
+  getContent(): {
+    portraitFrame: number;
+    string: string;
+    storyFlag: StoryFlagsParts | null
+  } | null {
+
+    // search for a story scenario that matches
+    const match = storyFlags.getRelevantScenario(this.content)
+    if (!match) {
+      console.warn("Npc, no storyflags found in list!", this.content);
+      return null;
+    }
+
     return {
-      portraitFrame: 1, // show first frame of npc sprite
-      string: this.textContent,
+      portraitFrame: this.portraitFrame,
+      string: match.string,
+      storyFlag: match.storyFlag ?? null
     };
   }
 }

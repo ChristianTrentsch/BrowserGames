@@ -18,6 +18,9 @@ import { Tree } from "../../levels/parts/Tree/Tree.js";
 import { Bush } from "../../levels/parts/Bush/Bush.js";
 import { Stone } from "../../levels/parts/Stone/Stone.js";
 import { Equipment } from "../Equipment/Equipment.js";
+import { storyFlags } from "../../StoryFlags.js";
+import { Npc } from "../Npc/Npc.js";
+import { gridCells } from "../../helpers/grid.js";
 
 export class Main extends GameObject {
   level: null | Level;
@@ -51,21 +54,82 @@ export class Main extends GameObject {
 
     // Check for hero action
     events.on(HERO_REQUESTS_ACTION, this, (withObject) => {
-      if (typeof withObject.getContent === "function") {
 
-        // max content length to fit in textbox sprite is 153
-        const content = withObject.getContent();
-        const textbox = new SpriteTextString(content.portraitFrame, content.string);
+      // Wenn keine getContent function dann raus
+      if (typeof withObject.getContent !== "function") return;
 
-        this.addChild(textbox);
-        events.emit(TEXTBOX_START);
+      // Prüfen ob Npc
+      if (withObject instanceof Npc) {
 
-        // Unsubscribe from this textbox after it's destroyed
-        const endingSub = events.on(TEXTBOX_END, this, () => {
-          textbox.destroy();
-          events.off(endingSub);
-        });
+        // aktuelle Scenario
+        const scenarios = withObject.getContent();
+
+        // nach storyFlag schauen
+        const flag = scenarios?.storyFlag ?? null;
+
+        // Inventar überprüfen auf Questbedingung
+        switch (flag) {
+          case "STORY_01_PART_01":
+            if (inventory.completeQuest([{ imageKey: "treeRessource", amount: 5 }])) {
+              // Story-Flag setzen
+              storyFlags.add(flag);
+              // console.log(flag);
+
+              // Falls StoryFlags persistierst:
+              // TODO: SaveGame erweitert um Status der gelösten Quests zu speichern
+
+              // Npc verschieben
+              withObject.position.x += gridCells(-1);
+
+              // Optional: Sound/Effekt
+              // TODO: neuen Sound beim lösen der Quest
+            }
+            break;
+
+          case "STORY_02_PART_01":
+            if (inventory.completeQuest([
+              { imageKey: "treeRessource", amount: 25 },
+              { imageKey: "bushRessource", amount: 20 },
+              { imageKey: "stoneRessource", amount: 10 }
+            ])) {
+              // Story-Flag setzen
+              storyFlags.add(flag);
+              // console.log(flag);
+
+              // Falls StoryFlags persistierst:
+              // TODO: SaveGame erweitert um Status der gelösten Quests zu speichern
+
+              // Npc verschieben
+              withObject.position.x += gridCells(-1);
+
+              // Optional: Sound/Effekt
+              // TODO: neuen Sound beim lösen der Quest
+            }
+            break;
+
+          default:
+            break;
+        }
       }
+
+      // Jetzt holen wir den aktuell passenden Content (nach eventuellen Änderungen oben)
+      const content = withObject.getContent();
+      if (!content) {
+        return;
+      }
+
+      // Textbox erstellen und anzeigen
+      const textbox = new SpriteTextString(content.portraitFrame, content.string);
+      this.addChild(textbox);
+
+      events.emit(TEXTBOX_START);
+
+      // Unsubscribe from this textbox after it's destroyed
+      const endingSub = events.on(TEXTBOX_END, this, () => {
+        textbox.destroy();
+        events.off(endingSub);
+      });
+
     });
 
     events.on(HERO_ATTACK_ACTION, this, (withObject) => {
