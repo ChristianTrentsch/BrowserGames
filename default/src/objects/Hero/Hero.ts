@@ -43,7 +43,7 @@ import { Main } from "../Main/Main.js";
 import { Direction } from "../../types.js";
 import { SaveGame } from "../../SaveGame.js";
 import { InventoryEvent } from "../Inventory/Inventory.js";
-import { SwordSlash } from "../Animations/SwordSlash.js";
+import { Attack } from "../Animations/Attack.js";
 
 export class Hero extends GameObject {
 
@@ -171,11 +171,27 @@ export class Hero extends GameObject {
     // ATTACK Button
     if (input.getActionJustPressed("KeyF")) {
 
-      const slash = new SwordSlash(this.position, this.facingDirection);
-      // this.parent?.addChild(slash);
-      this.addChild(slash);
+      // Equipment laden
+      const equip = SaveGame.loadEquipment();
 
-      // console.log("Hero.ts | create SwordSlash", slash);
+      // Aktuell aktives Item finden
+      const activeIndex = equip.findIndex(item => item.active === true);
+
+      let attack: Attack;
+      switch (equip[activeIndex]?.imageKey) {
+        case "rodPurple":
+          attack = new Attack(this.position, this.facingDirection, "rodAttackPurple");
+          break;
+
+        case "rodRed":
+          attack = new Attack(this.position, this.facingDirection, "rodAttackRed");
+          break;
+
+        default:
+          attack = new Attack(this.position, this.facingDirection, equip[activeIndex]?.imageKey);
+          break;
+      }
+      this.addChild(attack);
 
       if (this.parent) {
         const objAtPosition = this.parent.children.find((child) => {
