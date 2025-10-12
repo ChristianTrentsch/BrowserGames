@@ -11,6 +11,7 @@ import { Npc } from "../objects/Npc/Npc.js";
 import { Item } from "../objects/Item/Item.js";
 import { SaveGame } from "../SaveGame.js";
 import { LevelId } from "../helpers/levelRegistry.js";
+import { storyFlags } from "../StoryFlags.js";
 
 export class CaveLevel1 extends Level {
 
@@ -28,7 +29,7 @@ export class CaveLevel1 extends Level {
     // super(position);
 
     // mit Sound
-    super(position, "./sounds/levels/CaveLevel1.mp3", 0.3);
+    super(position, "./sounds/levels/CaveLevel1.mp3", 0.2);
 
     // Initialisierung des Sounds (abhängig vom SaveGame)
     this.initBackgroundSound();
@@ -51,7 +52,7 @@ export class CaveLevel1 extends Level {
     this.addChild(groundSprite);
 
     // change level gameobject
-    const exit = new Exit(gridCells(5), gridCells(1));
+    const exit = new Exit(gridCells(17), gridCells(7));
     this.addChild(exit);
 
     //** --- Create Hero and add to scene --- */
@@ -60,18 +61,75 @@ export class CaveLevel1 extends Level {
     const hero = new Hero(this.heroStartPosition.x, this.heroStartPosition.y);
     this.addChild(hero);
 
+    //** --- Create Npc and add to scene --- */
+    let npc = new Npc(
+      gridCells(6),
+      gridCells(2),
+      [
+        {
+          string: "Du hast nun die stärkste Waffe und keine Ressource kann dich aufhalten",
+          requires: ["STORY_01_PART_01", "STORY_02_PART_01"], // any string in the List must exists in our available list of storyflags
+          // bypass: [], // if we have done any of this storyflags then we dont show this message
+          // storyFlag: "STORY_01_PART_02", // add string to list of known flags
+        },
+        {
+          string: "Bringe mir 20x Blätter, 25x Holz, 10x Steine und die ultimative Waffe gehört dir!",
+          requires: ["STORY_01_PART_01"], // any string in the List must exists in our available list of storyflags
+          // bypass: ["STORY_01_PART_01"], // if we have done any of this storyflags then we dont show this message
+          storyFlag: "STORY_02_PART_01", // add string to list of known flags
+        },
+        {
+          string: "Sprich zuerst mit meinem Bruder!",
+          // requires: [], // any string in the List must exists in our available list of storyflags
+          // bypass: ["STORY_01_PART_01"], // if we have done any of this storyflags then we dont show this message
+          // storyFlag: "STORY_02_PART_01", // add string to list of known flags
+        }
+      ],
+    );
+
+    // Persitent but dependent on Equipment Item
+    if (SaveGame.isInEquipment("rodPurple")) {
+      storyFlags.add("STORY_01_PART_01");
+    }
+
+    if (SaveGame.isInEquipment("rodRed")) {
+      storyFlags.add("STORY_02_PART_01");
+    }
+
     //** --- Prüfen, ob Item schon im Inventar ist, ansonsten erzeugen --- */
     if (!SaveGame.isInEquipment("rodRed")) {
       // erzeuge Item und lege position fest
-      const rodRed = new Item(gridCells(10), gridCells(6), "rodRed");
+      const rodRed = new Item(gridCells(7), gridCells(3), "rodRed");
       this.addChild(rodRed);
+
+      // if red Rod is "NOT" inEquipment the Quest ist not complete and Npc default Position
+      npc = new Npc(
+        gridCells(7),
+        gridCells(2),
+        [
+          {
+            string: "Du hast nun die stärkste Waffe und keine Ressource kann dich aufhalten",
+            requires: ["STORY_01_PART_01", "STORY_02_PART_01"], // any string in the List must exists in our available list of storyflags
+            // bypass: [], // if we have done any of this storyflags then we dont show this message
+            // storyFlag: "STORY_01_PART_02", // add string to list of known flags
+          },
+          {
+            string: "Bringe mir 20x Blätter, 25x Holz, 10x Steine und die ultimative Waffe gehört dir!",
+            requires: ["STORY_01_PART_01"], // any string in the List must exists in our available list of storyflags
+            // bypass: ["STORY_01_PART_01"], // if we have done any of this storyflags then we dont show this message
+            storyFlag: "STORY_02_PART_01", // add string to list of known flags
+          },
+          {
+            string: "Sprich zuerst mit meinem Bruder!",
+            // requires: [], // any string in the List must exists in our available list of storyflags
+            // bypass: ["STORY_01_PART_01"], // if we have done any of this storyflags then we dont show this message
+            // storyFlag: "STORY_02_PART_01", // add string to list of known flags
+          }
+        ],
+      );
     }
 
-    //** --- Create Npc and add to scene --- */
-    const npc1 = new Npc(gridCells(5), gridCells(5), "Ich bin der Uwe und ich bin auch dabei!");
-    this.addChild(npc1);
-    const npc2 = new Npc(gridCells(10), gridCells(4), "Ich will hier raauuuusss!");
-    this.addChild(npc2);
+    this.addChild(npc);
 
     // Collision Preperation
     const wallDefinitions = {
@@ -99,7 +157,7 @@ export class CaveLevel1 extends Level {
         new OutdoorLevel1(
           {
             position: new Vector2(gridCells(0), gridCells(0)),
-            heroPosition: new Vector2(gridCells(11), gridCells(3)), // feste Startposition
+            heroPosition: new Vector2(gridCells(11), gridCells(4)), // feste Startposition
           })
       );
     });

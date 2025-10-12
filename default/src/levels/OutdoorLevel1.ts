@@ -17,6 +17,8 @@ import { Water } from "./parts/Water/Water.js";
 import { Bush } from "./parts/Bush/Bush.js";
 import { House } from "./parts/House/House.js";
 import { generateDefaultResources } from "../helpers/generateResources.js";
+import { Npc } from "../objects/Npc/Npc.js";
+import { storyFlags } from "../StoryFlags.js";
 
 export class OutdoorLevel1 extends Level {
 
@@ -34,7 +36,8 @@ export class OutdoorLevel1 extends Level {
     // super(position);
 
     // mit Sound
-    super(position, "./sounds/levels/OutdoorLevel1.mp3", 0.4);
+    // super(position, "./sounds/levels/OutdoorLevel1.mp3", 0.4);
+    super(position, "./sounds/levels/background_music_02.mp3", 0.2);
 
     // Initialisierung des Sounds (abhängig vom SaveGame)
     this.initBackgroundSound();
@@ -106,7 +109,7 @@ export class OutdoorLevel1 extends Level {
     this.addChild(new Water(gridCells(6), gridCells(5)));
     this.addChild(new Square(gridCells(4), gridCells(4)));
     this.addChild(new Square(gridCells(6), gridCells(4)));
-    this.addChild(new Bush(gridCells(5), gridCells(3)));
+    // this.addChild(new Bush(gridCells(5), gridCells(3)));
 
     this.addChild(new Square(gridCells(8), gridCells(3)));
     this.addChild(new Square(gridCells(9), gridCells(3)));
@@ -117,12 +120,75 @@ export class OutdoorLevel1 extends Level {
     const hero = new Hero(this.heroStartPosition.x, this.heroStartPosition.y);
     this.addChild(hero);
 
+    //** --- Create Npc and add to scene --- */
+    let npc = new Npc(
+      gridCells(4),
+      gridCells(3),
+      [
+        {
+          string: "Du hast nun die stärkste Waffe und keine Ressource kann dich aufhalten",
+          requires: ["STORY_01_PART_01", "STORY_02_PART_01"], // any string in the List must exists in our available list of storyflags
+          // bypass: [], // if we have done any of this storyflags then we dont show this message
+          // storyFlag: "STORY_01_PART_02", // add string to list of known flags
+        },
+        {
+          string: "Danke für das Holz. Jetzt kannst du noch schneller Ressourcen sammeln!  Sprich mit meinem Bruder wenn du Zeit findest.",
+          requires: ["STORY_01_PART_01"], // any string in the List must exists in our available list of storyflags
+          // bypass: [], // if we have done any of this storyflags then we dont show this message
+          // storyFlag: "STORY_01_PART_02", // add string to list of known flags
+        },
+        {
+          string: "Bringe mir 5x Holz und ich gebe dir einen Zauberstab der mehr Schaden austeilt!",
+          // requires: [], // any string in the List must exists in our available list of storyflags
+          // bypass: [], // if we have done any of this storyflags then we dont show this message
+          storyFlag: "STORY_01_PART_01", // add string to list of known flags
+        }
+      ],
+    );
+
+    // Persitent but dependent on Equipment Item
+    if (SaveGame.isInEquipment("rodPurple")) {
+      storyFlags.add("STORY_01_PART_01");
+    }
+
+    if (SaveGame.isInEquipment("rodRed")) {
+      storyFlags.add("STORY_02_PART_01");
+    }
+
     //** --- Prüfen, ob Item schon im Inventar ist, ansonsten erzeugen --- */
     if (!SaveGame.isInEquipment("rodPurple")) {
       // erzeuge Item und lege position fest
       const rodPurple = new Item(gridCells(5), gridCells(4), "rodPurple");
       this.addChild(rodPurple);
+
+      // if purple Rod is "NOT" inEquipment the Quest ist not complete and Npc default Position
+      npc = new Npc(
+        gridCells(5),
+        gridCells(3),
+        [
+          {
+            string: "Du hast nun die stärkste Waffe und keine Ressource kann dich aufhalten",
+            requires: ["STORY_01_PART_01", "STORY_02_PART_01"], // any string in the List must exists in our available list of storyflags
+            // bypass: [], // if we have done any of this storyflags then we dont show this message
+            // storyFlag: "STORY_01_PART_02", // add string to list of known flags
+          },
+          {
+            string: "Danke für das Holz. Jetzt kannst du noch schneller Ressourcen sammeln!  Sprich mit meinem Bruder wenn du Zeit findest.",
+            requires: ["STORY_01_PART_01"], // any string in the List must exists in our available list of storyflags
+            // bypass: [], // if we have done any of this storyflags then we dont show this message
+            // storyFlag: "STORY_01_PART_02", // add string to list of known flags
+          },
+          {
+            string: "Bringe mir 5x Holz und ich gebe dir einen Zauberstab der mehr Schaden austeilt!",
+            // requires: [], // any string in the List must exists in our available list of storyflags
+            // bypass: [], // if we have done any of this storyflags then we dont show this message
+            storyFlag: "STORY_01_PART_01", // add string to list of known flags
+          }
+        ],
+      );
     }
+
+    this.addChild(npc);
 
     // Collision Preperation
     // const wallDefinitions = {
@@ -159,7 +225,7 @@ export class OutdoorLevel1 extends Level {
         CHANGE_LEVEL,
         new CaveLevel1({
           position: new Vector2(gridCells(0), gridCells(0)),
-          heroPosition: new Vector2(gridCells(5), gridCells(2)), // feste Startposition
+          heroPosition: new Vector2(gridCells(16), gridCells(6)), // feste Startposition
         })
       );
     });
