@@ -6,7 +6,7 @@ import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
 import { InventoryItem } from "../Inventory/Inventory.js";
 
-export const EQUIPMENT_ITEMS = ["sword", "rodPurple", "rodRed"] as const;
+export const EQUIPMENT_ITEMS = ["sword", "rodPurple", "rodRed", "rodAttackPurple", "rodAttackRed"] as const;
 export type EquipmentItem = typeof EQUIPMENT_ITEMS[number];
 
 export interface EquipmentItemData {
@@ -102,7 +102,7 @@ export class Equipment extends GameObject {
             // Aktuell aktives Item finden
             const activeIndex = this.items.findIndex(item => item.active === true);
 
-            // Nächstes Item ermitteln falls vorhanden
+            // Nächstes Item ermitteln
             const nextIndex = (activeIndex + 1) % this.items.length;
 
             // Alles deaktivieren
@@ -179,5 +179,17 @@ export class Equipment extends GameObject {
     removeFromEquipment(imageKey: keyof typeof resources.images) {
         this.items = this.items.filter((item) => item.imageKey !== imageKey);
         this.renderEquipment();
+    }
+
+    getActiveDamage(): number {
+        const activeItem = this.items.find(item => item.active);
+        if (!activeItem) return 1; // Standard-Schaden ohne Waffe
+
+        switch (activeItem.imageKey) {
+            case "sword": return 1;
+            case "rodPurple": return 2;
+            case "rodRed": return 5;
+            default: return 1;
+        }
     }
 }
