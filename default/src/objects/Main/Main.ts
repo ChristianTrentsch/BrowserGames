@@ -70,9 +70,13 @@ export class Main extends GameObject {
 
     events.on(HERO_ATTACK_ACTION, this, (withObject) => {
       if (withObject instanceof Tree || withObject instanceof Stone || withObject instanceof Bush) {
-        
-        // HP ressource veringern
-        withObject.healthPoints -= 1;
+
+        // Hole aktive Waffe
+        const equipment = this.children.find(child => child instanceof Equipment) as Equipment;
+        const damage = equipment ? equipment.getActiveDamage() : 1;
+
+        // HP reduzieren basierend auf Waffe
+        withObject.healthPoints -= damage;
 
         if (this.level) {
           this.pushResource(withObject);
