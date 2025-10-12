@@ -15,20 +15,26 @@ export interface ResourceOptions {
   outdoorTree: string;
   outdoorWater: string;
   portraits: string;
-  rodPurple: string;
-  rodRed: string;
   shadow: string;
   fontWhite: string;
   fontBlack: string;
   startGround: string;
   textBox: string;
-  sword: string;
+
+  //** Inventory Stuff */
+  inventoryItemFrame: string;
   treeRessource: string;
   stoneRessource: string;
   bushRessource: string;
-  inventoryItemFrame: string;
+
+  //** Item/Equipment Stuff */
   equipmentItemFrame: string;
   equipmentActiveFrame: string;
+  sword: string;
+  rodPurple: string;
+  rodRed: string;
+  rodAttackPurple: string;
+  rodAttackRed: string;
 };
 
 export interface ResourceImageOptions {
@@ -80,17 +86,20 @@ class Resources {
       fontBlack: "./images/sprites/sprite-font-black.png",
       portraits: "./images/sprites/portraits-sheet.png",
 
-      // Items
+      //** Inventory Stuff */
       inventoryItemFrame: "./images/sprites/inventory_item_frame.png",
-      equipmentItemFrame: "./images/sprites/equipment_item_frame.png",
-      equipmentActiveFrame: "./images/sprites/equipment_active_frame.png",
-      rodPurple: "./images/sprites/rod-purple.png",
-      rodRed: "./images/sprites/rod-red.png",
-      sword: "./images/sprites/sword_experimental.png",
-
       treeRessource: "./images/sprites/outdoor/tree_ressource.png",
       stoneRessource: "./images/sprites/outdoor/stone_ressource.png",
       bushRessource: "./images/sprites/outdoor/bush_ressource.png",
+
+      //** Item/Equipment Stuff */
+      equipmentItemFrame: "./images/sprites/equipment_item_frame.png",
+      equipmentActiveFrame: "./images/sprites/equipment_active_frame.png",
+      sword: "./images/sprites/sword_experimental.png",
+      rodPurple: "./images/sprites/rod-purple.png",
+      rodRed: "./images/sprites/rod-red.png",
+      rodAttackPurple: "./images/sprites/rod_purple_experimental.png",
+      rodAttackRed: "./images/sprites/rod_red_experimental.png",
     };
 
     // A bucket to store all of our images
