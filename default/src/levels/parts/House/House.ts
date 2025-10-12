@@ -25,7 +25,7 @@ export class House extends GameObject {
     getContent() {
         // Maybe expand with story flag logic, etc.
         return {
-            portraitFrame: 1, // show first frame of npc sprite
+            portraitFrame: 0, // show first frame of portrait sprite
             // string: getRandomText("House"),
             string: getNextText("House"),
         };
