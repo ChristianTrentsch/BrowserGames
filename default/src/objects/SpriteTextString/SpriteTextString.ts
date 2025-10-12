@@ -74,6 +74,7 @@ export class SpriteTextString extends GameObject {
       position: new Vector2(0, 0),
       resource: resources.images.portraits,
       hFrames: 4,
+      vFrames: 1,
       frame: portraitFrame ?? 0,
     });
 
@@ -115,9 +116,12 @@ export class SpriteTextString extends GameObject {
     // Draw backdrop first
     this.backdrop.drawImage(ctx, drawPosX, drawPosY);
 
+    // Draw portrait
+    this.portrait.drawImage(ctx, drawPosX + 6, drawPosY + 6);
+
     // Configuration options
-    const PADDING_LEFT = 7;
-    const PADDING_TOP = 5;
+    const PADDING_LEFT = 27;
+    const PADDING_TOP = 9;
     const LINE_WIDTH_MAX = 240;
     const LINE_VERTICAL_HEIGHT = 14;
 
