@@ -1,7 +1,7 @@
-import { GameObject } from "./../../GameObject.js";
-import { Vector2 } from "./../../Vector2.js";
-import { events } from "./../../Events.js";
-import { LEFT, RIGHT, UP, DOWN } from "./../../Input.js";
+import { GameObject } from "../../GameObject.js";
+import { Vector2 } from "../../Vector2.js";
+import { events } from "../../Events.js";
+import { LEFT, RIGHT, UP, DOWN } from "../../Input.js";
 import { Direction } from "../../types.js";
 import { Sprite } from "../../Sprite.js";
 import { resources } from "../../Resource.js";
@@ -9,8 +9,9 @@ import { Animations } from "../../Animations.js";
 import { FrameIndexPattern } from "../../FrameIndexPattern.js";
 import { WALK_LEFT, WALK_DOWN, WALK_UP, WALK_RIGHT, STAND_LEFT, STAND_DOWN, STAND_UP, STAND_RIGHT, PICK_UP_DOWN, ATTACK_WALK_DOWN, ATTACK_WALK_LEFT, ATTACK_WALK_RIGHT, ATTACK_WALK_UP } from "../Hero/heroAnimations.js";
 import { SaveGame } from "../../SaveGame.js";
+import { EquipmentItem } from "../Equipment/Equipment.js";
 
-export class SwordSlash extends GameObject {
+export class Attack extends GameObject {
     lifetime: number = 480; // lebt 250ms
     facingDirection: Direction;
     body: Sprite;
@@ -25,7 +26,7 @@ export class SwordSlash extends GameObject {
     // Merkt sich den Index für die nächste Attacke
     private static sliceIndex: number = 0;
 
-    constructor(heroPosition: Vector2, facingDirection: Direction) {
+    constructor(heroPosition: Vector2, facingDirection: Direction, imageKey: EquipmentItem = "sword") {
         // Position abhängig von Hero + FacingDirection
         // const slashPos = heroPosition.toNeighbor(facing);
         // super(heroPosition);
@@ -33,12 +34,10 @@ export class SwordSlash extends GameObject {
         this.facingDirection = facingDirection;
 
         this.drawLayer = "HUD";
-        // console.log(resources.images.sword);
-
 
         // Sprite oder Animationszuweisung hier
         this.body = new Sprite({
-            resource: resources.images.sword,
+            resource: resources.images[imageKey],
             position: new Vector2(-8, -8),
             frameSize: new Vector2(32, 32),
             hFrames: 6,
@@ -62,12 +61,9 @@ export class SwordSlash extends GameObject {
         });
         this.addChild(this.body);
 
-        // console.log(SwordSlash.attackSlices);
-        
-
         // // Zufällig einen Slice auswählen
-        // const randomSlice = SwordSlash.attackSlices[
-        //     Math.floor(Math.random() * (SwordSlash.attackSlices.length - 1))
+        // const randomSlice = Attack.attackSlices[
+        //     Math.floor(Math.random() * (Attack.attackSlices.length - 1))
         // ];
 
         // // Check if sound is on
@@ -76,14 +72,13 @@ export class SwordSlash extends GameObject {
         // }
 
         // Nächsten Slice aus Array holen
-        const slice = SwordSlash.attackSlices[SwordSlash.sliceIndex];
+        const slice = Attack.attackSlices[Attack.sliceIndex];
         if (slice && SaveGame.loadSound() === "on") {
-            // console.log(slice);
             this.playSoundSlice(slice[0], slice[1]);
         }
 
         // Index hochzählen + zurücksetzen wenn Ende erreicht
-        SwordSlash.sliceIndex = (SwordSlash.sliceIndex + 1) % SwordSlash.attackSlices.length;
+        Attack.sliceIndex = (Attack.sliceIndex + 1) % Attack.attackSlices.length;
 
         // Start-Animation abspielen
         if (this.body.animations) {
@@ -109,8 +104,6 @@ export class SwordSlash extends GameObject {
     step(delta: number) {
         this.lifetime -= delta;
 
-        // console.log("lifetime", this.lifetime);
-
         if (this.lifetime <= 0) {
             this.destroy();
         }
@@ -119,7 +112,6 @@ export class SwordSlash extends GameObject {
     destroy() {
         // Cleanup
         super.destroy();
-        // console.log("SwordSlash removed");
     }
 
     async playSoundSlice(startTime: number, endTime: number) {
