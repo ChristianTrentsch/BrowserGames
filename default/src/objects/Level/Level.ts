@@ -39,7 +39,7 @@ export abstract class Level extends GameObject {
     objects: GameObject[],
     noRessourceZones: { x1: number, x2: number, y1: number, y2: number }[] = [],
   ) {
-    console.groupCollapsed(`Adding group: ${name}`);
+    // console.groupCollapsed(`Adding group: ${name}`);
 
     // Umrechnung von Pixeln auf Grid-Koordinaten
     const baseGridX = Math.floor(baseX / gridCells(1));
@@ -51,7 +51,7 @@ export abstract class Level extends GameObject {
       obj.position.y += baseY;
 
       this.addChild(obj);
-      console.log(`Added ${obj.constructor.name} at (${obj.position.x}, ${obj.position.y})`);
+      // console.log(`Added ${obj.constructor.name} at (${obj.position.x}, ${obj.position.y})`);
     });
 
     // Übernehme No-Resource-Zonen in Level-Koordinaten
@@ -68,7 +68,7 @@ export abstract class Level extends GameObject {
 
     this.noRessourceZones.push(...adjustedZones);
 
-    console.groupEnd();
+    // console.groupEnd();
   }
 
   protected checkGameProgress(){
