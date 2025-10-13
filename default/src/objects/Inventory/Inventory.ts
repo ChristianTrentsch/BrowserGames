@@ -114,9 +114,12 @@ export class Inventory extends GameObject {
   renderInventory() {
     // Remove old drawings
     this.children.forEach((child) => child.destroy());
+    
+    // Nur Items mit amount > 0 für die Darstellung
+    const visibleItems = this.items.filter(item => item.amount > 0);
 
     // Draw fresh inventory items
-    this.items.forEach((item, index) => {
+    visibleItems.forEach((item, index) => {
 
       const baseX = index * 25;
       const baseY = 0;
@@ -136,7 +139,7 @@ export class Inventory extends GameObject {
       });
       this.addChild(sprite);
 
-      // Wenn Item von type Baum dann Zahl passend zum amount zeichnen 
+      // Anzahl gesammelter Resourcen prüfen und Darstellen
       if (item.amount > 1) {
         const text = String(item.amount);
         let xOffset = baseX + 8; // etwas nach rechts vom Item
@@ -180,7 +183,8 @@ export class Inventory extends GameObject {
 
   /**
    * Entfernt eine bestimmte Menge einer Resource aus dem Inventar.
-   * Wenn die Menge auf 0 sinkt, wird das Item komplett entfernt.
+   * Wenn die Menge auf 0 sinkt, wird die Item.amount auf 0 gesetzt
+   * Die Liste der Items wird neu sortiert je nach Item.amount
    * @param imageKey - der Schlüssel der Resource
    * @param amount - die zu entfernende Menge
    */
@@ -190,10 +194,17 @@ export class Inventory extends GameObject {
 
     item.amount -= amount;
 
-    // Falls Menge <= 0 → Item komplett entfernen
+    // Falls Anzahl <= 0 dann Anzahl auf 0 setzen
     if (item.amount <= 0) {
-      this.items = this.items.filter(i => i.imageKey !== imageKey);
+      item.amount = 0;
     }
+
+    // Sortiere Items: zuerst mit amount > 0, danach amount = 0
+    this.items.sort((a, b) => {
+      if (a.amount === 0 && b.amount > 0) return 1;
+      if (a.amount > 0 && b.amount === 0) return -1;
+      return 0;
+    });
 
     // Änderungen speichern
     SaveGame.saveInventory(this.items.map(i => ({
