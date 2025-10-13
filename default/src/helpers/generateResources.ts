@@ -64,29 +64,45 @@ export function generateDefaultResources(options: GenerationOptions): ResourceSa
             const r = random();
 
             if (r < density.Tree) {
+                const hp = getRandomHP(random, 3, 4, 0.1); // 10% Chance auf Ausreißer (selten mal einer dabei mit 2 hp)
                 resources.push({
                     type: "Tree",
                     x: gridCells(x),
                     y: gridCells(y),
-                    hp: 4
+                    hp: hp
                 });
             } else if (r < density.Tree + density.Bush) {
+                const hp = getRandomHP(random, 2, 2, 0.1); // 10% Chance auf Ausreißer
                 resources.push({
                     type: "Bush",
                     x: gridCells(x),
                     y: gridCells(y),
-                    hp: 2
+                    hp: hp
                 });
             } else if (r < density.Tree + density.Bush + density.Stone) {
+                const hp = getRandomHP(random, 3, 4, 0.1); // 10% Chance auf Ausreißer (selten mal einer dabei mit 2 hp)
                 resources.push({
                     type: "Stone",
                     x: gridCells(x),
                     y: gridCells(y),
-                    hp: 4
+                    hp: hp
                 });
             }
         }
     }
 
     return resources;
+}
+
+/** Kleine Hilfsfunktion für zufällige HP */
+function getRandomHP(randFn: () => number, min: number, max: number, rareChance = 0.1): number {
+  let hp = Math.floor(randFn() * (max - min + 1)) + min;
+
+  // Mit kleiner Wahrscheinlichkeit Ausreißer erzeugen (etwas schwächer/stärker)
+  if (randFn() < rareChance) {
+    if (randFn() < 0.5) hp = Math.max(1, hp - 1); // schwächer
+    else hp = hp + 1; // stärker
+  }
+
+  return hp;
 }
