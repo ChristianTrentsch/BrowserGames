@@ -11,7 +11,11 @@ import { Npc } from "../objects/Npc/Npc.js";
 import { Item } from "../objects/Item/Item.js";
 import { SaveGame } from "../SaveGame.js";
 import { LevelId } from "../helpers/levelRegistry.js";
-import { storyFlags } from "../StoryFlags.js";
+import { GameObject } from "../GameObject.js";
+import { generateDefaultResources } from "../helpers/generateResources.js";
+import { Tree } from "./parts/Tree/Tree.js";
+import { Bush } from "./parts/Bush/Bush.js";
+import { Stone } from "./parts/Stone/Stone.js";
 
 export class CaveLevel1 extends Level {
 
@@ -25,16 +29,12 @@ export class CaveLevel1 extends Level {
     position: Vector2;
     heroPosition?: Vector2;
   }) {
-    // Ohne Sound
-    // super(position);
-
+    // Ohne Sound // super(position);
     // mit Sound
     super(position, "./sounds/levels/CaveLevel1.mp3", 0.2);
 
     // Initialisierung des Sounds (abhängig vom SaveGame)
     this.initBackgroundSound();
-
-    // console.log(`CaveLevel1 LOADED`, this);
 
     // Choose Background Image of your Level
     this.background = new Sprite({
@@ -51,9 +51,14 @@ export class CaveLevel1 extends Level {
     });
     this.addChild(groundSprite);
 
-    // change level gameobject
-    const exit = new Exit(gridCells(17), gridCells(7));
-    this.addChild(exit);
+    //** --- Check if Quest's finished --- */
+    this.checkGameProgress();
+
+    //** --- Build "redRod" Scene  --- */
+    this.buildLevelGroupRedRod();
+
+    //** --- Ressourcen laden --- */
+    this.loadLevelRessources();
 
     //** --- Create Hero and add to scene --- */
     // entweder geladene Position (Reload) oder die übergebene Startposition (Levelwechsel)
@@ -61,9 +66,47 @@ export class CaveLevel1 extends Level {
     const hero = new Hero(this.heroStartPosition.x, this.heroStartPosition.y);
     this.addChild(hero);
 
-    //** --- Create Npc and add to scene --- */
+    //** --- Create Level walls add to scene --- */
+    const wallDefinitions = {
+      right: this.generateWall(new Vector2(288, 16), new Vector2(288, 112), TILE_SIZE, "right"),
+      left: this.generateWall(new Vector2(16, 16), new Vector2(16, 112), TILE_SIZE, "left"),
+      top: this.generateWall(new Vector2(32, 0), new Vector2(272, 0), TILE_SIZE, "top"),
+      bottom: this.generateWall(new Vector2(32, 128), new Vector2(272, 128), TILE_SIZE, "bottom"),
+      stone: ["144,16", "192,32", "208,32", "208,48", "256,80", "32,64",],
+      littleStone: ["48,64", "48,80",],
+      squares: ["48,13", "64,16", "80,48", "96,48", "128,48", "112,64", "96,64", "192,80", "208,80", "224,96",],
+      water: ["240,32", "256,32", "208,96", "192,96", "176,96", "128,96", "112,96", "96,96",],
+    };
+    this.walls = new Set(Object.values(wallDefinitions).flat());
+  }
+
+  ready() {
+    events.on(HERO_EXITS, this, () => {
+
+      // console.log("CHANGE LEVEL", this);
+
+      // Alten Level-Sound stoppen
+      this.stopBackgroundSound();
+
+      events.emit(
+        CHANGE_LEVEL,
+        new OutdoorLevel1(
+          {
+            position: new Vector2(gridCells(0), gridCells(0)),
+            heroPosition: new Vector2(gridCells(11), gridCells(10)), // feste Startposition
+          })
+      );
+    });
+  }
+
+  /**
+     * Erstelle alle Elemente die zur "roter Zauberstab" Scene gehören
+     * - red Rod
+     * - Npc for Quest
+     */
+  buildLevelGroupRedRod() {
     let npc = new Npc(
-      gridCells(6),
+      gridCells(7),
       gridCells(2),
       [
         {
@@ -87,79 +130,86 @@ export class CaveLevel1 extends Level {
       ],
     );
 
-    // Persitent but dependent on Equipment Item
-    if (SaveGame.isInEquipment("rodPurple")) {
-      storyFlags.add("STORY_01_PART_01");
-    }
-
+    //** --- Check if Quest "rodRed" is finished --- */
     if (SaveGame.isInEquipment("rodRed")) {
-      storyFlags.add("STORY_02_PART_01");
+      // NPC leicht nach link verschieben
+      npc.position.x += gridCells(-1);
     }
 
-    //** --- Prüfen, ob Item schon im Inventar ist, ansonsten erzeugen --- */
+    // Gruppe vorbereiten
+    const rodRedGroup: GameObject[] = [
+      // add Npc
+      npc,
+      new Exit(gridCells(17), gridCells(7)),
+    ];
+
+    //** --- Wenn noch kein "rodRed" im Equipment dann "rodRed" in der Scene platzieren --- */
     if (!SaveGame.isInEquipment("rodRed")) {
-      // erzeuge Item und lege position fest
-      const rodRed = new Item(gridCells(7), gridCells(3), "rodRed");
-      this.addChild(rodRed);
-
-      // if red Rod is "NOT" inEquipment the Quest ist not complete and Npc default Position
-      npc = new Npc(
-        gridCells(7),
-        gridCells(2),
-        [
-          {
-            string: "Du hast nun die stärkste Waffe und keine Ressource kann dich aufhalten",
-            requires: ["STORY_01_PART_01", "STORY_02_PART_01"], // any string in the List must exists in our available list of storyflags
-            // bypass: [], // if we have done any of this storyflags then we dont show this message
-            // storyFlag: "STORY_01_PART_02", // add string to list of known flags
-          },
-          {
-            string: "Bringe mir 20x Blätter, 25x Holz, 10x Steine und die ultimative Waffe gehört dir!",
-            requires: ["STORY_01_PART_01"], // any string in the List must exists in our available list of storyflags
-            // bypass: ["STORY_01_PART_01"], // if we have done any of this storyflags then we dont show this message
-            storyFlag: "STORY_02_PART_01", // add string to list of known flags
-          },
-          {
-            string: "Sprich zuerst mit meinem Bruder!",
-            // requires: [], // any string in the List must exists in our available list of storyflags
-            // bypass: ["STORY_01_PART_01"], // if we have done any of this storyflags then we dont show this message
-            // storyFlag: "STORY_02_PART_01", // add string to list of known flags
-          }
-        ],
-      );
+      const rod = new Item(gridCells(7), gridCells(3), "rodRed");
+      rodRedGroup.push(rod);
     }
 
-    this.addChild(npc);
-
-    // Collision Preperation
-    const wallDefinitions = {
-      right: this.generateWall(new Vector2(288, 16), new Vector2(288, 112), TILE_SIZE, "right"),
-      left: this.generateWall(new Vector2(16, 16), new Vector2(16, 112), TILE_SIZE, "left"),
-      top: this.generateWall(new Vector2(32, 0), new Vector2(272, 0), TILE_SIZE, "top"),
-      bottom: this.generateWall(new Vector2(32, 128), new Vector2(272, 128), TILE_SIZE, "bottom"),
-      stone: ["144,16", "192,32", "208,32", "208,48", "256,80", "32,64",],
-      littleStone: ["48,64", "48,80",],
-      squares: ["48,13", "64,16", "80,48", "96,48", "128,48", "112,64", "96,64", "192,80", "208,80", "224,96",],
-      water: ["240,32", "256,32", "208,96", "192,96", "176,96", "128,96", "112,96", "96,96",],
-    };
-
-    this.walls = new Set(Object.values(wallDefinitions).flat());
+    /** --- Gruppe: "roter Zauberstab" erzeugen --- */
+    this.addChildrenGroup(
+      "roter Zauberstab",
+      gridCells(0), // Platziere Gruppe links/rechts
+      gridCells(0), // Platziere Gruppe oben/unten
+      rodRedGroup,
+      [
+        // Ressourcen freie Zone definieren
+        {
+          x1: 0, // links
+          x2: 10,// rechts
+          y1: 0, // oben
+          y2: 10, // unten
+        },
+      ],
+    );
   }
 
-  ready() {
-    events.on(HERO_EXITS, this, () => {
-
-      // Alten Level-Sound stoppen
-      this.stopBackgroundSound();
-
-      events.emit(
-        CHANGE_LEVEL,
-        new OutdoorLevel1(
-          {
-            position: new Vector2(gridCells(0), gridCells(0)),
-            heroPosition: new Vector2(gridCells(11), gridCells(4)), // feste Startposition
-          })
-      );
+  /**
+     * Lade alle für dieses Level relevante Ressource
+     * - default Ressources
+     * - saved Ressources
+     * - merge default and saved Ressources
+     * - create merged Ressources
+     */
+  loadLevelRessources() {
+    // Default-Resourcen-Definition im Level
+    const defaultResources = generateDefaultResources({
+      levelId: "CaveLevel1",
+      width: 320,
+      height: 180,
+      seed: 1, // bestimmter Seed = immer gleiche Karte
+      pathZones: [
+        ...this.noRessourceZones, // füge Gruppenbasierte freie flächen hinzu
+      ],
+      density: {
+        Tree: 0, // keine Ressourcen erzeugen
+        Bush: 0, // keine Ressourcen erzeugen
+        Stone: 0, // keine Ressourcen erzeugen
+      },
+      border: 0
     });
+
+    // Geladene Savegame-Daten
+    const savedResources = SaveGame.loadResources(this.levelId);
+
+    // Merging Logik
+    const mergedResources = defaultResources.map(def => {
+      const saved = savedResources.find(s => s.x === def.x && s.y === def.y && s.type === def.type);
+      return saved ? { ...def, ...saved } : def;
+    });
+
+    // Ressourcen anhand der Daten setzen (saved Data / default Data)
+    for (const res of mergedResources) {
+      if (res.hp > 0) {
+        switch (res.type) {
+          case "Tree": this.addChild(new Tree(res.x, res.y, res.hp)); break;
+          case "Bush": this.addChild(new Bush(res.x, res.y, res.hp)); break;
+          case "Stone": this.addChild(new Stone(res.x, res.y, res.hp)); break;
+        }
+      }
+    }
   }
 }
