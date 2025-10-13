@@ -142,6 +142,11 @@ export class Main extends GameObject {
         // HP reduzieren basierend auf Waffe
         withObject.healthPoints -= damage;
 
+        // abfangen wenn Schaden größer als verfügbare HP
+        if (withObject.healthPoints <= 0) {
+          withObject.healthPoints = 0; // keine negative HP speichern
+        }
+
         if (this.level) {
           this.pushResource(withObject);
           SaveGame.saveResources(this.level.levelId, this.savedResources);
