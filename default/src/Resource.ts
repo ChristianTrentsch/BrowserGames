@@ -23,9 +23,9 @@ export interface ResourceOptions {
 
   //** Inventory Stuff */
   inventoryItemFrame: string;
-  treeRessource: string;
-  stoneRessource: string;
-  bushRessource: string;
+  treeResource: string;
+  stoneResource: string;
+  bushResource: string;
 
   //** Item/Equipment Stuff */
   equipmentItemFrame: string;
@@ -88,9 +88,9 @@ class Resources {
 
       //** Inventory Stuff */
       inventoryItemFrame: "./images/sprites/inventory_item_frame.png",
-      treeRessource: "./images/sprites/outdoor/tree_ressource.png",
-      stoneRessource: "./images/sprites/outdoor/stone_ressource.png",
-      bushRessource: "./images/sprites/outdoor/bush_ressource.png",
+      treeResource: "./images/sprites/outdoor/tree_resource.png",
+      stoneResource: "./images/sprites/outdoor/stone_resource.png",
+      bushResource: "./images/sprites/outdoor/bush_resource.png",
 
       //** Item/Equipment Stuff */
       equipmentItemFrame: "./images/sprites/equipment_item_frame.png",

@@ -57,8 +57,8 @@ export class CaveLevel1 extends Level {
     //** --- Build "redRod" Scene  --- */
     this.buildLevelGroupRedRod();
 
-    //** --- Ressourcen laden --- */
-    this.loadLevelRessources();
+    //** --- Resourcen laden --- */
+    this.loadLevelResources();
 
     //** --- Create Hero and add to scene --- */
     // entweder geladene Position (Reload) oder die übergebene Startposition (Levelwechsel)
@@ -110,7 +110,7 @@ export class CaveLevel1 extends Level {
       gridCells(2),
       [
         {
-          string: "Du hast nun die stärkste Waffe und keine Ressource kann dich aufhalten",
+          string: "Du hast nun die stärkste Waffe und keine Resource kann dich aufhalten",
           requires: ["STORY_01_PART_01", "STORY_02_PART_01"], // any string in the List must exists in our available list of storyflags
           // bypass: [], // if we have done any of this storyflags then we dont show this message
           // storyFlag: "STORY_01_PART_02", // add string to list of known flags
@@ -156,7 +156,7 @@ export class CaveLevel1 extends Level {
       gridCells(0), // Platziere Gruppe oben/unten
       rodRedGroup,
       [
-        // Ressourcen freie Zone definieren
+        // Resourcen freie Zone definieren
         {
           x1: 0, // links
           x2: 10,// rechts
@@ -168,13 +168,13 @@ export class CaveLevel1 extends Level {
   }
 
   /**
-     * Lade alle für dieses Level relevante Ressource
-     * - default Ressources
-     * - saved Ressources
-     * - merge default and saved Ressources
-     * - create merged Ressources
+     * Lade alle für dieses Level relevante Resource
+     * - default Resources
+     * - saved Resources
+     * - merge default and saved Resources
+     * - create merged Resources
      */
-  loadLevelRessources() {
+  loadLevelResources() {
     // Default-Resourcen-Definition im Level
     const defaultResources = generateDefaultResources({
       levelId: "CaveLevel1",
@@ -182,12 +182,12 @@ export class CaveLevel1 extends Level {
       height: 180,
       seed: 1, // bestimmter Seed = immer gleiche Karte
       pathZones: [
-        ...this.noRessourceZones, // füge Gruppenbasierte freie flächen hinzu
+        ...this.noResourceZones, // füge Gruppenbasierte freie flächen hinzu
       ],
       density: {
-        Tree: 0, // keine Ressourcen erzeugen
-        Bush: 0, // keine Ressourcen erzeugen
-        Stone: 0, // keine Ressourcen erzeugen
+        Tree: 0, // keine Resourcen erzeugen
+        Bush: 0, // keine Resourcen erzeugen
+        Stone: 0, // keine Resourcen erzeugen
       },
       border: 0
     });
@@ -201,7 +201,7 @@ export class CaveLevel1 extends Level {
       return saved ? { ...def, ...saved } : def;
     });
 
-    // Ressourcen anhand der Daten setzen (saved Data / default Data)
+    // Resourcen anhand der Daten setzen (saved Data / default Data)
     for (const res of mergedResources) {
       if (res.hp > 0) {
         switch (res.type) {

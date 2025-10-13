@@ -42,7 +42,7 @@ import { FrameIndexPattern } from "../../FrameIndexPattern.js";
 import { Main } from "../Main/Main.js";
 import { Direction } from "../../types.js";
 import { SaveGame } from "../../SaveGame.js";
-import { InventoryEvent } from "../Inventory/Inventory.js";
+import { INVENTORY_ITEMS, InventoryEvent } from "../Inventory/Inventory.js";
 import { Attack } from "../Animations/Attack.js";
 
 export class Hero extends GameObject {
@@ -322,10 +322,7 @@ export class Hero extends GameObject {
       // Start the pickup animation
       this.itemPickUpTime = 1000; // ms
 
-      if (
-        data.imageKey === "treeRessource"
-        || data.imageKey === "stoneRessource"
-        || data.imageKey === "bushRessource") {
+      if (INVENTORY_ITEMS.includes(data.imageKey)) {
         this.itemPickUpTime = 300; // ms
       }
 

@@ -63,7 +63,7 @@ export class Stone extends GameObject {
         const item = new Item(
             this.position.x,
             this.position.y,
-            "stoneRessource",
+            "stoneResource",
             "./sounds/items/pick_up_item.mp3",
             1
         );

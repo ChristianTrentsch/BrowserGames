@@ -13,7 +13,7 @@ interface GenerationOptions {
         Bush: number;
         Stone: number;
     };
-    pathZones?: { x1: number; x2: number; y1: number; y2: number }[]; // Bereiche ohne Ressourcen
+    pathZones?: { x1: number; x2: number; y1: number; y2: number }[]; // Bereiche ohne Resourcen
     border?: number;
 }
 
@@ -42,7 +42,7 @@ export function generateDefaultResources(options: GenerationOptions): ResourceSa
         tileSize = 16,
         density = { Tree: 0.015, Bush: 0.007, Stone: 0.002 },
         pathZones = [],
-        border = 32 // keine Ressourcen am Rand
+        border = 32 // keine Resourcen am Rand
     } = options;
 
     const random = mulberry32(seed + options.levelId.length); // deterministisch pro Level

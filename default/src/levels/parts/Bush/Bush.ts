@@ -70,7 +70,7 @@ export class Bush extends GameObject {
         const item = new Item(
             this.position.x,
             this.position.y,
-            "bushRessource",
+            "bushResource",
             "./sounds/items/pick_up_item.mp3",
             1
         );

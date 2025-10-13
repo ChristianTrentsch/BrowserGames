@@ -6,7 +6,7 @@ import { events, HERO_PICKS_UP_ITEM, HERO_USE_ITEM } from "../../Events.js";
 import { SaveGame } from "../../SaveGame.js";
 import { getCharacterFrame, getCharacterWidth } from "../SpriteTextString/spriteFontMap.js";
 
-export const INVENTORY_ITEMS = ["treeRessource", "stoneRessource", "bushRessource"] as const;
+export const INVENTORY_ITEMS = ["treeResource", "stoneResource", "bushResource"] as const;
 export type InventoryItem = typeof INVENTORY_ITEMS[number];
 
 export interface InventoryItemData {
@@ -45,11 +45,11 @@ export class Inventory extends GameObject {
 
     // Nur prüfen, wenn das Inventar nicht leer ist
     if (this.items.length > 0) {
-      const ressourceItem = this.items.find(item => INVENTORY_ITEMS.includes(item.imageKey));
+      const resourceItem = this.items.find(item => INVENTORY_ITEMS.includes(item.imageKey));
 
-      if (ressourceItem) {
+      if (resourceItem) {
         // Wenn Baum, Menge erhöhen
-        ressourceItem.amount += 1;
+        resourceItem.amount += 1;
       }
 
       // nextId auf höchsten ID-Wert setzen
@@ -168,8 +168,8 @@ export class Inventory extends GameObject {
   }
 
   /**
-   * Prüft, ob der Spieler mindestens `amount` Stück einer Ressource besitzt.
-   * @param imageKey - der Schlüssel der Ressource (z. B. "treeRessource")
+   * Prüft, ob der Spieler mindestens `amount` Stück einer Resource besitzt.
+   * @param imageKey - der Schlüssel der Resource (z. B. "treeResource")
    * @param amount - die benötigte Menge
    * @returns true, wenn genügend vorhanden ist, sonst false
   */
@@ -179,9 +179,9 @@ export class Inventory extends GameObject {
   }
 
   /**
-   * Entfernt eine bestimmte Menge einer Ressource aus dem Inventar.
+   * Entfernt eine bestimmte Menge einer Resource aus dem Inventar.
    * Wenn die Menge auf 0 sinkt, wird das Item komplett entfernt.
-   * @param imageKey - der Schlüssel der Ressource
+   * @param imageKey - der Schlüssel der Resource
    * @param amount - die zu entfernende Menge
    */
   removeResource(imageKey: InventoryItem, amount: number): void {
@@ -207,10 +207,10 @@ export class Inventory extends GameObject {
   }
 
   /**
-   * Prüft, ob der Spieler mindestens `amount` Stück einer oder mehrerer Ressourcen besitzt.
-   * Entfernt eine bestimmte Menge einer Ressource aus dem Inventar.
+   * Prüft, ob der Spieler mindestens `amount` Stück einer oder mehrerer Resourcen besitzt.
+   * Entfernt eine bestimmte Menge einer Resource aus dem Inventar.
    * Wenn die Menge auf 0 sinkt, wird das Item komplett entfernt.
-   * @param requirements - Array mit Ressourcen Bedingung
+   * @param requirements - Array mit Resourcen Bedingung
    */
   completeQuest(requirements: { imageKey: InventoryItem; amount: number }[]): boolean {
     // Prüfen, ob alle Anforderungen erfüllt sind
@@ -220,7 +220,7 @@ export class Inventory extends GameObject {
 
     if (!allAvailable) return false;
 
-    // Ressourcen abziehen, wenn erfüllt
+    // Resourcen abziehen, wenn erfüllt
     requirements.forEach(req => this.removeResource(req.imageKey, req.amount));
     return true;
   }

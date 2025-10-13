@@ -18,7 +18,7 @@ export abstract class Level extends GameObject {
   abstract defaultHeroPosition: Vector2;
 
   backgroundSound?: HTMLAudioElement;
-  noRessourceZones: { x1: number, x2: number, y1: number, y2: number }[];
+  noResourceZones: { x1: number, x2: number, y1: number, y2: number }[];
 
   constructor(position: Vector2, backgroundSoundSrc?: string, volume: number = 0.5) {
     super(position);
@@ -29,7 +29,7 @@ export abstract class Level extends GameObject {
       this.backgroundSound.volume = volume; // Lautstärke setzen (0.0 - 1.0)
     }
 
-    this.noRessourceZones = [];
+    this.noResourceZones = [];
   }
 
   protected addChildrenGroup(
@@ -37,7 +37,7 @@ export abstract class Level extends GameObject {
     baseX: number,
     baseY: number,
     objects: GameObject[],
-    noRessourceZones: { x1: number, x2: number, y1: number, y2: number }[] = [],
+    noResourceZones: { x1: number, x2: number, y1: number, y2: number }[] = [],
   ) {
     // console.groupCollapsed(`Adding group: ${name}`);
 
@@ -55,18 +55,18 @@ export abstract class Level extends GameObject {
     });
 
     // Übernehme No-Resource-Zonen in Level-Koordinaten
-    const adjustedZones = noRessourceZones.map(zone => ({
+    const adjustedZones = noResourceZones.map(zone => ({
       x1: zone.x1 + baseGridX,
       y1: zone.y1 + baseGridY,
       x2: zone.x2 + baseGridX,
       y2: zone.y2 + baseGridY,
     }));
 
-    if (!this.noRessourceZones) {
-      this.noRessourceZones = [];
+    if (!this.noResourceZones) {
+      this.noResourceZones = [];
     }
 
-    this.noRessourceZones.push(...adjustedZones);
+    this.noResourceZones.push(...adjustedZones);
 
     // console.groupEnd();
   }

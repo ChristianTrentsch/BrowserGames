@@ -70,7 +70,7 @@ export class Tree extends GameObject {
         const item = new Item(
             this.position.x,
             this.position.y,
-            "treeRessource",
+            "treeResource",
             "./sounds/items/pick_up_item.mp3",
             1
         );
@@ -81,7 +81,7 @@ export class Tree extends GameObject {
         }
 
 
-        // const drops = ["treeRessource", "apple", null]; // null = keine Dropp
+        // const drops = ["treeResource", "apple", null]; // null = keine Dropp
         // const drop = drops[Math.floor(Math.random() * drops.length)];
         // if (!drop) return;
 

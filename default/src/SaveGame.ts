@@ -24,7 +24,7 @@ export class SaveGame {
     private static soundKey = "sound";
     private static inputKey = "input";
 
-    private static ressourceKey = "ressources";
+    private static resourceKey = "resources";
 
     // --------- INVENTORY ----------
     static saveInventory(items: InventoryItemData[]) {
@@ -176,58 +176,72 @@ export class SaveGame {
     }
 
     // --------- RESOURCES ----------
-    static saveResources(levelId: LevelId, ressources: ResourceSaveData[]) {
-        const raw = localStorage.getItem(this.ressourceKey);
+    static saveResources(levelId: LevelId, resources: ResourceSaveData[]) {
+        const raw = localStorage.getItem(this.resourceKey);
         let all: Partial<Record<LevelId, ResourceSaveData[]>> = {};
 
         if (raw) {
             try {
                 all = JSON.parse(raw);
             } catch (e) {
-                console.warn("Fehler beim Parsen der Ressourcen:", e);
+                console.warn("Fehler beim Parsen der Resourcen:", e);
             }
         }
 
-        all[levelId] = ressources; // immer setzen
+        all[levelId] = resources; // immer setzen
 
-        localStorage.setItem(this.ressourceKey, JSON.stringify(all));
+        localStorage.setItem(this.resourceKey, JSON.stringify(all));
     }
 
 
     static loadResources(levelId: LevelId): ResourceSaveData[] {
-        const raw = localStorage.getItem(this.ressourceKey);
+        const raw = localStorage.getItem(this.resourceKey);
         if (!raw) return [];
         try {
             const all = JSON.parse(raw) as Record<LevelId, ResourceSaveData[]>;
-            return all[levelId] ?? []; // zum level passende ressource zurück geben
+            return all[levelId] ?? []; // zum level passende resource zurück geben
         } catch (e) {
-            console.warn("Fehler beim Laden der Ressourcen:", e);
+            console.warn("Fehler beim Laden der Resourcen:", e);
             return [];
         }
     }
 
     static clearResources() {
-        localStorage.removeItem(this.ressourceKey);
+        localStorage.removeItem(this.resourceKey);
     }
 
     // --------- ALL SAVE DATA ----------
     static clearAll() {
-        this.clearInventory();
-        this.clearEquipment();
-        this.clearHero();
-        this.clearOverlay();
-        this.clearSound();
-        this.clearLevel();
-        this.clearInput();
-        this.clearResources();
+
+        // AlienGame Highscore vorher sichern
+        const highscore = localStorage.getItem("alienHighscores");
+
+        // Kompletten Speicher leeren
+        localStorage.clear();
+
+        // this.clearInventory();
+        // this.clearEquipment();
+        // this.clearHero();
+        // this.clearOverlay();
+        // this.clearSound();
+        // this.clearLevel();
+        // this.clearInput();
+        // this.clearResources();
+
+        // Highscore wiederherstellen (falls vorhanden)
+        if (highscore !== null) {
+            localStorage.setItem("alienHighscores", highscore);
+        }
     }
 
     static initAll() {
-        this.saveSound("on");
-        this.saveLevel("OutdoorLevel1");
-        // this.saveLevel("StartLevel");
         this.saveOverlay("false");
+        this.saveSound("on");
         this.saveInput("keyboard");
+        this.saveLevel("OutdoorLevel1");
         this.saveResources("OutdoorLevel1", []);
+        this.saveResources("CaveLevel1", []);
+
+        this.saveEquipment([{ id: 1, imageKey: "sword", amount: 1, active: true }]);
     }
 }

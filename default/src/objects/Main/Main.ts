@@ -70,7 +70,7 @@ export class Main extends GameObject {
         // Inventar überprüfen auf Questbedingung
         switch (flag) {
           case "STORY_01_PART_01":
-            if (inventory.completeQuest([{ imageKey: "treeRessource", amount: 5 }])) {
+            if (inventory.completeQuest([{ imageKey: "treeResource", amount: 5 }])) {
               // Story-Flag setzen
               storyFlags.add(flag);
               // console.log(flag);
@@ -88,9 +88,9 @@ export class Main extends GameObject {
 
           case "STORY_02_PART_01":
             if (inventory.completeQuest([
-              { imageKey: "treeRessource", amount: 25 },
-              { imageKey: "bushRessource", amount: 20 },
-              { imageKey: "stoneRessource", amount: 10 }
+              { imageKey: "treeResource", amount: 25 },
+              { imageKey: "bushResource", amount: 20 },
+              { imageKey: "stoneResource", amount: 10 }
             ])) {
               // Story-Flag setzen
               storyFlags.add(flag);
@@ -184,7 +184,7 @@ export class Main extends GameObject {
     this.level = newLevelInstance;
     this.addChild(this.level);
 
-    // Ressourcen des neuen Levels laden
+    // Resourcen des neuen Levels laden
     this.savedResources = SaveGame.loadResources(this.level.levelId) ?? [];
   }
 

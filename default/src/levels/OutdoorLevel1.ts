@@ -63,8 +63,8 @@ export class OutdoorLevel1 extends Level {
     //** --- Build Exit Scene --- */
     this.buildLevelGroupExit();
 
-    //** --- Ressourcen laden --- */
-    this.loadLevelRessources();
+    //** --- Resourcen laden --- */
+    this.loadLevelResources();
 
     //** --- Create Hero and add to scene --- */
     // entweder geladene Position (Reload) oder die übergebene Startposition (Levelwechsel)
@@ -105,7 +105,7 @@ export class OutdoorLevel1 extends Level {
    * - purple Rod
    * - Npc for Quest
    * - Square to block path
-   * - Ressources
+   * - Resources
    */
   buildLevelGroupPurpleRod() {
     let npc = new Npc(
@@ -113,13 +113,13 @@ export class OutdoorLevel1 extends Level {
       gridCells(8),
       [
         {
-          string: "Du hast nun die stärkste Waffe und keine Ressource kann dich aufhalten",
+          string: "Du hast nun die stärkste Waffe und keine Resource kann dich aufhalten",
           requires: ["STORY_01_PART_01", "STORY_02_PART_01"], // any string in the List must exists in our available list of storyflags
           // bypass: [], // if we have done any of this storyflags then we dont show this message
           // storyFlag: "STORY_01_PART_02", // add string to list of known flags
         },
         {
-          string: "Danke für das Holz. Jetzt kannst du noch schneller Ressourcen sammeln!  Sprich mit meinem Bruder wenn du Zeit findest.",
+          string: "Danke für das Holz. Jetzt kannst du noch schneller Resourcen sammeln!  Sprich mit meinem Bruder wenn du Zeit findest.",
           requires: ["STORY_01_PART_01"], // any string in the List must exists in our available list of storyflags
           // bypass: [], // if we have done any of this storyflags then we dont show this message
           // storyFlag: "STORY_01_PART_02", // add string to list of known flags
@@ -173,7 +173,7 @@ export class OutdoorLevel1 extends Level {
       gridCells(6), // Platziere Gruppe oben/unten
       rodPurpleGroup,
       [
-        // Ressourcen freie Zone definieren
+        // Resourcen freie Zone definieren
 
         /** --- OBEN --- */
         {
@@ -241,7 +241,7 @@ export class OutdoorLevel1 extends Level {
    * Erstelle alle Elemente die zur "Exit" Scene gehören
    * - Exit
    * - House
-   * - Ressources
+   * - Resources
    */
   buildLevelGroupExit() {
     // Exit Gruppe vorbereiten
@@ -265,7 +265,7 @@ export class OutdoorLevel1 extends Level {
       gridCells(6), // Platziere Gruppe oben/unten
       exitGroup,
       [
-        // Ressourcen freie Zone definieren
+        // Resourcen freie Zone definieren
 
         /** --- OBEN --- */
         {
@@ -324,13 +324,13 @@ export class OutdoorLevel1 extends Level {
   }
 
   /**
-   * Lade alle für dieses Level relevante Ressource
-   * - default Ressources
-   * - saved Ressources
-   * - merge default and saved Ressources
-   * - create merged Ressources
+   * Lade alle für dieses Level relevante Resource
+   * - default Resources
+   * - saved Resources
+   * - merge default and saved Resources
+   * - create merged Resources
    */
-  loadLevelRessources() {
+  loadLevelResources() {
     // Default-Resourcen-Definition im Level
     const defaultResources = generateDefaultResources({
       levelId: "OutdoorLevel1",
@@ -340,7 +340,7 @@ export class OutdoorLevel1 extends Level {
       pathZones: [
 
         // füge Gruppenbasierte freie flächen hinzu
-        ...this.noRessourceZones,
+        ...this.noResourceZones,
 
         // Start Position Spieler
         { x1: 58, x2: 62, y1: 19, y2: 19 },
@@ -372,7 +372,7 @@ export class OutdoorLevel1 extends Level {
       return saved ? { ...def, ...saved } : def;
     });
 
-    // Ressourcen anhand der Daten setzen (saved Data / default Data)
+    // Resourcen anhand der Daten setzen (saved Data / default Data)
     for (const res of mergedResources) {
       if (res.hp > 0) {
         switch (res.type) {
