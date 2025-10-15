@@ -41,21 +41,7 @@ export class Equipment extends GameObject {
         this.nextId = 0;
 
         // Equipment laden
-        this.items = SaveGame.loadEquipment().map((item) => ({
-            ...item,
-            image: resources.images[item.name],
-        }));
-
-        // Standard Equipment festlegen beim erstmaligen laden
-        if (this.items.length <= 0) {
-            this.nextId += 1;
-            this.items.push({
-                id: this.nextId,
-                name: "sword",
-                amount: 1,
-                active: true
-            });
-        }
+        this.items = SaveGame.loadEquipment();
 
         // nextId auf höchsten ID-Wert setzen
         this.nextId = Math.max(0, ...this.items.map(item => item.id));
@@ -72,17 +58,21 @@ export class Equipment extends GameObject {
             const existingItem = this.items.find(item => item.name === imageKey);
 
             if (!existingItem && EQUIPMENT_ITEMS.includes(imageKey)) {
-                // neues Item hinzufügen
+
+                // Alles deaktivieren
+                this.items.forEach(item => item.active = false);
+
+                // neues Item eingesammelt, dann automatisch auf aktiv setzen
                 this.nextId += 1;
                 this.items.push({
                     id: this.nextId,
                     name: imageKey,
                     amount: 1,
-                    active: false,
+                    active: true,
                 });
             }
 
-            // Save inventory in localStorage
+            // Save Equipment
             SaveGame.saveEquipment(this.items.map((i) => ({
                 id: i.id,
                 name: i.name,
@@ -90,7 +80,7 @@ export class Equipment extends GameObject {
                 active: i.active,
             })));
 
-            // Draw initial state
+            // Neu rendern
             this.renderEquipment();
         });
 
@@ -125,7 +115,7 @@ export class Equipment extends GameObject {
     renderEquipment() {
         // Remove old drawings
         this.children.forEach((child) => child.destroy());
-        
+
         const frameSize = 24; // Bildmaße und um wieviel das nächste Bild nach rechts ausgerichtet werden muss
         const zIndex = 0.01; // damit Item im Vorder-/Hintergrund gezeichnet wird
         const baseY = 0;
