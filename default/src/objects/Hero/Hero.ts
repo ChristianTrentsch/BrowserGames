@@ -44,6 +44,9 @@ import { Direction } from "../../types.js";
 import { SaveGame } from "../../SaveGame.js";
 import { INVENTORY_ITEMS, InventoryEvent } from "../Inventory/Inventory.js";
 import { Attack } from "../Animations/Attack.js";
+import { Tree } from "../../levels/parts/Tree/Tree.js";
+import { Stone } from "../../levels/parts/Stone/Stone.js";
+import { Bush } from "../../levels/parts/Bush/Bush.js";
 
 export class Hero extends GameObject {
 
@@ -152,6 +155,8 @@ export class Hero extends GameObject {
 
     // Check for input
     const input = root.input;
+
+    //** --- PRESS: Space --- */ 
     if (input.getActionJustPressed("Space")) {
 
       // Look for an object at the next space (according to where Hero is facing)
@@ -168,31 +173,38 @@ export class Hero extends GameObject {
       }
     }
 
-    // ATTACK Button
+    //** --- PRESS: KeyF (attack) --- */ 
     if (input.getActionJustPressed("KeyF")) {
 
       // Equipment laden
       const equip = SaveGame.loadEquipment();
 
-      // Aktuell aktives Item finden
+      // Aktuell ausgerüstetes Equipment finden
       const activeIndex = equip.findIndex(item => item.active === true);
 
+      // Wenn aktives Equipment gefunden dann passende Attack animation
       let attack: Attack;
-      switch (equip[activeIndex]?.imageKey) {
-        case "rodPurple":
-          attack = new Attack(this.position, this.facingDirection, "rodAttackPurple");
-          break;
+      if (equip[activeIndex] && equip[activeIndex].name) {
 
-        case "rodRed":
-          attack = new Attack(this.position, this.facingDirection, "rodAttackRed");
-          break;
+        switch (equip[activeIndex].name) {
+          case "rodPurple":
+            attack = new Attack(this.facingDirection, "rodAttackPurple");
+            break;
 
-        default:
-          attack = new Attack(this.position, this.facingDirection, equip[activeIndex]?.imageKey);
-          break;
+          case "rodRed":
+            attack = new Attack(this.facingDirection, "rodAttackRed");
+            break;
+
+          default:
+            attack = new Attack(this.facingDirection, equip[activeIndex].name);
+            break;
+        }
+
+        this.addChild(attack);
       }
-      this.addChild(attack);
 
+      // Wenn GameObject an benachbarter Position von Typ Tree, Stone, Bush
+      // dann HERO_ATTACK_ACTION Event triggern
       if (this.parent) {
         const objAtPosition = this.parent.children.find((child) => {
           return child.position.matches(
@@ -200,13 +212,19 @@ export class Hero extends GameObject {
           );
         });
 
-        if (objAtPosition) {
+        if (
+          objAtPosition && (
+            objAtPosition instanceof Tree
+            || objAtPosition instanceof Stone
+            || objAtPosition instanceof Bush
+          )
+        ) {
           events.emit(HERO_ATTACK_ACTION, objAtPosition);
         }
       }
     }
 
-    // Change Equipment
+    //** --- PRESS: KeyQ (change weapon)--- */ 
     if (input.getActionJustPressed("KeyQ")) {
       events.emit(HERO_CHANGE_EQUIPMENT, this);
     }

@@ -11,7 +11,7 @@ export type InventoryItem = typeof INVENTORY_ITEMS[number];
 
 export interface InventoryItemData {
   id: number;
-  imageKey: InventoryItem;
+  name: InventoryItem;
   amount: number;
 }
 
@@ -27,7 +27,7 @@ export class Inventory extends GameObject {
   items: {
     id: number;
     image: ResourceImageOptions;
-    imageKey: InventoryItem;
+    name: InventoryItem;
     amount: number;
   }[];
 
@@ -40,16 +40,16 @@ export class Inventory extends GameObject {
     // Inventar laden
     this.items = SaveGame.loadInventory().map((item) => ({
       ...item,
-      image: resources.images[item.imageKey],
+      image: resources.images[item.name],
     }));
 
     // Nur prüfen, wenn das Inventar nicht leer ist
     if (this.items.length > 0) {
-      const resourceItem = this.items.find(item => INVENTORY_ITEMS.includes(item.imageKey));
+      const inventarItem = this.items.find(item => INVENTORY_ITEMS.includes(item.name));
 
-      if (resourceItem) {
-        // Wenn Baum, Menge erhöhen
-        resourceItem.amount += 1;
+      if (inventarItem) {
+        // Wenn Resource, Menge erhöhen
+        inventarItem.amount += 1;
       }
 
       // nextId auf höchsten ID-Wert setzen
@@ -70,10 +70,10 @@ export class Inventory extends GameObject {
     events.on(HERO_PICKS_UP_ITEM, this, (data: { imageKey: InventoryItem }) => {
       const { imageKey } = data;
 
-      const existingItem = this.items.find(item => item.imageKey === imageKey);
+      const existingItem = this.items.find(item => item.name === imageKey);
       if (existingItem) {
-        if (INVENTORY_ITEMS.includes(existingItem.imageKey)) {
-          // Wenn Baum, Menge erhöhen
+        if (INVENTORY_ITEMS.includes(existingItem.name)) {
+          // Wenn Resource, Menge erhöhen
           existingItem.amount += 1;
         }
       }
@@ -84,7 +84,7 @@ export class Inventory extends GameObject {
           this.items.push({
             id: this.nextId,
             image: resources.images[imageKey],
-            imageKey: imageKey,
+            name: imageKey,
             amount: 1
           });
         }
@@ -93,7 +93,7 @@ export class Inventory extends GameObject {
       // Save inventory in localStorage
       SaveGame.saveInventory(this.items.map((i) => ({
         id: i.id,
-        imageKey: i.imageKey,
+        name: i.name,
         amount: i.amount
       })));
 
@@ -121,20 +121,22 @@ export class Inventory extends GameObject {
     // Draw fresh inventory items
     visibleItems.forEach((item, index) => {
 
-      const baseX = index * 25;
+      const frameSize = 24;
+      const zIndex = 0.01
+      const baseX = index * frameSize;
       const baseY = 0;
 
       // Item Background zeichnen
       const background = new Sprite({
         resource: resources.images.inventoryItemFrame,
-        position: new Vector2(baseX - 0.01, baseY - 0.01), // funktioniert wie z-Index
+        position: new Vector2(baseX, baseY - zIndex),
         frameSize: new Vector2(24, 24),
       });
       this.addChild(background);
 
       // Item zeichnen
       const sprite = new Sprite({
-        resource: resources.images[item.imageKey],
+        resource: resources.images[item.name],
         position: new Vector2(baseX + 4, baseY + 4),
       });
       this.addChild(sprite);
@@ -166,7 +168,7 @@ export class Inventory extends GameObject {
   }
 
   removeFromInventory(imageKey: keyof typeof resources.images) {
-    this.items = this.items.filter((item) => item.imageKey !== imageKey);
+    this.items = this.items.filter((item) => item.name !== imageKey);
     this.renderInventory();
   }
 
@@ -177,7 +179,7 @@ export class Inventory extends GameObject {
    * @returns true, wenn genügend vorhanden ist, sonst false
   */
   hasResource(imageKey: InventoryItem, amount: number): boolean {
-    const item = this.items.find(i => i.imageKey === imageKey);
+    const item = this.items.find(i => i.name === imageKey);
     return !!item && item.amount >= amount;
   }
 
@@ -189,7 +191,7 @@ export class Inventory extends GameObject {
    * @param amount - die zu entfernende Menge
    */
   removeResource(imageKey: InventoryItem, amount: number): void {
-    const item = this.items.find(i => i.imageKey === imageKey);
+    const item = this.items.find(i => i.name === imageKey);
     if (!item) return;
 
     item.amount -= amount;
@@ -209,7 +211,7 @@ export class Inventory extends GameObject {
     // Änderungen speichern
     SaveGame.saveInventory(this.items.map(i => ({
       id: i.id,
-      imageKey: i.imageKey,
+      name: i.name,
       amount: i.amount,
     })));
 

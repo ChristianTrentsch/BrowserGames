@@ -1,6 +1,5 @@
 import { GameObject } from "../../GameObject.js";
 import { Vector2 } from "../../Vector2.js";
-import { events } from "../../Events.js";
 import { LEFT, RIGHT, UP, DOWN } from "../../Input.js";
 import { Direction } from "../../types.js";
 import { Sprite } from "../../Sprite.js";
@@ -26,7 +25,7 @@ export class Attack extends GameObject {
     // Merkt sich den Index für die nächste Attacke
     private static sliceIndex: number = 0;
 
-    constructor(heroPosition: Vector2, facingDirection: Direction, imageKey: EquipmentItem = "sword") {
+    constructor(facingDirection: Direction, equipName: EquipmentItem = "sword") {
         // Position abhängig von Hero + FacingDirection
         // const slashPos = heroPosition.toNeighbor(facing);
         // super(heroPosition);
@@ -37,7 +36,7 @@ export class Attack extends GameObject {
 
         // Sprite oder Animationszuweisung hier
         this.body = new Sprite({
-            resource: resources.images[imageKey],
+            resource: resources.images[equipName],
             position: new Vector2(-8, -8),
             frameSize: new Vector2(32, 32),
             hFrames: 6,

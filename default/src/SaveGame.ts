@@ -53,7 +53,7 @@ export class SaveGame {
         try {
             const items = JSON.parse(raw) as InventoryItemData[];
 
-            return items.some(item => item.imageKey === imageKey);
+            return items.some(item => item.name === imageKey);
         } catch (err) {
             console.error("Fehler beim Lesen des Inventars:", err);
             return false;
@@ -87,7 +87,7 @@ export class SaveGame {
         try {
             const items = JSON.parse(raw) as EquipmentItemData[];
 
-            return items.some(item => item.imageKey === imageKey);
+            return items.some(item => item.name === imageKey);
         } catch (err) {
             console.error("Fehler beim Lesen des Equipment:", err);
             return false;
@@ -242,6 +242,6 @@ export class SaveGame {
         this.saveResources("OutdoorLevel1", []);
         this.saveResources("CaveLevel1", []);
 
-        this.saveEquipment([{ id: 1, imageKey: "sword", amount: 1, active: true }]);
+        this.saveEquipment([{ id: 1, name: "sword", amount: 1, active: true }]);
     }
 }
