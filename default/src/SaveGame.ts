@@ -239,9 +239,8 @@ export class SaveGame {
         this.saveSound("on");
         this.saveInput("keyboard");
         this.saveLevel("OutdoorLevel1");
-        this.saveResources("OutdoorLevel1", []);
-        this.saveResources("CaveLevel1", []);
 
+        // Standard Equipment festlegen beim erstmaligen laden
         this.saveEquipment([{ id: 1, name: "sword", amount: 1, active: true }]);
     }
 }
