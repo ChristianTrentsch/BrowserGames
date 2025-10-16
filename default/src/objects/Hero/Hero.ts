@@ -11,14 +11,6 @@ import {
   WALK_RIGHT,
   WALK_UP,
   PICK_UP_DOWN,
-  DAMAGE_DOWN,
-  DAMAGE_RIGHT,
-  DAMAGE_UP,
-  DAMAGE_LEFT,
-  ATTACK_DOWN,
-  ATTACK_LEFT,
-  ATTACK_RIGHT,
-  ATTACK_UP,
 } from "./heroAnimations.js";
 
 import {
@@ -320,7 +312,7 @@ export class Hero extends GameObject {
       this.itemPickUpTime = 1000; // ms
 
       if (data.name === INVENTORY_BUSH || data.name === INVENTORY_TREE || data.name === INVENTORY_STONE) {
-        this.itemPickUpTime = 300; // ms
+        this.itemPickUpTime = 200; // ms
       }
 
       // Play pick up sound from Item
