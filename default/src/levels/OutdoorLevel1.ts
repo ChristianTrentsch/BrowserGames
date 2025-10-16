@@ -74,8 +74,8 @@ export class OutdoorLevel1 extends Level {
 
     //** --- Create Level walls add to scene --- */
     const wallDefinitions = {
-      right: this.generateWall(new Vector2(1568, 32), new Vector2(1568, 832), TILE_SIZE, "right"),
-      left: this.generateWall(new Vector2(16, 32), new Vector2(16, 832), TILE_SIZE, "left"),
+      right: this.generateWall(new Vector2(1568, 32), new Vector2(1568, 864), TILE_SIZE, "right"),
+      left: this.generateWall(new Vector2(16, 32), new Vector2(16, 864), TILE_SIZE, "left"),
       top: this.generateWall(new Vector2(32, 16), new Vector2(1568, 16), TILE_SIZE, "top"),
       bottom: this.generateWall(new Vector2(32, 864), new Vector2(1568, 864), TILE_SIZE, "bottom"),
     };
