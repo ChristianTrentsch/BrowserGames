@@ -1,27 +1,21 @@
-import { events, HERO_CHANGE_EQUIPMENT, HERO_PICKS_UP_ITEM } from "../../Events.js";
+import { EventCollectible, events, HERO_CHANGE_EQUIPMENT, HERO_PICKS_UP_ITEM } from "../../Events.js";
 import { GameObject } from "../../GameObject.js";
-import { gridCells } from "../../helpers/grid.js";
 import { ResourceImageOptions, resources } from "../../Resource.js";
 import { SaveGame } from "../../SaveGame.js";
 import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
-import { InventoryItem } from "../Inventory/Inventory.js";
 
-export const EQUIPMENT_ITEMS = ["sword", "rodPurple", "rodRed", "rodAttackPurple", "rodAttackRed"] as const;
-export type EquipmentItem = typeof EQUIPMENT_ITEMS[number];
+export const EQUIPMENT_SWORD = "sword";
+export const EQUIPMENT_ROD_PURPLE = "rodPurple";
+export const EQUIPMENT_ROD_RED = "rodRed";
+export const EQUIPMENT_ITEMS = [EQUIPMENT_SWORD, EQUIPMENT_ROD_PURPLE, EQUIPMENT_ROD_RED] as const;
+export type EquipmentUnion = typeof EQUIPMENT_ITEMS[number];
 
 export interface EquipmentItemData {
     id: number;
-    name: EquipmentItem;
+    name: EquipmentUnion;
     amount: number;
     active: boolean;
-}
-
-export interface EquipmentEvent {
-    imageKey: EquipmentItem
-    position: Vector2
-    image: ResourceImageOptions
-    itemSound: HTMLAudioElement
 }
 
 export class Equipment extends GameObject {
@@ -29,7 +23,7 @@ export class Equipment extends GameObject {
     nextId: number;
     items: {
         id: number;
-        name: EquipmentItem;
+        name: EquipmentUnion;
         amount: number;
         active: boolean;
     }[];
@@ -51,13 +45,12 @@ export class Equipment extends GameObject {
     }
 
     ready() {
-        //** --- Event Equipment add item --- */ 
-        events.on(HERO_PICKS_UP_ITEM, this, (data: { imageKey: EquipmentItem }) => {
-            const { imageKey } = data;
+        //** --- Add Equipment --- */ 
+        events.on(HERO_PICKS_UP_ITEM, this, (data: { name: EquipmentUnion }) => {
+            const { name } = data;
 
-            const existingItem = this.items.find(item => item.name === imageKey);
-
-            if (!existingItem && EQUIPMENT_ITEMS.includes(imageKey)) {
+            const existingItem = this.items.find(item => item.name === name);
+            if (!existingItem && EQUIPMENT_ITEMS.includes(name)) {
 
                 // Alles deaktivieren
                 this.items.forEach(item => item.active = false);
@@ -66,13 +59,12 @@ export class Equipment extends GameObject {
                 this.nextId += 1;
                 this.items.push({
                     id: this.nextId,
-                    name: imageKey,
+                    name: name,
                     amount: 1,
                     active: true,
                 });
             }
 
-            // Save Equipment
             SaveGame.saveEquipment(this.items.map((i) => ({
                 id: i.id,
                 name: i.name,
@@ -80,11 +72,10 @@ export class Equipment extends GameObject {
                 active: i.active,
             })));
 
-            // Neu rendern
             this.renderEquipment();
         });
 
-        //** --- Change Equipment to active --- */ 
+        //** --- Change Equipment --- */ 
         events.on(HERO_CHANGE_EQUIPMENT, this, () => {
 
             // Aktuell aktives Item finden
@@ -99,7 +90,6 @@ export class Equipment extends GameObject {
             // Nächstes aktivieren
             this.items[nextIndex]!.active = true;
 
-            // Equipment speichern
             SaveGame.saveEquipment(this.items.map(i => ({
                 id: i.id,
                 name: i.name,
@@ -107,7 +97,6 @@ export class Equipment extends GameObject {
                 active: i.active,
             })));
 
-            // Neu rendern
             this.renderEquipment();
         })
     }
@@ -162,13 +151,13 @@ export class Equipment extends GameObject {
 
             let frame;
             switch (item.name) {
-                case "sword":
+                case EQUIPMENT_SWORD:
                     frame = 20;
                     break;
-                case "rodPurple":
+                case EQUIPMENT_ROD_PURPLE:
                     frame = 21;
                     break;
-                case "rodRed":
+                case EQUIPMENT_ROD_RED:
                     frame = 22;
                     break;
                 default:
@@ -199,9 +188,9 @@ export class Equipment extends GameObject {
         if (!activeItem) return 1; // Standard-Schaden ohne Waffe
 
         switch (activeItem.name) {
-            case "sword": return 1;
-            case "rodPurple": return 2;
-            case "rodRed": return 5;
+            case EQUIPMENT_SWORD: return 1;
+            case EQUIPMENT_ROD_PURPLE: return 2;
+            case EQUIPMENT_ROD_RED: return 5;
             default: return 1;
         }
     }

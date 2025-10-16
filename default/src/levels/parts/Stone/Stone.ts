@@ -4,11 +4,13 @@ import { Vector2 } from "../../../Vector2.js";
 import { resources } from "../../../Resource.js";
 import { getNextText, getRandomText } from "../../../helpers/levelPartsText.js";
 import { Item } from "../../../objects/Item/Item.js";
+import { INVENTORY_STONE, InventoryUnion } from "../../../objects/Inventory/Inventory.js";
 
 export class Stone extends GameObject {
 
     healthPoints: number;
     stoneSprite: Sprite;
+    type: InventoryUnion = "stone";
 
     constructor(x: number, y: number, hp = 4) {
         super(new Vector2(x, y));
@@ -63,7 +65,7 @@ export class Stone extends GameObject {
         const item = new Item(
             this.position.x,
             this.position.y,
-            "stoneResource",
+            INVENTORY_STONE,
             "./sounds/items/pick_up_item.mp3",
             1
         );

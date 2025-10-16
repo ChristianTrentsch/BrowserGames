@@ -13,7 +13,7 @@ import {
 import { SpriteTextString } from "../SpriteTextString/SpriteTextString.js";
 import { Level } from "../Level/Level.js";
 import { Vector2 } from "../../Vector2.js";
-import { ResourceSaveData, ResourceType, SaveGame } from "../../SaveGame.js";
+import { ResourceSaveData, SaveGame } from "../../SaveGame.js";
 import { Tree } from "../../levels/parts/Tree/Tree.js";
 import { Bush } from "../../levels/parts/Bush/Bush.js";
 import { Stone } from "../../levels/parts/Stone/Stone.js";
@@ -70,7 +70,7 @@ export class Main extends GameObject {
         // Inventar überprüfen auf Questbedingung
         switch (flag) {
           case "STORY_01_PART_01":
-            if (inventory.completeQuest([{ imageKey: "treeResource", amount: 5 }])) {
+            if (inventory.completeQuest([{ name: "tree", amount: 5 }])) {
               // Story-Flag setzen
               storyFlags.add(flag);
               // console.log(flag);
@@ -88,9 +88,9 @@ export class Main extends GameObject {
 
           case "STORY_02_PART_01":
             if (inventory.completeQuest([
-              { imageKey: "treeResource", amount: 25 },
-              { imageKey: "bushResource", amount: 20 },
-              { imageKey: "stoneResource", amount: 10 }
+              { name: "tree", amount: 25 },
+              { name: "bush", amount: 20 },
+              { name: "stone", amount: 10 }
             ])) {
               // Story-Flag setzen
               storyFlags.add(flag);
@@ -152,7 +152,7 @@ export class Main extends GameObject {
 
   pushResource(withObject: Tree | Stone | Bush) {
     const existing = this.savedResources.find(
-      r => r.type === withObject.constructor.name &&
+      r => r.type === withObject.type &&
         r.x === withObject.position.x &&
         r.y === withObject.position.y
     );
@@ -163,7 +163,7 @@ export class Main extends GameObject {
     } else {
       // Ansonsten neues Objekt speichern
       this.savedResources.push({
-        type: withObject.constructor.name as ResourceType,
+        type: withObject.type,
         x: withObject.position.x,
         y: withObject.position.y,
         hp: withObject.healthPoints

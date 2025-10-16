@@ -87,10 +87,10 @@ export const DAMAGE_RIGHT = makeDamageFrames(15);
 export const DAMAGE_UP = makeDamageFrames(18);
 export const DAMAGE_LEFT = makeDamageFrames(21);
 
-export const ATTACK_WALK_DOWN = makeAttackFrames(0);
-export const ATTACK_WALK_RIGHT = makeAttackFrames(6);
-export const ATTACK_WALK_UP = makeAttackFrames(12);
-export const ATTACK_WALK_LEFT = makeAttackFrames(18);
+export const ATTACK_DOWN = makeAttackFrames(0);
+export const ATTACK_RIGHT = makeAttackFrames(6);
+export const ATTACK_UP = makeAttackFrames(12);
+export const ATTACK_LEFT = makeAttackFrames(18);
 
 export const PICK_UP_DOWN = {
   duration: 400,

@@ -66,7 +66,7 @@ export function generateDefaultResources(options: GenerationOptions): ResourceSa
             if (r < density.Tree) {
                 const hp = getRandomHP(random, 3, 4, 0.1); // 10% Chance auf Ausreißer (selten mal einer dabei mit 2 hp)
                 resources.push({
-                    type: "Tree",
+                    type: "tree",
                     x: gridCells(x),
                     y: gridCells(y),
                     hp: hp
@@ -74,7 +74,7 @@ export function generateDefaultResources(options: GenerationOptions): ResourceSa
             } else if (r < density.Tree + density.Bush) {
                 const hp = getRandomHP(random, 2, 2, 0.1); // 10% Chance auf Ausreißer
                 resources.push({
-                    type: "Bush",
+                    type: "bush",
                     x: gridCells(x),
                     y: gridCells(y),
                     hp: hp
@@ -82,7 +82,7 @@ export function generateDefaultResources(options: GenerationOptions): ResourceSa
             } else if (r < density.Tree + density.Bush + density.Stone) {
                 const hp = getRandomHP(random, 3, 4, 0.1); // 10% Chance auf Ausreißer (selten mal einer dabei mit 2 hp)
                 resources.push({
-                    type: "Stone",
+                    type: "stone",
                     x: gridCells(x),
                     y: gridCells(y),
                     hp: hp

@@ -1,15 +1,14 @@
 import { LevelId } from "./helpers/levelRegistry.js";
-import { EquipmentItem, EquipmentItemData } from "./objects/Equipment/Equipment.js";
-import { InventoryItem, InventoryItemData } from "./objects/Inventory/Inventory.js";
+import { EquipmentUnion, EquipmentItemData } from "./objects/Equipment/Equipment.js";
+import { InventoryUnion, InventoryItemData } from "./objects/Inventory/Inventory.js";
 import { Vector2 } from "./Vector2.js";
 
 export type OverlayType = "true" | "false";
 export type SoundType = "on" | "off";
 export type InputType = "keyboard" | "controller";
-export type ResourceType = "Tree" | "Stone" | "Bush";
 
 export interface ResourceSaveData {
-    type: ResourceType;
+    type: InventoryUnion;
     x: number;
     y: number;
     hp: number;
@@ -46,7 +45,7 @@ export class SaveGame {
     }
 
     // Prüft, ob ein Item mit dem angegebenen imageKey bereits im Inventar vorhanden ist
-    static isInInventory(imageKey: InventoryItem): boolean {
+    static isInInventory(imageKey: InventoryUnion): boolean {
         const raw = localStorage.getItem(this.inventoryKey);
         if (!raw) return false;
 
@@ -80,14 +79,14 @@ export class SaveGame {
     }
 
     // Prüft, ob ein Item mit dem angegebenen imageKey bereits im Equipment vorhanden ist
-    static isInEquipment(imageKey: EquipmentItem): boolean {
+    static isInEquipment(name: EquipmentUnion): boolean {
         const raw = localStorage.getItem(this.equipmentKey);
         if (!raw) return false;
 
         try {
             const items = JSON.parse(raw) as EquipmentItemData[];
 
-            return items.some(item => item.name === imageKey);
+            return items.some(item => item.name === name);
         } catch (err) {
             console.error("Fehler beim Lesen des Equipment:", err);
             return false;

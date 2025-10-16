@@ -4,11 +4,13 @@ import { Vector2 } from "../../../Vector2.js";
 import { resources } from "../../../Resource.js";
 import { getNextText, getRandomText } from "../../../helpers/levelPartsText.js";
 import { Item } from "../../../objects/Item/Item.js";
+import { INVENTORY_TREE, InventoryUnion } from "../../../objects/Inventory/Inventory.js";
 
 export class Tree extends GameObject {
 
     healthPoints: number;
     treeSprite: Sprite;
+    type: InventoryUnion = "tree";
 
     constructor(x: number, y: number, hp = 4) {
         super(new Vector2(x, y));
@@ -70,7 +72,7 @@ export class Tree extends GameObject {
         const item = new Item(
             this.position.x,
             this.position.y,
-            "treeResource",
+            INVENTORY_TREE,
             "./sounds/items/pick_up_item.mp3",
             1
         );

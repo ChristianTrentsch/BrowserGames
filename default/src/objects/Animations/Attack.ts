@@ -4,14 +4,14 @@ import { LEFT, RIGHT, UP, DOWN } from "../../Input.js";
 import { Direction } from "../../types.js";
 import { Sprite } from "../../Sprite.js";
 import { resources } from "../../Resource.js";
-import { Animations } from "../../Animations.js";
+import { Animations, AttackAnimationKey } from "../../Animations.js";
 import { FrameIndexPattern } from "../../FrameIndexPattern.js";
-import { WALK_LEFT, WALK_DOWN, WALK_UP, WALK_RIGHT, STAND_LEFT, STAND_DOWN, STAND_UP, STAND_RIGHT, PICK_UP_DOWN, ATTACK_WALK_DOWN, ATTACK_WALK_LEFT, ATTACK_WALK_RIGHT, ATTACK_WALK_UP } from "../Hero/heroAnimations.js";
+import { WALK_LEFT, WALK_DOWN, WALK_UP, WALK_RIGHT, STAND_LEFT, STAND_DOWN, STAND_UP, STAND_RIGHT, PICK_UP_DOWN, ATTACK_DOWN, ATTACK_LEFT, ATTACK_RIGHT, ATTACK_UP } from "../Hero/heroAnimations.js";
 import { SaveGame } from "../../SaveGame.js";
-import { EquipmentItem } from "../Equipment/Equipment.js";
+import { EquipmentUnion } from "../Equipment/Equipment.js";
 
 export class Attack extends GameObject {
-    lifetime: number = 480; // lebt 250ms
+    lifetime: number = 400; // lebt 250ms
     facingDirection: Direction;
     body: Sprite;
 
@@ -25,7 +25,7 @@ export class Attack extends GameObject {
     // Merkt sich den Index für die nächste Attacke
     private static sliceIndex: number = 0;
 
-    constructor(facingDirection: Direction, equipName: EquipmentItem = "sword") {
+    constructor(facingDirection: Direction, equipName: EquipmentUnion = "sword") {
         // Position abhängig von Hero + FacingDirection
         // const slashPos = heroPosition.toNeighbor(facing);
         // super(heroPosition);
@@ -42,20 +42,11 @@ export class Attack extends GameObject {
             hFrames: 6,
             vFrames: 4,
             frame: 1,
-            animations: new Animations({
-                walkLeft: new FrameIndexPattern(WALK_LEFT),
-                walkDown: new FrameIndexPattern(WALK_DOWN),
-                walkUp: new FrameIndexPattern(WALK_UP),
-                walkRight: new FrameIndexPattern(WALK_RIGHT),
-                standLeft: new FrameIndexPattern(STAND_LEFT),
-                standDown: new FrameIndexPattern(STAND_DOWN),
-                standUp: new FrameIndexPattern(STAND_UP),
-                standRight: new FrameIndexPattern(STAND_RIGHT),
-                pickUpDown: new FrameIndexPattern(PICK_UP_DOWN),
-                attackWalkDown: new FrameIndexPattern(ATTACK_WALK_DOWN),
-                attackWalkRight: new FrameIndexPattern(ATTACK_WALK_RIGHT),
-                attackWalkUp: new FrameIndexPattern(ATTACK_WALK_UP),
-                attackWalkLeft: new FrameIndexPattern(ATTACK_WALK_LEFT),
+            animations: new Animations<AttackAnimationKey>({
+                attackDown: new FrameIndexPattern(ATTACK_DOWN),
+                attackRight: new FrameIndexPattern(ATTACK_RIGHT),
+                attackUp: new FrameIndexPattern(ATTACK_UP),
+                attackLeft: new FrameIndexPattern(ATTACK_LEFT),
             }),
         });
         this.addChild(this.body);
@@ -83,16 +74,16 @@ export class Attack extends GameObject {
         if (this.body.animations) {
             switch (this.facingDirection) {
                 case LEFT:
-                    this.body.animations.play("attackWalkLeft");
+                    this.body.animations.play("attackLeft");
                     break;
                 case RIGHT:
-                    this.body.animations.play("attackWalkRight");
+                    this.body.animations.play("attackRight");
                     break;
                 case UP:
-                    this.body.animations.play("attackWalkUp");
+                    this.body.animations.play("attackUp");
                     break;
                 case DOWN:
-                    this.body.animations.play("attackWalkDown");
+                    this.body.animations.play("attackDown");
                     break;
             }
 

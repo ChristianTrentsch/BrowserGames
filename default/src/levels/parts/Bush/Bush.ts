@@ -4,11 +4,13 @@ import { Vector2 } from "../../../Vector2.js";
 import { resources } from "../../../Resource.js";
 import { getNextText, getRandomText } from "../../../helpers/levelPartsText.js";
 import { Item } from "../../../objects/Item/Item.js";
+import { INVENTORY_BUSH, InventoryUnion } from "../../../objects/Inventory/Inventory.js";
 
 export class Bush extends GameObject {
 
     healthPoints: number;
     bushSprite: Sprite;
+    type: InventoryUnion = "bush";
 
     constructor(x: number, y: number, hp = 2) {
         super(new Vector2(x, y));
@@ -70,7 +72,7 @@ export class Bush extends GameObject {
         const item = new Item(
             this.position.x,
             this.position.y,
-            "bushResource",
+            INVENTORY_BUSH,
             "./sounds/items/pick_up_item.mp3",
             1
         );

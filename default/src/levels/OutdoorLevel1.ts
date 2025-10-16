@@ -77,7 +77,7 @@ export class OutdoorLevel1 extends Level {
       right: this.generateWall(new Vector2(1568, 32), new Vector2(1568, 832), TILE_SIZE, "right"),
       left: this.generateWall(new Vector2(16, 32), new Vector2(16, 832), TILE_SIZE, "left"),
       top: this.generateWall(new Vector2(32, 16), new Vector2(1568, 16), TILE_SIZE, "top"),
-      bottom: this.generateWall(new Vector2(32, 848), new Vector2(1568, 848), TILE_SIZE, "bottom"),
+      bottom: this.generateWall(new Vector2(32, 864), new Vector2(1568, 864), TILE_SIZE, "bottom"),
     };
     this.walls = new Set(Object.values(wallDefinitions).flat());
   }
@@ -376,9 +376,9 @@ export class OutdoorLevel1 extends Level {
     for (const res of mergedResources) {
       if (res.hp > 0) {
         switch (res.type) {
-          case "Tree": this.addChild(new Tree(res.x, res.y, res.hp)); break;
-          case "Bush": this.addChild(new Bush(res.x, res.y, res.hp)); break;
-          case "Stone": this.addChild(new Stone(res.x, res.y, res.hp)); break;
+          case "tree": this.addChild(new Tree(res.x, res.y, res.hp)); break;
+          case "bush": this.addChild(new Bush(res.x, res.y, res.hp)); break;
+          case "stone": this.addChild(new Stone(res.x, res.y, res.hp)); break;
         }
       }
     }

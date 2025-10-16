@@ -3,18 +3,18 @@ import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
 import { resources } from "../../Resource.js";
 import { events, HERO_POSTION, HERO_PICKS_UP_ITEM } from "../../Events.js";
-import { InventoryItem } from "../Inventory/Inventory.js";
-import { EquipmentItem } from "../Equipment/Equipment.js";
+import { INVENTORY_BUSH, INVENTORY_STONE, INVENTORY_TREE, InventoryUnion } from "../Inventory/Inventory.js";
+import { EQUIPMENT_ROD_PURPLE, EQUIPMENT_ROD_RED, EQUIPMENT_SWORD, EquipmentUnion } from "../Equipment/Equipment.js";
 
 export class Item extends GameObject {
 
-  itemKey: InventoryItem | EquipmentItem;
+  itemKey: InventoryUnion | EquipmentUnion;
   itemSound: HTMLAudioElement;
 
   constructor(
     x: number,
     y: number,
-    itemKey: InventoryItem | EquipmentItem,
+    itemKey: InventoryUnion | EquipmentUnion,
     itemSoundSrc: string = "./sounds/items/pick_up_item_01.mp3", // Pfad zur Standard Sounddatei
     volume: number = 0.7 // Standard-Lautstärke
   ) {
@@ -24,11 +24,15 @@ export class Item extends GameObject {
     this.itemSound = new Audio(itemSoundSrc);
     this.itemSound.volume = volume; // Lautstärke setzen (0.0 - 1.0)
 
-    const sprite = new Sprite({
-      resource: resources.images[itemKey],
-      position: new Vector2(0, -5), // nudge upwards visually
-    });
-    this.addChild(sprite);
+    const frame = resources.getCollectibleItemFrame(this.itemKey);
+    this.addChild(
+      new Sprite({
+        resource: resources.images.collectible,
+        position: new Vector2(0, -5), // optisch nach oben ausrichten
+        hFrames: 20,
+        frame: frame, // Bild passend zum Item ermitteln
+      })
+    );
   }
 
   ready() {
@@ -59,8 +63,8 @@ export class Item extends GameObject {
 
     // Alert that we picked up a rod
     events.emit(HERO_PICKS_UP_ITEM, {
-      imageKey: this.itemKey,
-      image: resources.images[this.itemKey],
+      name: this.itemKey,
+      image: resources.images.collectible,
       position: this.position,
       itemSound: this.itemSound
     });

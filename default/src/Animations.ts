@@ -1,6 +1,7 @@
 import { FrameIndexPattern } from "./FrameIndexPattern";
 
-export type AnimationKey = "walkLeft"
+export type HeroAnimationKey =
+  "walkLeft"
   | "walkDown"
   | "walkUp"
   | "walkRight"
@@ -13,25 +14,29 @@ export type AnimationKey = "walkLeft"
 // | "damageRight"
 // | "damageUp"
 // | "damageLeft"
-| "attackWalkDown"
-| "attackWalkRight"
-| "attackWalkUp"
-| "attackWalkLeft"
 
-export class Animations {
-  patterns: Record<AnimationKey, FrameIndexPattern>;
-  activeKey: AnimationKey;
+export type AttackAnimationKey =
+  "attackDown"
+  | "attackRight"
+  | "attackUp"
+  | "attackLeft"
 
-  constructor(patterns: Record<AnimationKey, FrameIndexPattern>) {
+export type AnimationUnion = HeroAnimationKey | AttackAnimationKey
+
+export class Animations<T extends AnimationUnion> {
+  patterns: Record<T, FrameIndexPattern>;
+  activeKey: T;
+
+  constructor(patterns: Record<T, FrameIndexPattern>) {
     this.patterns = patterns;
-    this.activeKey = Object.keys(this.patterns)[0] as AnimationKey;
+    this.activeKey = Object.keys(this.patterns)[0] as T;
   }
 
   get frame() {
     return this.patterns[this.activeKey].frame;
   }
 
-  play(key: AnimationKey, startAtTime = 0) {
+  play(key: T, startAtTime = 0) {
     // Already playing
     if (this.activeKey === key) {
       return;

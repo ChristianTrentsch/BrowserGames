@@ -6,30 +6,21 @@ import { events, HERO_PICKS_UP_ITEM, HERO_USE_ITEM } from "../../Events.js";
 import { SaveGame } from "../../SaveGame.js";
 import { getCharacterFrame, getCharacterWidth } from "../SpriteTextString/spriteFontMap.js";
 
-export const INVENTORY_ITEMS = ["treeResource", "stoneResource", "bushResource"] as const;
-export type InventoryItem = typeof INVENTORY_ITEMS[number];
+export const INVENTORY_TREE = "tree";
+export const INVENTORY_STONE = "stone";
+export const INVENTORY_BUSH = "bush";
+export const INVENTORY_ITEMS = [INVENTORY_TREE, INVENTORY_STONE, INVENTORY_BUSH] as const;
+export type InventoryUnion = typeof INVENTORY_ITEMS[number];
 
 export interface InventoryItemData {
   id: number;
-  name: InventoryItem;
+  name: InventoryUnion;
   amount: number;
-}
-
-export interface InventoryEvent {
-  imageKey: InventoryItem
-  position: Vector2
-  image: ResourceImageOptions
-  itemSound: HTMLAudioElement
 }
 
 export class Inventory extends GameObject {
   nextId: number;
-  items: {
-    id: number;
-    image: ResourceImageOptions;
-    name: InventoryItem;
-    amount: number;
-  }[];
+  items: InventoryItemData[];
 
   constructor() {
     super(new Vector2(1, 1));
@@ -38,10 +29,7 @@ export class Inventory extends GameObject {
     this.nextId = 0;
 
     // Inventar laden
-    this.items = SaveGame.loadInventory().map((item) => ({
-      ...item,
-      image: resources.images[item.name],
-    }));
+    this.items = SaveGame.loadInventory();
 
     // Nur prüfen, wenn das Inventar nicht leer ist
     if (this.items.length > 0) {
@@ -67,27 +55,22 @@ export class Inventory extends GameObject {
 
   ready() {
     // Event Inventory add item
-    events.on(HERO_PICKS_UP_ITEM, this, (data: { imageKey: InventoryItem }) => {
-      const { imageKey } = data;
+    events.on(HERO_PICKS_UP_ITEM, this, (data: { name: InventoryUnion }) => {
+      const { name } = data;
 
-      const existingItem = this.items.find(item => item.name === imageKey);
-      if (existingItem) {
-        if (INVENTORY_ITEMS.includes(existingItem.name)) {
-          // Wenn Resource, Menge erhöhen
-          existingItem.amount += 1;
-        }
+      const existingItem = this.items.find(item => item.name === name);
+      if (existingItem && INVENTORY_ITEMS.includes(existingItem.name)) {
+        // Wenn gefunden Resource, Menge erhöhen
+        existingItem.amount += 1;
       }
-      else {
-        if (INVENTORY_ITEMS.includes(imageKey)) {
-          // neues Item hinzufügen
-          this.nextId += 1;
-          this.items.push({
-            id: this.nextId,
-            image: resources.images[imageKey],
-            name: imageKey,
-            amount: 1
-          });
-        }
+      else if (!existingItem && INVENTORY_ITEMS.includes(name)) {
+        // neues Item hinzufügen
+        this.nextId += 1;
+        this.items.push({
+          id: this.nextId,
+          name: name,
+          amount: 1
+        });
       }
 
       // Save inventory in localStorage
@@ -103,18 +86,18 @@ export class Inventory extends GameObject {
 
 
     // Listen for use Item event
-    events.on(HERO_USE_ITEM, this, (data: { imageKey: keyof typeof resources.images }) => {
-      const { imageKey } = data;
+    events.on(HERO_USE_ITEM, this, (data: { name: InventoryUnion }) => {
+      const { name } = data;
 
       // Draw initial state
-      this.removeFromInventory(imageKey);
+      this.removeFromInventory(name);
     });
   }
 
   renderInventory() {
     // Remove old drawings
     this.children.forEach((child) => child.destroy());
-    
+
     // Nur Items mit amount > 0 für die Darstellung
     const visibleItems = this.items.filter(item => item.amount > 0);
 
@@ -134,10 +117,15 @@ export class Inventory extends GameObject {
       });
       this.addChild(background);
 
+      // Bild passend zum Item ermitteln
+      const frame = resources.getCollectibleItemFrame(item.name);
+
       // Item zeichnen
       const sprite = new Sprite({
-        resource: resources.images[item.name],
+        resource: resources.images.collectible,
         position: new Vector2(baseX + 4, baseY + 4),
+        hFrames: 20,
+        frame: frame,
       });
       this.addChild(sprite);
 
@@ -167,19 +155,19 @@ export class Inventory extends GameObject {
     });
   }
 
-  removeFromInventory(imageKey: keyof typeof resources.images) {
-    this.items = this.items.filter((item) => item.name !== imageKey);
+  removeFromInventory(name: InventoryUnion) {
+    this.items = this.items.filter((item) => item.name !== name);
     this.renderInventory();
   }
 
   /**
    * Prüft, ob der Spieler mindestens `amount` Stück einer Resource besitzt.
-   * @param imageKey - der Schlüssel der Resource (z. B. "treeResource")
+   * @param name - der Schlüssel der Resource (z. B. "treeResource")
    * @param amount - die benötigte Menge
    * @returns true, wenn genügend vorhanden ist, sonst false
   */
-  hasResource(imageKey: InventoryItem, amount: number): boolean {
-    const item = this.items.find(i => i.name === imageKey);
+  hasResource(name: InventoryUnion, amount: number): boolean {
+    const item = this.items.find(i => i.name === name);
     return !!item && item.amount >= amount;
   }
 
@@ -187,11 +175,11 @@ export class Inventory extends GameObject {
    * Entfernt eine bestimmte Menge einer Resource aus dem Inventar.
    * Wenn die Menge auf 0 sinkt, wird die Item.amount auf 0 gesetzt
    * Die Liste der Items wird neu sortiert je nach Item.amount
-   * @param imageKey - der Schlüssel der Resource
+   * @param name - der Schlüssel der Resource
    * @param amount - die zu entfernende Menge
    */
-  removeResource(imageKey: InventoryItem, amount: number): void {
-    const item = this.items.find(i => i.name === imageKey);
+  removeResource(name: InventoryUnion, amount: number): void {
+    const item = this.items.find(i => i.name === name);
     if (!item) return;
 
     item.amount -= amount;
@@ -225,16 +213,16 @@ export class Inventory extends GameObject {
    * Wenn die Menge auf 0 sinkt, wird das Item komplett entfernt.
    * @param requirements - Array mit Resourcen Bedingung
    */
-  completeQuest(requirements: { imageKey: InventoryItem; amount: number }[]): boolean {
+  completeQuest(requirements: { name: InventoryUnion; amount: number }[]): boolean {
     // Prüfen, ob alle Anforderungen erfüllt sind
     const allAvailable = requirements.every(req =>
-      this.hasResource(req.imageKey, req.amount)
+      this.hasResource(req.name, req.amount)
     );
 
     if (!allAvailable) return false;
 
     // Resourcen abziehen, wenn erfüllt
-    requirements.forEach(req => this.removeResource(req.imageKey, req.amount));
+    requirements.forEach(req => this.removeResource(req.name, req.amount));
     return true;
   }
 }

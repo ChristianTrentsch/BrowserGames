@@ -47,7 +47,7 @@ export class StartLevel extends Level {
 
     // Choose actual Level Ground
     const groundSprite = new Sprite({
-      resource: resources.images.startGround,
+      resource: resources.images.caveGround,
       frameSize: new Vector2(320, 180),
       position: new Vector2(0, 0)
     });

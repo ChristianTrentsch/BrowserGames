@@ -15,10 +15,10 @@ import {
   DAMAGE_RIGHT,
   DAMAGE_UP,
   DAMAGE_LEFT,
-  ATTACK_WALK_DOWN,
-  ATTACK_WALK_RIGHT,
-  ATTACK_WALK_UP,
-  ATTACK_WALK_LEFT,
+  ATTACK_DOWN,
+  ATTACK_LEFT,
+  ATTACK_RIGHT,
+  ATTACK_UP,
 } from "./heroAnimations.js";
 
 import {
@@ -30,6 +30,7 @@ import {
   TEXTBOX_END,
   HERO_ATTACK_ACTION,
   HERO_CHANGE_EQUIPMENT,
+  EventCollectible,
 } from "../../Events.js";
 
 import { GameObject } from "../../GameObject.js";
@@ -37,12 +38,12 @@ import { Vector2 } from "../../Vector2.js";
 import { DOWN, LEFT, RIGHT, UP } from "../../Input.js";
 import { Sprite } from "../../Sprite.js";
 import { resources } from "../../Resource.js";
-import { Animations } from "../../Animations.js";
+import { Animations, HeroAnimationKey } from "../../Animations.js";
 import { FrameIndexPattern } from "../../FrameIndexPattern.js";
 import { Main } from "../Main/Main.js";
 import { Direction } from "../../types.js";
 import { SaveGame } from "../../SaveGame.js";
-import { INVENTORY_ITEMS, InventoryEvent } from "../Inventory/Inventory.js";
+import { INVENTORY_BUSH, INVENTORY_STONE, INVENTORY_TREE } from "../Inventory/Inventory.js";
 import { Attack } from "../Animations/Attack.js";
 import { Tree } from "../../levels/parts/Tree/Tree.js";
 import { Stone } from "../../levels/parts/Stone/Stone.js";
@@ -76,7 +77,7 @@ export class Hero extends GameObject {
       hFrames: 3,
       vFrames: 12,
       frame: 1,
-      animations: new Animations({
+      animations: new Animations<HeroAnimationKey>({
         walkLeft: new FrameIndexPattern(WALK_LEFT),
         walkDown: new FrameIndexPattern(WALK_DOWN),
         walkUp: new FrameIndexPattern(WALK_UP),
@@ -86,14 +87,7 @@ export class Hero extends GameObject {
         standUp: new FrameIndexPattern(STAND_UP),
         standRight: new FrameIndexPattern(STAND_RIGHT),
         pickUpDown: new FrameIndexPattern(PICK_UP_DOWN),
-        // damageDown: new FrameIndexPattern(DAMAGE_DOWN),
-        // damageRight: new FrameIndexPattern(DAMAGE_RIGHT),
-        // damageUp: new FrameIndexPattern(DAMAGE_UP),
-        // damageLeft: new FrameIndexPattern(DAMAGE_LEFT),
-        attackWalkDown: new FrameIndexPattern(ATTACK_WALK_DOWN),
-        attackWalkRight: new FrameIndexPattern(ATTACK_WALK_RIGHT),
-        attackWalkUp: new FrameIndexPattern(ATTACK_WALK_UP),
-        attackWalkLeft: new FrameIndexPattern(ATTACK_WALK_LEFT),
+        
       }),
     });
     this.addChild(this.body);
@@ -107,7 +101,7 @@ export class Hero extends GameObject {
 
   ready() {
     // Hero picks up item
-    events.on(HERO_PICKS_UP_ITEM, this, (data: InventoryEvent) => {
+    events.on(HERO_PICKS_UP_ITEM, this, (data: EventCollectible) => {
       this.onPickUpItem(data);
     });
 
@@ -183,24 +177,8 @@ export class Hero extends GameObject {
       const activeIndex = equip.findIndex(item => item.active === true);
 
       // Wenn aktives Equipment gefunden dann passende Attack animation
-      let attack: Attack;
       if (equip[activeIndex] && equip[activeIndex].name) {
-
-        switch (equip[activeIndex].name) {
-          case "rodPurple":
-            attack = new Attack(this.facingDirection, "rodAttackPurple");
-            break;
-
-          case "rodRed":
-            attack = new Attack(this.facingDirection, "rodAttackRed");
-            break;
-
-          default:
-            attack = new Attack(this.facingDirection, equip[activeIndex].name);
-            break;
-        }
-
-        this.addChild(attack);
+        this.addChild(new Attack(this.facingDirection, equip[activeIndex].name));
       }
 
       // Wenn GameObject an benachbarter Position von Typ Tree, Stone, Bush
@@ -331,7 +309,8 @@ export class Hero extends GameObject {
     }
   }
 
-  onPickUpItem(data: InventoryEvent) {
+  onPickUpItem(data: EventCollectible) {
+
     // Make sure we land right on the item
     const position = data.position;
     if (position) {
@@ -340,7 +319,7 @@ export class Hero extends GameObject {
       // Start the pickup animation
       this.itemPickUpTime = 1000; // ms
 
-      if (INVENTORY_ITEMS.includes(data.imageKey)) {
+      if (data.name === INVENTORY_BUSH || data.name === INVENTORY_TREE || data.name === INVENTORY_STONE) {
         this.itemPickUpTime = 300; // ms
       }
 
@@ -350,14 +329,18 @@ export class Hero extends GameObject {
         data.itemSound.play().catch(err => console.warn("Sound konnte nicht abgespielt werden:", err));
       }
 
+      // Bild passend zum Item ermitteln
+      const frame = resources.getCollectibleItemFrame(data.name);
       const image = data.image;
+
       if (image) {
-        // this.itemPickUpShell = new GameObject(position);
         this.itemPickUpShell = new GameObject(new Vector2(0, 0));
         this.itemPickUpShell.addChild(
           new Sprite({
-            resource: image,
+            resource: resources.images.collectible,
             position: new Vector2(0, -19), // show item image above head of hero
+            hFrames: 20,
+            frame: frame,
           })
         );
         this.addChild(this.itemPickUpShell);
