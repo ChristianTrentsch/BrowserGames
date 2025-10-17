@@ -1,7 +1,6 @@
 import { Main } from "./objects/Main/Main.js";
 import { Vector2 } from "./Vector2.js";
 import { OutdoorLevel1 } from "./levels/OutdoorLevel1.js";
-import { StartLevel } from "./levels/StartLevel.js";
 import { GameLoop } from "./GameLoop.js";
 import { SaveGame } from "./SaveGame.js";
 import { levelRegistry } from "./helpers/levelRegistry.js";
@@ -54,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const savedLevelId = SaveGame.loadLevel();
       let startLevel;
       if (savedLevelId && levelRegistry[savedLevelId]) {
+        
         // Level aus Registry dynamisch laden
         const LevelClass = levelRegistry[savedLevelId];
         startLevel = new LevelClass({
@@ -66,10 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
         startLevel = new OutdoorLevel1({
           position: new Vector2(0, 0),
         });
-        
-        // startLevel = new StartLevel({
-        //   position: new Vector2(0, 0),
-        // });
       }
       mainScene.setLevel(startLevel);
 
