@@ -20,16 +20,13 @@ import { Square } from "./parts/Square/Square.js";
 
 export class CaveLevel1 extends Level {
 
+  levelId: LevelId = "CaveLevel1";
   background: Sprite;
   walls: Set<string>;
   heroStartPosition: Vector2;
   defaultHeroPosition = new Vector2(gridCells(16), gridCells(6));
-  levelId: LevelId = "CaveLevel1";   // eindeutige ID
 
-  constructor({ position, heroPosition }: {
-    position: Vector2;
-    heroPosition?: Vector2;
-  }) {
+  constructor(position: Vector2) {
     // Ohne Sound // super(position);
     // mit Sound
     super(position, "./sounds/levels/CaveLevel1.mp3", 0.2);
@@ -112,13 +109,7 @@ export class CaveLevel1 extends Level {
       if (hero) {
         SaveGame.saveHero(hero.level, heroPosition, hero.exp);
 
-        events.emit(
-          CHANGE_LEVEL,
-          new OutdoorLevel1({
-            position: new Vector2(gridCells(0), gridCells(0)),
-            heroPosition: heroPosition, // feste Startposition
-          })
-        );
+        events.emit(CHANGE_LEVEL, new OutdoorLevel1(new Vector2(gridCells(0), gridCells(0))));
       }
     });
   }

@@ -22,16 +22,13 @@ import { GameObject } from "../GameObject.js";
 
 export class OutdoorLevel1 extends Level {
 
+  levelId: LevelId = "OutdoorLevel1";
   background: Sprite;
   walls: Set<string>;
   heroStartPosition: Vector2;
   defaultHeroPosition = new Vector2(gridCells(60), gridCells(21));
-  levelId: LevelId = "OutdoorLevel1";   // eindeutige ID
 
-  constructor({ position, heroPosition }: {
-    position: Vector2;
-    heroPosition?: Vector2;
-  }) {
+  constructor(position: Vector2) {
     // Ohne Sound // super(position);
     // mit Sound // super(position, "./sounds/levels/OutdoorLevel1.mp3", 0.4);
     super(position, "./sounds/levels/background_music_02.mp3", 0.2);
@@ -114,13 +111,7 @@ export class OutdoorLevel1 extends Level {
       if (hero) {
         SaveGame.saveHero(hero.level, heroPosition, hero.exp);
 
-        events.emit(
-          CHANGE_LEVEL,
-          new CaveLevel1({
-            position: new Vector2(gridCells(0), gridCells(0)),
-            heroPosition: heroPosition, // feste Startposition
-          })
-        );
+        events.emit(CHANGE_LEVEL, new CaveLevel1(new Vector2(gridCells(0), gridCells(0))));
       }
     });
   }

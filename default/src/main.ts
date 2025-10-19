@@ -53,19 +53,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const savedLevelId = SaveGame.loadLevel();
       let startLevel;
       if (savedLevelId && levelRegistry[savedLevelId]) {
-        
+
         // Level aus Registry dynamisch laden
         const LevelClass = levelRegistry[savedLevelId];
-        startLevel = new LevelClass({
-          position: new Vector2(0, 0),
-        });
+        startLevel = new LevelClass(new Vector2(0, 0));
       } else {
         // Fallback: Startlevel Outdoor with initial value
         SaveGame.initAll();
 
-        startLevel = new OutdoorLevel1({
-          position: new Vector2(0, 0),
-        });
+        startLevel = new OutdoorLevel1(new Vector2(0, 0));
       }
       mainScene.setLevel(startLevel);
 
