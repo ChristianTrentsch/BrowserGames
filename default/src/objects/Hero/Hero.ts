@@ -1,5 +1,5 @@
 import { moveTowards } from "../../helpers/moveTowards.js";
-import { TILE_SIZE, gridCells, isSpaceFree } from "../../helpers/grid.js";
+import { TILE_SIZE, isSpaceFree } from "../../helpers/grid.js";
 import {
   STAND_DOWN,
   STAND_LEFT,
@@ -22,8 +22,6 @@ import {
   HERO_CHANGE_EQUIPMENT,
   EventCollectible,
   RES_DESTROY,
-  HERO_EXITS,
-  CHANGE_LEVEL,
   HERO_CHANGE_EXP,
 } from "../../Events.js";
 import { GameObject } from "../../GameObject.js";
@@ -41,8 +39,6 @@ import { Tree } from "../../levels/parts/Tree/Tree.js";
 import { Stone } from "../../levels/parts/Stone/Stone.js";
 import { Bush } from "../../levels/parts/Bush/Bush.js";
 import { BUSH, Item, STONE, TREE } from "../Item/Item.js";
-import { Level } from "../Level/Level.js";
-import { Exp } from "../Exp/Exp.js";
 
 export const LEVEL_THRESHOLDS = [
   10, 20, 30, 40, 50, 60, 70, 80, 90, 100,
@@ -102,8 +98,6 @@ export class Hero extends GameObject {
       }),
     });
     this.addChild(this.body);
-
-
 
     this.facingDirection = DOWN;
     this.destinationPosition = this.position.duplicate();
@@ -331,16 +325,17 @@ export class Hero extends GameObject {
     // Hero Erfahrungspunkte geben abhängig zur Resource
     this.exp += resource.xp;
 
-
     const nextLevelExp = LEVEL_THRESHOLDS[this.level];
-
     if (nextLevelExp && this.exp >= nextLevelExp && this.level < LEVEL_THRESHOLDS.length - 1) {
-
+      
       // level erhöhen
       this.level++;
-
+      
+      // nach Level Up übrige Xp auf neues Level drauf rechnen
+      const diff = this.exp - nextLevelExp;
+      
       // Xp zurücksetzen
-      this.exp = 0;
+      this.exp = diff;
     }
 
     SaveGame.saveHero(this.level, this.position, this.exp);
