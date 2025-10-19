@@ -286,7 +286,7 @@ export class SaveGame {
         this.saveInput("keyboard");
         this.saveLevel("OutdoorLevel1");
 
-        this.saveHero(0, new Vector2(gridCells(60), gridCells(21)), 0);
+        this.saveHero(0, new Vector2(gridCells(49), gridCells(24)), 0);
 
         this.saveResources("OutdoorLevel1", []);
         this.saveResources("CaveLevel1", []);

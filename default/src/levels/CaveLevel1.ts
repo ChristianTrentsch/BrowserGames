@@ -99,7 +99,7 @@ export class CaveLevel1 extends Level {
       this.stopBackgroundSound();
 
       // Hero position im neuem Level
-      const heroPosition = new Vector2(gridCells(11), gridCells(8));
+      const heroPosition = new Vector2(gridCells(84), gridCells(14));
 
       // Hero laden/speichern
       // - exp speichern

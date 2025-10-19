@@ -1,8 +1,8 @@
-import { CHANGE_LEVEL, events } from "../../Events.js";
 import { GameObject } from "../../GameObject.js";
+import { DEBUG_MODE } from "../../helpers/debug.js";
 import { gridCells } from "../../helpers/grid.js";
-import { getNewLevelInstance, LevelId, levelRegistry, LevelUnion } from "../../helpers/levelRegistry.js";
-import { OutdoorLevel1 } from "../../levels/OutdoorLevel1.js";
+import { LevelId } from "../../helpers/levelRegistry.js";
+import { resources } from "../../Resource.js";
 import { SaveGame } from "../../SaveGame.js";
 import { Sprite } from "../../Sprite.js";
 import { storyFlags } from "../../StoryFlags.js";
@@ -155,7 +155,8 @@ export abstract class Level extends GameObject {
     start: Vector2,
     end: Vector2,
     step: number,
-    direction: "top" | "bottom" | "left" | "right"
+    direction: "top" | "bottom" | "left" | "right",
+    visualize: boolean = DEBUG_MODE, // DEACTIVATE WHEN DEBUG FINISHED
   ): string[] {
     const coords: string[] = [];
 
@@ -175,6 +176,25 @@ export abstract class Level extends GameObject {
         break;
     }
 
+    // --- DEBUG ---
+    if (visualize) {
+      coords.forEach(coord => {
+        const [x, y] = coord.split(",").map(Number);
+        this.visualizeTile(new Vector2(x, y));
+      });
+    }
+
     return coords;
+  }
+
+  private visualizeTile(pos: Vector2) {
+    const debugTile = new Sprite({
+      resource: resources.images.collectible,
+      position: pos,
+      frameSize: new Vector2(16, 16),
+      hFrames: 20,
+      frame: 19,
+    });
+    this.addChild(debugTile);
   }
 }

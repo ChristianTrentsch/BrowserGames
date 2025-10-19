@@ -90,6 +90,39 @@ export class OutdoorLevel1 extends Level {
       left: this.generateWall(new Vector2(16, 32), new Vector2(16, 764), TILE_SIZE, "left"),
       top: this.generateWall(new Vector2(32, 16), new Vector2(1568, 16), TILE_SIZE, "top"),
       bottom: this.generateWall(new Vector2(32, 768), new Vector2(1568, 768), TILE_SIZE, "bottom"),
+
+      // Start Island
+      startIslandTop1: this.generateWall(new Vector2(gridCells(48), gridCells(22)), new Vector2(gridCells(51), gridCells(22)), TILE_SIZE, "top"),
+      startIslandTop2: this.generateWall(new Vector2(gridCells(52), gridCells(23)), new Vector2(gridCells(57), gridCells(23)), TILE_SIZE, "top"),
+      startIslandTop3: this.generateWall(new Vector2(gridCells(44), gridCells(24)), new Vector2(gridCells(46), gridCells(24)), TILE_SIZE, "top"),
+      startIslandTop4: this.generateWall(new Vector2(gridCells(44), gridCells(26)), new Vector2(gridCells(46), gridCells(26)), TILE_SIZE, "top"),
+      startIslandLeft1: this.generateWall(new Vector2(gridCells(47), gridCells(23)), new Vector2(gridCells(47), gridCells(24)), TILE_SIZE, "left"),
+      startIslandLeft2: this.generateWall(new Vector2(gridCells(47), gridCells(26)), new Vector2(gridCells(47), gridCells(26)), TILE_SIZE, "left"),
+      startIslandRight1: this.generateWall(new Vector2(gridCells(52), gridCells(26)), new Vector2(gridCells(52), gridCells(26)), TILE_SIZE, "right"),
+      startIslandBottom1: this.generateWall(new Vector2(gridCells(48), gridCells(27)), new Vector2(gridCells(51), gridCells(27)), TILE_SIZE, "bottom"),
+      startIslandBottom2: this.generateWall(new Vector2(gridCells(52), gridCells(25)), new Vector2(gridCells(57), gridCells(25)), TILE_SIZE, "bottom"),
+
+      // Start Lake
+      startLakeTop1: this.generateWall(new Vector2(gridCells(43), gridCells(19)), new Vector2(gridCells(46), gridCells(19)), TILE_SIZE, "top"),
+      startLakeTop2: this.generateWall(new Vector2(gridCells(47), gridCells(20)), new Vector2(gridCells(53), gridCells(20)), TILE_SIZE, "top"),
+      startLakeTop3: this.generateWall(new Vector2(gridCells(54), gridCells(21)), new Vector2(gridCells(56), gridCells(21)), TILE_SIZE, "top"),
+
+      startLakeLeft1: this.generateWall(new Vector2(gridCells(43), gridCells(24)), new Vector2(gridCells(43), gridCells(24)), TILE_SIZE, "left"),
+      startLakeLeft2: this.generateWall(new Vector2(gridCells(43), gridCells(26)), new Vector2(gridCells(43), gridCells(28)), TILE_SIZE, "left"),
+      startLakeLeft3: this.generateWall(new Vector2(gridCells(43), gridCells(20)), new Vector2(gridCells(43), gridCells(21)), TILE_SIZE, "left"),
+      startLakeLeft4: this.generateWall(new Vector2(gridCells(44), gridCells(22)), new Vector2(gridCells(44), gridCells(23)), TILE_SIZE, "left"),
+
+      startLakeRight1: this.generateWall(new Vector2(gridCells(57), gridCells(20)), new Vector2(gridCells(57), gridCells(20)), TILE_SIZE, "right"),
+      startLakeRight2: this.generateWall(new Vector2(gridCells(58), gridCells(20)), new Vector2(gridCells(58), gridCells(22)), TILE_SIZE, "right"),
+
+      startLakeBottom1: this.generateWall(new Vector2(gridCells(56), gridCells(26)), new Vector2(gridCells(58), gridCells(26)), TILE_SIZE, "bottom"),
+      startLakeBottom2: this.generateWall(new Vector2(gridCells(53), gridCells(27)), new Vector2(gridCells(55), gridCells(27)), TILE_SIZE, "bottom"),
+      startLakeBottom3: this.generateWall(new Vector2(gridCells(44), gridCells(28)), new Vector2(gridCells(52), gridCells(28)), TILE_SIZE, "bottom"),
+      startLakeBottom4: this.generateWall(new Vector2(gridCells(44), gridCells(29)), new Vector2(gridCells(44), gridCells(29)), TILE_SIZE, "bottom"),
+      startLakeBottom5: this.generateWall(new Vector2(gridCells(47), gridCells(29)), new Vector2(gridCells(48), gridCells(29)), TILE_SIZE, "bottom"),
+
+      // fakePfad: this.generateWall(new Vector2(gridCells(60), gridCells(32)), new Vector2(gridCells(85), gridCells(32)), TILE_SIZE, "bottom"),
+
     };
     this.walls = new Set(Object.values(wallDefinitions).flat());
   }
@@ -185,8 +218,8 @@ export class OutdoorLevel1 extends Level {
     /** --- Gruppe: "lila Zauberstab" erzeugen --- */
     this.addChildrenGroup(
       "lila Zauberstab",
-      gridCells(34), // Platziere Gruppe links/rechts
-      gridCells(6), // Platziere Gruppe oben/unten
+      gridCells(8), // Platziere Gruppe links/rechts
+      gridCells(8), // Platziere Gruppe oben/unten
       rodPurpleGroup,
       [
         // Resourcen freie Zone definieren
@@ -277,8 +310,8 @@ export class OutdoorLevel1 extends Level {
 
     this.addChildrenGroup(
       "Exit Gruppe",
-      gridCells(7), // Platziere Gruppe links/rechts
-      gridCells(6), // Platziere Gruppe oben/unten
+      gridCells(80), // Platziere Gruppe links/rechts
+      gridCells(10), // Platziere Gruppe oben/unten
       exitGroup,
       [
         // Resourcen freie Zone definieren
@@ -359,17 +392,25 @@ export class OutdoorLevel1 extends Level {
         ...this.noResourceZones,
 
         // Start Position Spieler
-        { x1: 58, x2: 62, y1: 19, y2: 19 },
-        { x1: 57, x2: 63, y1: 20, y2: 20 },
-        { x1: 56, x2: 64, y1: 21, y2: 21 },
-        { x1: 57, x2: 63, y1: 22, y2: 22 },
-        { x1: 58, x2: 62, y1: 23, y2: 23 },
+        // oben
+        { x1: 41, x2: 48, y1: 17, y2: 17 },
+        { x1: 41, x2: 60, y1: 18, y2: 19 },
+        // mitte
+        { x1: 40, x2: 61, y1: 20, y2: 28 },
+        // unten
+        { x1: 41, x2: 58, y1: 29, y2: 29 },
+        { x1: 41, x2: 53, y1: 30, y2: 30 },
+        { x1: 42, x2: 49, y1: 31, y2: 31 },
 
-        // horizontaler Pfad 1600/16 = 100 gridCells
-        { x1: 11, x2: 55, y1: 20, y2: 22 },
-
-        // vertikaler Pfad
-        // { x1: 50, x2: 55, y1: 0, y2: 56 },    
+        // horizontaler Pfad zum Exit
+        { x1: 68, x2: 80, y1: 24, y2: 25 },
+        
+        // horizontaler Pfad zum lila Zauberstab
+        { x1: 25, x2: 37, y1: 23, y2: 25 },
+        { x1: 25, x2: 26, y1: 26, y2: 39 },
+        { x1: 8, x2: 24, y1: 40, y2: 41 },
+        { x1: 8, x2: 9, y1: 22, y2: 39 },
+        { x1: 10, x2: 14, y1: 22, y2: 23 },
       ],
       density: {
         Tree: 0.500,
