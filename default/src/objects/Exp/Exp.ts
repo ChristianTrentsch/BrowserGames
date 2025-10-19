@@ -91,24 +91,17 @@ export class Exp extends GameObject {
 
         if (nextLevelExp) {
 
-            // console.group("Exp Debug");
-            // console.log("exp: ", this.exp);
-            // console.log("level: ", this.level);
-            // console.log("LevelExp: ", nextLevelExp);
-
+            // max Anzahl an Pixel
             const maxPixel = 234;
 
             // Prozentualer Fortschritt bis zum nächsten Level
             const progress = this.exp / nextLevelExp;
-            // console.log("progress:", progress);
 
             // Begrenze auf 100 %
             const clampedProgress = Math.min(progress, 1);
-            // console.log("clampedProgress:", progress);
 
             // Anzahl an Pixel die gezeichnet werden
             let showPixel = Math.floor(clampedProgress * maxPixel);
-            // console.log("showPixel: ", showPixel);
 
             // Draw exp Balken
             const frameSize = 1;
@@ -124,8 +117,6 @@ export class Exp extends GameObject {
                     })
                 );
             }
-
-            // console.groupEnd();
         }
     }
 }
