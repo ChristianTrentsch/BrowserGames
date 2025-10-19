@@ -1,3 +1,4 @@
+import { gridCells } from "./helpers/grid.js";
 import { LevelId } from "./helpers/levelRegistry.js";
 import { EquipmentUnion, EquipmentItemData } from "./objects/Equipment/Equipment.js";
 import { InventoryUnion, InventoryItemData } from "./objects/Inventory/Inventory.js";
@@ -17,7 +18,7 @@ export interface ResourceSaveData {
 export class SaveGame {
     private static inventoryKey = "inventory";
     private static equipmentKey = "equipment";
-    private static heroKey = "heroPosition";
+    private static heroKey = "hero";
     private static levelKey = "currentLevel";
     private static overlayKey = "overlaySeen";
     private static soundKey = "sound";
@@ -54,7 +55,7 @@ export class SaveGame {
 
             return items.some(item => item.name === imageKey);
         } catch (err) {
-            console.error("Fehler beim Lesen des Inventars:", err);
+            console.warn("Fehler beim Lesen des Inventars:", err);
             return false;
         }
     }
@@ -88,35 +89,81 @@ export class SaveGame {
 
             return items.some(item => item.name === name);
         } catch (err) {
-            console.error("Fehler beim Lesen des Equipment:", err);
+            console.warn("Fehler beim Lesen des Equipment:", err);
             return false;
         }
     }
 
     // --------- HERO POSITION ----------
-    static saveHero(levelId: LevelId, pos: Vector2) {
+    static saveHero(level: number, pos: Vector2, exp: number) {
         const data = {
-            levelId,
+            level: level,
             x: pos.x,
-            y: pos.y
+            y: pos.y,
+            exp: exp
         };
         localStorage.setItem(this.heroKey, JSON.stringify(data));
     }
 
-    static loadHero(expectedLevelId: LevelId, defaultPos: Vector2): Vector2 {
+    static loadHero() {
         const raw = localStorage.getItem(this.heroKey);
-        if (!raw) return defaultPos;
 
-        try {
-            const data = JSON.parse(raw) as { levelId: LevelId; x: number; y: number };
-            if (data.levelId === expectedLevelId) {
-                return new Vector2(data.x, data.y);
-            }
-        } catch (e) {
-            console.warn("Fehler beim Laden der Hero Position:", e);
+        if (!raw) return;
+
+        // Daten aufbereiten
+        const data: {
+            level: number;
+            x: number;
+            y: number;
+            exp: number
+        } = JSON.parse(raw);
+
+        return {
+            level: data.level,
+            pos: new Vector2(data.x, data.y),
+            exp: data.exp
         }
-        return defaultPos;
     }
+
+    // static loadHero(expectedLevelId: LevelId, defaultPos: Vector2) {
+    //     const raw = localStorage.getItem(this.heroKey);
+    //     if (!raw) {
+    //         // Erstinitialisierung
+    //         return {
+    //             levelId: expectedLevelId,
+    //             pos: defaultPos,
+    //             exp: 0
+    //         };
+    //     }
+
+    //     // Daten aufbereiten
+    //     const data: {
+    //         levelId: LevelId;
+    //         x: number;
+    //         y: number;
+    //         exp: number
+    //     } = JSON.parse(raw);
+
+    //     if (data.levelId === expectedLevelId) {
+    //         // nach Reload noch im gleichen Level ?
+    //         // - dann gespeicherte Position nutzen
+    //         return {
+    //             levelId: data.levelId,
+    //             pos: new Vector2(data.x, data.y),
+    //             exp: data.exp
+    //         }
+    //     }
+    //     else {
+    //         // Level wechsel
+    //         // - Position auf übergabe setzen
+    //         // - rest speichern
+    //         return {
+    //             levelId: data.levelId,
+    //             pos: defaultPos,
+    //             exp: data.exp
+    //         }
+    //     }
+    // }
 
     static clearHero() {
         localStorage.removeItem(this.heroKey);
@@ -238,6 +285,11 @@ export class SaveGame {
         this.saveSound("on");
         this.saveInput("keyboard");
         this.saveLevel("OutdoorLevel1");
+
+        this.saveHero(0, new Vector2(gridCells(60), gridCells(21)), 0);
+
+        this.saveResources("OutdoorLevel1", []);
+        this.saveResources("CaveLevel1", []);
 
         // Standard Equipment festlegen beim erstmaligen laden
         this.saveEquipment([{ id: 1, name: "sword", amount: 1, active: true }]);

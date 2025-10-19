@@ -8,21 +8,22 @@ import { Hero } from "../objects/Hero/Hero.js";
 import { events, HERO_EXITS, CHANGE_LEVEL } from "../Events.js";
 import { OutdoorLevel1 } from "./OutdoorLevel1.js";
 import { Npc } from "../objects/Npc/Npc.js";
-import { Item } from "../objects/Item/Item.js";
+import { BUSH, Item, STONE, TREE } from "../objects/Item/Item.js";
 import { SaveGame } from "../SaveGame.js";
-import { LevelId } from "../helpers/levelRegistry.js";
+import { LevelId, levelRegistry } from "../helpers/levelRegistry.js";
 import { GameObject } from "../GameObject.js";
 import { generateDefaultResources } from "../helpers/generateResources.js";
 import { Tree } from "./parts/Tree/Tree.js";
 import { Bush } from "./parts/Bush/Bush.js";
 import { Stone } from "./parts/Stone/Stone.js";
+import { Square } from "./parts/Square/Square.js";
 
 export class CaveLevel1 extends Level {
 
   background: Sprite;
   walls: Set<string>;
   heroStartPosition: Vector2;
-  defaultHeroPosition = new Vector2(gridCells(5), gridCells(2));
+  defaultHeroPosition = new Vector2(gridCells(16), gridCells(6));
   levelId: LevelId = "CaveLevel1";   // eindeutige ID
 
   constructor({ position, heroPosition }: {
@@ -45,8 +46,8 @@ export class CaveLevel1 extends Level {
 
     // Choose actual Level Ground
     const groundSprite = new Sprite({
-      resource: resources.images.caveGround,
-      frameSize: new Vector2(320, 180),
+      resource: resources.images.desertGround,
+      frameSize: new Vector2(1600, 1600),
       position: new Vector2(0, 0)
     });
     this.addChild(groundSprite);
@@ -57,25 +58,39 @@ export class CaveLevel1 extends Level {
     //** --- Build "redRod" Scene  --- */
     this.buildLevelGroupRedRod();
 
+    //** --- Build Exit Scene --- */
+    this.buildLevelGroupExit();
+
     //** --- Resourcen laden --- */
     this.loadLevelResources();
 
+    //** --- Load Hero Data --- */
+    this.heroStartPosition = this.defaultHeroPosition;
+    // const heroSave = SaveGame.loadHero(this.levelId, heroPosition ?? this.defaultHeroPosition);
+    const heroSave = SaveGame.loadHero();
+    let exp = 0;
+    let level = 0;
+    if (heroSave) {
+      this.heroStartPosition = heroSave.pos ?? this.defaultHeroPosition;
+      exp = heroSave.exp;
+      level = heroSave.level;
+    }
+
     //** --- Create Hero and add to scene --- */
-    // entweder geladene Position (Reload) oder die übergebene Startposition (Levelwechsel)
-    this.heroStartPosition = SaveGame.loadHero(this.levelId, heroPosition ?? this.defaultHeroPosition);
-    const hero = new Hero(this.heroStartPosition.x, this.heroStartPosition.y);
+    const hero = new Hero(
+      this.heroStartPosition.x,
+      this.heroStartPosition.y,
+      exp,
+      level
+    );
     this.addChild(hero);
 
     //** --- Create Level walls add to scene --- */
     const wallDefinitions = {
-      right: this.generateWall(new Vector2(288, 16), new Vector2(288, 112), TILE_SIZE, "right"),
-      left: this.generateWall(new Vector2(16, 16), new Vector2(16, 112), TILE_SIZE, "left"),
-      top: this.generateWall(new Vector2(32, 0), new Vector2(272, 0), TILE_SIZE, "top"),
-      bottom: this.generateWall(new Vector2(32, 128), new Vector2(272, 128), TILE_SIZE, "bottom"),
-      stone: ["144,16", "192,32", "208,32", "208,48", "256,80", "32,64",],
-      littleStone: ["48,64", "48,80",],
-      squares: ["48,13", "64,16", "80,48", "96,48", "128,48", "112,64", "96,64", "192,80", "208,80", "224,96",],
-      water: ["240,32", "256,32", "208,96", "192,96", "176,96", "128,96", "112,96", "96,96",],
+      right: this.generateWall(new Vector2(1568, 32), new Vector2(1568, 1564), TILE_SIZE, "right"),
+      left: this.generateWall(new Vector2(16, 32), new Vector2(16, 1564), TILE_SIZE, "left"),
+      top: this.generateWall(new Vector2(32, 16), new Vector2(1568, 16), TILE_SIZE, "top"),
+      bottom: this.generateWall(new Vector2(32, 1564), new Vector2(1568, 1564), TILE_SIZE, "bottom"),
     };
     this.walls = new Set(Object.values(wallDefinitions).flat());
   }
@@ -83,19 +98,28 @@ export class CaveLevel1 extends Level {
   ready() {
     events.on(HERO_EXITS, this, () => {
 
-      // console.log("CHANGE LEVEL", this);
-
       // Alten Level-Sound stoppen
       this.stopBackgroundSound();
 
-      events.emit(
-        CHANGE_LEVEL,
-        new OutdoorLevel1(
-          {
+      // Hero position im neuem Level
+      const heroPosition = new Vector2(gridCells(11), gridCells(8));
+
+      // Hero laden/speichern
+      // - exp speichern
+      // - Position festlegen
+      // - Level festlegen
+      const hero = SaveGame.loadHero();
+      if (hero) {
+        SaveGame.saveHero(hero.level, heroPosition, hero.exp);
+
+        events.emit(
+          CHANGE_LEVEL,
+          new OutdoorLevel1({
             position: new Vector2(gridCells(0), gridCells(0)),
-            heroPosition: new Vector2(gridCells(11), gridCells(10)), // feste Startposition
+            heroPosition: heroPosition, // feste Startposition
           })
-      );
+        );
+      }
     });
   }
 
@@ -106,8 +130,8 @@ export class CaveLevel1 extends Level {
      */
   buildLevelGroupRedRod() {
     let npc = new Npc(
-      gridCells(7),
-      gridCells(2),
+      gridCells(5),
+      gridCells(8),
       [
         {
           string: "Du hast nun die stärkste Waffe und keine Resource kann dich aufhalten",
@@ -136,32 +160,184 @@ export class CaveLevel1 extends Level {
       npc.position.x += gridCells(-1);
     }
 
+    const design = "desert";
+
     // Gruppe vorbereiten
     const rodRedGroup: GameObject[] = [
       // add Npc
       npc,
-      new Exit(gridCells(17), gridCells(7)),
+
+      // Schrein horizontal Begrenzung
+      new Square(gridCells(4), gridCells(3), design),
+      new Square(gridCells(5), gridCells(3), design),
+      new Square(gridCells(6), gridCells(3), design),
+      new Square(gridCells(4), gridCells(7), design),
+      new Square(gridCells(6), gridCells(7), design),
+
+      // Schrein vertical Begrenzung
+      new Square(gridCells(3), gridCells(4), design),
+      new Square(gridCells(3), gridCells(5), design),
+      new Square(gridCells(3), gridCells(6), design),
+      new Square(gridCells(7), gridCells(4), design),
+      new Square(gridCells(7), gridCells(5), design),
+      new Square(gridCells(7), gridCells(6), design),
     ];
 
     //** --- Wenn noch kein "rodRed" im Equipment dann "rodRed" in der Scene platzieren --- */
     if (!SaveGame.isInEquipment("rodRed")) {
-      const rod = new Item(gridCells(7), gridCells(3), "rodRed");
+      const rod = new Item(gridCells(5), gridCells(5), "rodRed");
       rodRedGroup.push(rod);
     }
 
     /** --- Gruppe: "roter Zauberstab" erzeugen --- */
     this.addChildrenGroup(
       "roter Zauberstab",
-      gridCells(0), // Platziere Gruppe links/rechts
-      gridCells(0), // Platziere Gruppe oben/unten
+      gridCells(8), // Platziere Gruppe links/rechts
+      gridCells(8), // Platziere Gruppe oben/unten
       rodRedGroup,
       [
         // Resourcen freie Zone definieren
+
+        /** --- OBEN --- */
+        {
+          x1: 4, // links
+          x2: 6,// rechts
+          y1: 0, // oben
+          y2: 0, // unten
+        },
+        {
+          x1: 3, // links
+          x2: 7,// rechts
+          y1: 1, // oben
+          y2: 1, // unten
+        },
+        {
+          x1: 2, // links
+          x2: 8,// rechts
+          y1: 2, // oben
+          y2: 2, // unten
+        },
+        {
+          x1: 1, // links
+          x2: 9,// rechts
+          y1: 3, // oben
+          y2: 3, // unten
+        },
+        /** --- MITTE --- */
         {
           x1: 0, // links
           x2: 10,// rechts
-          y1: 0, // oben
+          y1: 4, // oben
+          y2: 6, // unten
+        },
+        /** --- UNTEN --- */
+        {
+          x1: 1, // links
+          x2: 9,// rechts
+          y1: 7, // oben
+          y2: 7, // unten
+        },
+        {
+          x1: 2, // links
+          x2: 8,// rechts
+          y1: 8, // oben
+          y2: 8, // unten
+        },
+        {
+          x1: 3, // links
+          x2: 7,// rechts
+          y1: 9, // oben
+          y2: 9, // unten
+        },
+        {
+          x1: 4, // links
+          x2: 6,// rechts
+          y1: 10, // oben
           y2: 10, // unten
+        },
+        /** --- EINGANG --- */
+        // {
+        //   x1: 4, // links
+        //   x2: 6,// rechts
+        //   y1: 10, // oben
+        //   y2: 13, // unten
+        // },
+      ],
+    );
+  }
+
+  /**
+   * Erstelle alle Elemente die zur "Exit" Scene gehören
+   * - Exit
+   * - House
+   * - Resources
+   */
+  buildLevelGroupExit() {
+    // Exit Gruppe vorbereiten
+    const exitGroup: GameObject[] = [
+      // Exit
+      new Exit(gridCells(4), gridCells(4)),
+    ];
+
+    this.addChildrenGroup(
+      "Exit Gruppe",
+      gridCells(30), // Platziere Gruppe links/rechts
+      gridCells(30), // Platziere Gruppe oben/unten
+      exitGroup,
+      [
+        // Resourcen freie Zone definieren
+
+        /** --- OBEN --- */
+        {
+          x1: 3, // links
+          x2: 7,// rechts
+          y1: 1, // oben
+          y2: 1, // unten
+        },
+        {
+          x1: 2, // links
+          x2: 8,// rechts
+          y1: 2, // oben
+          y2: 2, // unten
+        },
+        {
+          x1: 1, // links
+          x2: 9,// rechts
+          y1: 3, // oben
+          y2: 3, // unten
+        },
+        /** --- MITTE --- */
+        {
+          x1: 2, // links
+          x2: 8,// rechts
+          y1: 4, // oben
+          y2: 6, // unten
+        },
+        /** --- UNTEN --- */
+        {
+          x1: 1, // links
+          x2: 9,// rechts
+          y1: 7, // oben
+          y2: 7, // unten
+        },
+        {
+          x1: 2, // links
+          x2: 8,// rechts
+          y1: 8, // oben
+          y2: 8, // unten
+        },
+        {
+          x1: 3, // links
+          x2: 7,// rechts
+          y1: 9, // oben
+          y2: 9, // unten
+        },
+        /** --- EINGANG --- */
+        {
+          x1: 4, // links
+          x2: 6,// rechts
+          y1: 10, // oben
+          y2: 13, // unten
         },
       ],
     );
@@ -178,18 +354,25 @@ export class CaveLevel1 extends Level {
     // Default-Resourcen-Definition im Level
     const defaultResources = generateDefaultResources({
       levelId: "CaveLevel1",
-      width: 320,
-      height: 180,
+      width: 1600,
+      height: 1600,
       seed: 1, // bestimmter Seed = immer gleiche Karte
       pathZones: [
-        ...this.noResourceZones, // füge Gruppenbasierte freie flächen hinzu
+        // füge Gruppenbasierte freie flächen hinzu
+        ...this.noResourceZones,
+
+        // verticaler Pfad
+        { x1: 30, x2: 32, y1: 12, y2: 32 },
+
+        // horizontal Pfad
+        { x1: 20, x2: 29, y1: 12, y2: 13 },
       ],
       density: {
-        Tree: 0, // keine Resourcen erzeugen
-        Bush: 0, // keine Resourcen erzeugen
-        Stone: 0, // keine Resourcen erzeugen
+        Tree: 0.200, // keine Resourcen erzeugen
+        Bush: 0.300, // keine Resourcen erzeugen
+        Stone: 0.100, // keine Resourcen erzeugen
       },
-      border: 0
+      border: 32
     });
 
     // Geladene Savegame-Daten
@@ -205,9 +388,9 @@ export class CaveLevel1 extends Level {
     for (const res of mergedResources) {
       if (res.hp > 0) {
         switch (res.type) {
-          case "Tree": this.addChild(new Tree(res.x, res.y, res.hp)); break;
-          case "Bush": this.addChild(new Bush(res.x, res.y, res.hp)); break;
-          case "Stone": this.addChild(new Stone(res.x, res.y, res.hp)); break;
+          case BUSH: this.addChild(new Bush(res.x, res.y, res.hp, "desert")); break;
+          case TREE: this.addChild(new Tree(res.x, res.y, res.hp, "desert")); break;
+          case STONE: this.addChild(new Stone(res.x, res.y, res.hp, "desert")); break;
         }
       }
     }

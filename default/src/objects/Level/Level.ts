@@ -1,6 +1,8 @@
+import { CHANGE_LEVEL, events } from "../../Events.js";
 import { GameObject } from "../../GameObject.js";
 import { gridCells } from "../../helpers/grid.js";
-import { LevelId } from "../../helpers/levelRegistry.js";
+import { getNewLevelInstance, LevelId, levelRegistry, LevelUnion } from "../../helpers/levelRegistry.js";
+import { OutdoorLevel1 } from "../../levels/OutdoorLevel1.js";
 import { SaveGame } from "../../SaveGame.js";
 import { Sprite } from "../../Sprite.js";
 import { storyFlags } from "../../StoryFlags.js";
@@ -71,7 +73,7 @@ export abstract class Level extends GameObject {
     // console.groupEnd();
   }
 
-  protected checkGameProgress(){
+  protected checkGameProgress() {
     //** --- Check if Quest "rodPurple" is finished --- */
     if (SaveGame.isInEquipment("rodPurple")) {
       // Festlegen das Quest bereits abgeschlossen

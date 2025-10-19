@@ -3,21 +3,26 @@ import { Sprite } from "../../../Sprite.js";
 import { Vector2 } from "../../../Vector2.js";
 import { resources } from "../../../Resource.js";
 import { getNextText, getRandomText } from "../../../helpers/levelPartsText.js";
-import { Item } from "../../../objects/Item/Item.js";
-import { INVENTORY_TREE, InventoryUnion } from "../../../objects/Inventory/Inventory.js";
+import { Item, TREE } from "../../../objects/Item/Item.js";
+import { InventoryUnion } from "../../../objects/Inventory/Inventory.js";
+import { events, RES_DESTROY } from "../../../Events.js";
+import { getResourceFrame } from "../../../helpers/generateResources.js";
 
 export class Tree extends GameObject {
 
     healthPoints: number;
+    xp: number = 2;
     treeSprite: Sprite;
     type: InventoryUnion = "tree";
+    design: "outdoor" | "desert";
 
-    constructor(x: number, y: number, hp = 4) {
+    constructor(x: number, y: number, hp = 4, design: "outdoor" | "desert" = "outdoor") {
         super(new Vector2(x, y));
 
         // this.drawLayer = "FLOOR";
         this.isSolid = true;
         this.healthPoints = hp;
+        this.design = design;
 
         const shadow = new Sprite({
             resource: resources.images.shadow,
@@ -27,12 +32,12 @@ export class Tree extends GameObject {
         this.addChild(shadow);
 
         this.treeSprite = new Sprite({
-            resource: resources.images.outdoorTree,
+            resource: resources.images.tree,
             frameSize: new Vector2(16, 32),
             position: new Vector2(0, -15),
             hFrames: 4,
-            vFrames: 1,
-            frame: 0 // intakter Baum
+            vFrames: 2,
+            frame: getResourceFrame(this.type, this.design),
         })
         this.addChild(this.treeSprite);
     }
@@ -40,23 +45,33 @@ export class Tree extends GameObject {
     ready() { }
 
     step(delta: number) {
+
+        // bei welchem Image starten wir abhängig vom Type
+        let startFrame = getResourceFrame(this.type, this.design);
+
         // Baum-Sprite basierend auf HP wechseln
-        const frame = 4 - this.healthPoints; // 0 = intakt, 3 = schwer beschädigt
-        if (frame >= 1 && frame <= 3) {
+        const frame = startFrame + (4 - this.healthPoints); // 0 = intakt, 3 = schwer beschädigt
+
+        if (this.healthPoints >= 1 && this.healthPoints <= 3) {
             this.removeChild(this.treeSprite);
             this.treeSprite = new Sprite({
-                resource: resources.images.outdoorTree,
+                resource: resources.images.tree,
                 frameSize: new Vector2(16, 32),
                 position: new Vector2(0, -15),
                 hFrames: 4,
-                vFrames: 1,
+                vFrames: 2,
                 frame: frame
             });
             this.addChild(this.treeSprite);
         }
 
         if (this.healthPoints <= 0) {
-            this.destroy(true); // Baum vom Spieler zerstört
+
+            // Resource wurde zerstört
+            events.emit(RES_DESTROY, this);
+
+            // vom Spieler zerstört
+            this.destroy(true);
         }
     }
 
@@ -64,6 +79,7 @@ export class Tree extends GameObject {
         if (killedByHero) {
             this.spawnItem();
         }
+
         // Cleanup
         super.destroy();
     }
@@ -72,7 +88,7 @@ export class Tree extends GameObject {
         const item = new Item(
             this.position.x,
             this.position.y,
-            INVENTORY_TREE,
+            TREE,
             "./sounds/items/pick_up_item.mp3",
             1
         );

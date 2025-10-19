@@ -3,21 +3,26 @@ import { Sprite } from "../../../Sprite.js";
 import { Vector2 } from "../../../Vector2.js";
 import { resources } from "../../../Resource.js";
 import { getNextText, getRandomText } from "../../../helpers/levelPartsText.js";
-import { Item } from "../../../objects/Item/Item.js";
-import { INVENTORY_BUSH, InventoryUnion } from "../../../objects/Inventory/Inventory.js";
+import { BUSH, Item } from "../../../objects/Item/Item.js";
+import { InventoryUnion } from "../../../objects/Inventory/Inventory.js";
+import { events, RES_DESTROY } from "../../../Events.js";
+import { getResourceFrame } from "../../../helpers/generateResources.js";
 
 export class Bush extends GameObject {
 
     healthPoints: number;
+    xp: number = 1;
     bushSprite: Sprite;
     type: InventoryUnion = "bush";
+    design: "outdoor" | "desert";
 
-    constructor(x: number, y: number, hp = 2) {
+    constructor(x: number, y: number, hp = 2, design: "outdoor" | "desert" = "outdoor") {
         super(new Vector2(x, y));
 
         // this.drawLayer = "FLOOR";
         this.isSolid = true;
         this.healthPoints = hp;
+        this.design = design;
 
         const shadow = new Sprite({
             resource: resources.images.shadow,
@@ -27,12 +32,12 @@ export class Bush extends GameObject {
         this.addChild(shadow);
 
         this.bushSprite = new Sprite({
-            resource: resources.images.outdoorBush,
+            resource: resources.images.bush,
             frameSize: new Vector2(16, 16),
             position: new Vector2(0, 0),
             hFrames: 2,
-            vFrames: 1,
-            frame: 0
+            vFrames: 2,
+            frame: getResourceFrame(this.type, this.design),
         })
         this.addChild(this.bushSprite);
     }
@@ -40,22 +45,34 @@ export class Bush extends GameObject {
     ready() { }
 
     step(delta: number) {
+        
+        // bei welchem Image starten wir abhängig vom Type
+        let startFrame = getResourceFrame(this.type, this.design);
+        
         if (this.healthPoints <= 1) {
             // Sprite wechseln wenn nur noch 1 HP
             this.removeChild(this.bushSprite);
 
+            // +1 um vom startframe die hp zu berücksichtigen
+            startFrame += 1;
+
             this.bushSprite = new Sprite({
-                resource: resources.images.outdoorBush,
+                resource: resources.images.bush,
                 frameSize: new Vector2(16, 16),
                 position: new Vector2(0, 0),
                 hFrames: 2,
-                vFrames: 1,
-                frame: 1 // kaputter Busch
+                vFrames: 2,
+                frame: startFrame // kaputter Busch
             });
             this.addChild(this.bushSprite);
         }
 
         if (this.healthPoints <= 0) {
+            
+            // Resource wurde zerstört
+            events.emit(RES_DESTROY, this); 
+            
+            // vom Spieler zerstört
             this.destroy(true);
         }
     }
@@ -64,6 +81,7 @@ export class Bush extends GameObject {
         if (killedByHero) {
             this.spawnItem();
         }
+
         // Cleanup
         super.destroy();
     }
@@ -72,7 +90,7 @@ export class Bush extends GameObject {
         const item = new Item(
             this.position.x,
             this.position.y,
-            INVENTORY_BUSH,
+            BUSH,
             "./sounds/items/pick_up_item.mp3",
             1
         );

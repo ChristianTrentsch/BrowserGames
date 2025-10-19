@@ -1,5 +1,6 @@
 import { gridCells } from "../helpers/grid.js";
 import { LevelId } from "../helpers/levelRegistry.js";
+import { InventoryUnion } from "../objects/Inventory/Inventory.js";
 import { ResourceSaveData } from "../SaveGame.js";
 
 interface GenerationOptions {
@@ -96,13 +97,54 @@ export function generateDefaultResources(options: GenerationOptions): ResourceSa
 
 /** Kleine Hilfsfunktion für zufällige HP */
 function getRandomHP(randFn: () => number, min: number, max: number, rareChance = 0.1): number {
-  let hp = Math.floor(randFn() * (max - min + 1)) + min;
+    let hp = Math.floor(randFn() * (max - min + 1)) + min;
 
-  // Mit kleiner Wahrscheinlichkeit Ausreißer erzeugen (etwas schwächer/stärker)
-  if (randFn() < rareChance) {
-    if (randFn() < 0.5) hp = Math.max(1, hp - 1); // schwächer
-    else hp = hp + 1; // stärker
-  }
+    // Mit kleiner Wahrscheinlichkeit Ausreißer erzeugen (etwas schwächer/stärker)
+    if (randFn() < rareChance) {
+        if (randFn() < 0.5) hp = Math.max(1, hp - 1); // schwächer
+        else hp = hp + 1; // stärker
+    }
 
-  return hp;
+    return hp;
+}
+
+export function getResourceFrame(type: string, design: "outdoor" | "desert" = "outdoor") {
+
+    let startFrame = 0;
+
+    switch (type) {
+        case "bush":
+            switch (design) {
+                case "desert":
+                    startFrame = 2;
+                    break;
+                default:
+                    startFrame = 0;
+                    break;
+            }
+            break;
+        case "tree":
+        case "stone":
+            switch (design) {
+                case "desert":
+                    startFrame = 4;
+                    break;
+                default:
+                    startFrame = 0;
+                    break;
+            }
+            break;
+        case "square":
+            switch (design) {
+                case "desert":
+                    startFrame = 1;
+                    break;
+                default:
+                    startFrame = 0;
+                    break;
+            }
+            break;
+    }
+
+    return startFrame;
 }

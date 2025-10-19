@@ -1,6 +1,3 @@
-import { EquipmentUnion, EQUIPMENT_SWORD, EQUIPMENT_ROD_PURPLE, EQUIPMENT_ROD_RED } from "./objects/Equipment/Equipment.js";
-import { InventoryUnion, INVENTORY_BUSH, INVENTORY_TREE, INVENTORY_STONE } from "./objects/Inventory/Inventory.js";
-
 export interface ResourceOptions {
 
   // Allgemein
@@ -18,19 +15,23 @@ export interface ResourceOptions {
   fontWhite: string;
   fontBlack: string;
 
+  // Resources
+  bush: string;
+  tree: string;
+  stone: string;
+
+  square: string;
+
   // Level - Outdoor
-  outdoorBush: string;
   outdoorGround: string;
   outdoorHouse: string;
   outdoorSky: string;
-  outdoorSquare: string;
-  outdoorStone: string;
   outdoorSwamp: string;
-  outdoorTree: string;
   outdoorWater: string;
 
   // Level - Cave
   caveGround: string;
+  desertGround: string;
   caveSky: string;
 
   // Inventory
@@ -41,6 +42,11 @@ export interface ResourceOptions {
 
   // Collectible
   collectible: string;
+
+  // exp
+  exp: string;
+  expBackground: string;
+  levelBackground: string;
 
   // Weapon
   sword: string;
@@ -59,7 +65,7 @@ class Resources {
   images: { [K in keyof ResourceOptions]: ResourceImageOptions }
 
   constructor() {
-    console.log(`Resources LOADED`, this);
+    // console.log(`Resources LOADED`, this);
 
     this.toLoad = {
 
@@ -78,19 +84,23 @@ class Resources {
       fontBlack: "./images/sprites/textbox/font_black.png",
       portraits: "./images/sprites/textbox/portraits.png",
 
+      // Resources
+      bush: "./images/sprites/resources/bush.png",
+      tree: "./images/sprites/resources/tree.png",
+      stone: "./images/sprites/resources/stone.png",
+
+      square: "./images/sprites/level/outdoor/square.png",
+      
       // Level - Outdoor
-      outdoorBush: "./images/sprites/level/outdoor/bush.png",
       outdoorGround: "./images/sprites/level/outdoor/ground_01.png",
       outdoorHouse: "./images/sprites/level/outdoor/house.png",
       outdoorSky: "./images/sprites/level/outdoor/sky.png",
-      outdoorSquare: "./images/sprites/level/outdoor/square.png",
-      outdoorStone: "./images/sprites/level/outdoor/stone.png",
       outdoorSwamp: "./images/sprites/level/outdoor/swamp.png",
-      outdoorTree: "./images/sprites/level/outdoor/tree.png",
       outdoorWater: "./images/sprites/level/outdoor/water.png",
 
       // Level - Cave
       caveGround: "./images/sprites/level/cave/ground_00.png",
+      desertGround: "./images/sprites/level/cave/desert_ground_01.png",
       caveSky: "./images/sprites/level/cave/sky.png",
 
       // Inventory
@@ -106,6 +116,11 @@ class Resources {
       sword: "./images/sprites/animation/sword.png",
       rodPurple: "./images/sprites/animation/rod_purple.png",
       rodRed: "./images/sprites/animation/rod_red.png",
+
+      // exp
+      exp: "./images/sprites/exp.png",
+      expBackground: "./images/sprites/exp_background.png",
+      levelBackground: "./images/sprites/level_background.png",
     };
 
     // A bucket to store all of our images
@@ -132,40 +147,6 @@ class Resources {
         this.images[key].isLoaded = true;
       };
     });
-  }
-
-  /** 
-   * Helper Methode
-   * - Du brauchst das passende Bild zu einem Item was man einsammeln kann?
-   * - Dann nutze deinen ItemNamen um den richtigen frame zu ermitteln.
-   * @param itemKey ItemName um collectible Bild zu ermitteln
-   * */
-  getCollectibleItemFrame(itemKey: InventoryUnion | EquipmentUnion): number {
-    let frame: number;
-    switch (itemKey) {
-      case INVENTORY_BUSH:
-        frame = 11;
-        break;
-      case INVENTORY_TREE:
-        frame = 12;
-        break;
-      case INVENTORY_STONE:
-        frame = 13;
-        break;
-      case EQUIPMENT_SWORD:
-        frame = 0;
-        break;
-      case EQUIPMENT_ROD_PURPLE:
-        frame = 1;
-        break;
-      case EQUIPMENT_ROD_RED:
-        frame = 2;
-        break;
-      default:
-        frame = 19;
-        break;
-    }
-    return frame;
   }
 }
 

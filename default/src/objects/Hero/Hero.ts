@@ -1,6 +1,5 @@
 import { moveTowards } from "../../helpers/moveTowards.js";
-import { TILE_SIZE, isSpaceFree } from "../../helpers/grid.js";
-
+import { TILE_SIZE, gridCells, isSpaceFree } from "../../helpers/grid.js";
 import {
   STAND_DOWN,
   STAND_LEFT,
@@ -12,7 +11,6 @@ import {
   WALK_UP,
   PICK_UP_DOWN,
 } from "./heroAnimations.js";
-
 import {
   events,
   HERO_POSTION,
@@ -23,8 +21,11 @@ import {
   HERO_ATTACK_ACTION,
   HERO_CHANGE_EQUIPMENT,
   EventCollectible,
+  RES_DESTROY,
+  HERO_EXITS,
+  CHANGE_LEVEL,
+  HERO_CHANGE_EXP,
 } from "../../Events.js";
-
 import { GameObject } from "../../GameObject.js";
 import { Vector2 } from "../../Vector2.js";
 import { DOWN, LEFT, RIGHT, UP } from "../../Input.js";
@@ -35,11 +36,26 @@ import { FrameIndexPattern } from "../../FrameIndexPattern.js";
 import { Main } from "../Main/Main.js";
 import { Direction } from "../../types.js";
 import { SaveGame } from "../../SaveGame.js";
-import { INVENTORY_BUSH, INVENTORY_STONE, INVENTORY_TREE } from "../Inventory/Inventory.js";
 import { Attack } from "../Animations/Attack.js";
 import { Tree } from "../../levels/parts/Tree/Tree.js";
 import { Stone } from "../../levels/parts/Stone/Stone.js";
 import { Bush } from "../../levels/parts/Bush/Bush.js";
+import { BUSH, Item, STONE, TREE } from "../Item/Item.js";
+import { Level } from "../Level/Level.js";
+import { Exp } from "../Exp/Exp.js";
+
+export const LEVEL_THRESHOLDS = [
+  10, 20, 30, 40, 50, 60, 70, 80, 90, 100,
+  110, 120, 130, 140, 150, 160, 170, 180, 190, 200,
+  210, 220, 230, 240, 250, 260, 270, 280, 290, 300,
+  310, 320, 330, 340, 350, 360, 370, 380, 390, 400,
+  410, 420, 430, 440, 450, 460, 470, 480, 490, 500,
+  510, 520, 530, 540, 550, 560, 570, 580, 590, 600,
+  610, 620, 630, 640, 650, 660, 670, 680, 690, 700,
+  710, 720, 730, 740, 750, 760, 770, 780, 790, 800,
+  810, 820, 830, 840, 850, 860, 870, 880, 890, 900,
+  910, 920, 930, 940, 950, 960, 970, 980, 990, 1000,
+];
 
 export class Hero extends GameObject {
 
@@ -49,10 +65,13 @@ export class Hero extends GameObject {
   itemPickUpTime: number;
   itemPickUpShell: null | GameObject;
   isLocked: boolean;
+  exp: number;
+  level: number;
+
   lastX?: number;
   lastY?: number;
 
-  constructor(x: number, y: number) {
+  constructor(x: number, y: number, exp: number, level: number) {
     super(new Vector2(x, y));
 
     const shadow = new Sprite({
@@ -79,22 +98,31 @@ export class Hero extends GameObject {
         standUp: new FrameIndexPattern(STAND_UP),
         standRight: new FrameIndexPattern(STAND_RIGHT),
         pickUpDown: new FrameIndexPattern(PICK_UP_DOWN),
-        
+
       }),
     });
     this.addChild(this.body);
+
+
 
     this.facingDirection = DOWN;
     this.destinationPosition = this.position.duplicate();
     this.itemPickUpTime = 0;
     this.itemPickUpShell = null;
     this.isLocked = false;
+    this.exp = exp;
+    this.level = level;
   }
 
   ready() {
     // Hero picks up item
     events.on(HERO_PICKS_UP_ITEM, this, (data: EventCollectible) => {
       this.onPickUpItem(data);
+    });
+
+    // Hero destroy Resource
+    events.on(RES_DESTROY, this, (resource: Bush | Tree | Stone) => {
+      this.onHeroGainExp(resource);
     });
 
     events.on(TEXTBOX_START, this, () => {
@@ -292,13 +320,37 @@ export class Hero extends GameObject {
           this.destinationPosition.y = nextY;
 
           //** Ziel Position im localStorage speichern */ 
-          SaveGame.saveHero(
-            level.levelId,
-            this.destinationPosition
-          );
+          SaveGame.saveHero(this.level, this.destinationPosition, this.exp);
         }
       }
     }
+  }
+
+  onHeroGainExp(resource: Bush | Tree | Stone) {
+
+    // Hero Erfahrungspunkte geben abhängig zur Resource
+    this.exp += resource.xp;
+
+
+    const nextLevelExp = LEVEL_THRESHOLDS[this.level];
+
+    if (nextLevelExp && this.exp >= nextLevelExp && this.level < LEVEL_THRESHOLDS.length - 1) {
+
+      // level erhöhen
+      this.level++;
+
+      // Xp zurücksetzen
+      this.exp = 0;
+    }
+
+    SaveGame.saveHero(this.level, this.position, this.exp);
+
+    // Daten für Exp class bereit stellen
+    events.emit(HERO_CHANGE_EXP, {
+      exp: this.exp,
+      level: this.level,
+      heroPos: this.position
+    });
   }
 
   onPickUpItem(data: EventCollectible) {
@@ -311,7 +363,7 @@ export class Hero extends GameObject {
       // Start the pickup animation
       this.itemPickUpTime = 1000; // ms
 
-      if (data.name === INVENTORY_BUSH || data.name === INVENTORY_TREE || data.name === INVENTORY_STONE) {
+      if (data.name === BUSH || data.name === TREE || data.name === STONE) {
         this.itemPickUpTime = 200; // ms
       }
 
@@ -321,11 +373,13 @@ export class Hero extends GameObject {
         data.itemSound.play().catch(err => console.warn("Sound konnte nicht abgespielt werden:", err));
       }
 
-      // Bild passend zum Item ermitteln
-      const frame = resources.getCollectibleItemFrame(data.name);
       const image = data.image;
-
       if (image) {
+
+        // Bild passend zum Item ermitteln
+        const frame = Item.getCollectibleItemFrame(data.name);
+
+        // Pick Up Hülle erzeugen
         this.itemPickUpShell = new GameObject(new Vector2(0, 0));
         this.itemPickUpShell.addChild(
           new Sprite({

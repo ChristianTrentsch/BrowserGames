@@ -21,6 +21,7 @@ import { Equipment } from "../Equipment/Equipment.js";
 import { storyFlags } from "../../StoryFlags.js";
 import { Npc } from "../Npc/Npc.js";
 import { gridCells } from "../../helpers/grid.js";
+import { Exp } from "../Exp/Exp.js";
 
 export class Main extends GameObject {
   level: null | Level;
@@ -46,9 +47,15 @@ export class Main extends GameObject {
     const equipment = new Equipment();
     this.addChild(equipment);
 
+    const exp = new Exp();
+    this.addChild(exp);
+
     // Change the level
     events.on(CHANGE_LEVEL, this, (newLevelInstance: Level) => {
+
+      // neues Level speichern
       SaveGame.saveLevel(newLevelInstance.levelId);
+
       this.setLevel(newLevelInstance);
     });
 

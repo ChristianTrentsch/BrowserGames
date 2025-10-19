@@ -3,8 +3,15 @@ import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
 import { resources } from "../../Resource.js";
 import { events, HERO_POSTION, HERO_PICKS_UP_ITEM } from "../../Events.js";
-import { INVENTORY_BUSH, INVENTORY_STONE, INVENTORY_TREE, InventoryUnion } from "../Inventory/Inventory.js";
-import { EQUIPMENT_ROD_PURPLE, EQUIPMENT_ROD_RED, EQUIPMENT_SWORD, EquipmentUnion } from "../Equipment/Equipment.js";
+import { InventoryUnion } from "../Inventory/Inventory.js";
+import { EquipmentUnion } from "../Equipment/Equipment.js";
+
+export const TREE = "tree";
+export const STONE = "stone";
+export const BUSH = "bush";
+export const SWORD = "sword";
+export const ROD_PURPLE = "rodPurple";
+export const ROD_RED = "rodRed";
 
 export class Item extends GameObject {
 
@@ -24,7 +31,7 @@ export class Item extends GameObject {
     this.itemSound = new Audio(itemSoundSrc);
     this.itemSound.volume = volume; // Lautstärke setzen (0.0 - 1.0)
 
-    const frame = resources.getCollectibleItemFrame(this.itemKey);
+    const frame = Item.getCollectibleItemFrame(this.itemKey);
     this.addChild(
       new Sprite({
         resource: resources.images.collectible,
@@ -68,5 +75,39 @@ export class Item extends GameObject {
       position: this.position,
       itemSound: this.itemSound
     });
+  }
+
+  /** 
+   * Helper Methode
+   * - Du brauchst das passende Bild zu einem Item was man einsammeln kann?
+   * - Dann nutze deinen ItemNamen um den richtigen frame zu ermitteln.
+   * @param itemKey ItemName um collectible Bild zu ermitteln
+   * */
+  static getCollectibleItemFrame(itemKey: InventoryUnion | EquipmentUnion): number {
+    let frame: number;
+    switch (itemKey) {
+      case BUSH:
+        frame = 11;
+        break;
+      case TREE:
+        frame = 12;
+        break;
+      case STONE:
+        frame = 13;
+        break;
+      case SWORD:
+        frame = 0;
+        break;
+      case ROD_PURPLE:
+        frame = 1;
+        break;
+      case ROD_RED:
+        frame = 2;
+        break;
+      default:
+        frame = 19;
+        break;
+    }
+    return frame;
   }
 }

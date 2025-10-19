@@ -1,15 +1,13 @@
 import { GameObject } from "../../GameObject.js";
-import { ResourceImageOptions, resources } from "../../Resource.js";
+import { resources } from "../../Resource.js";
 import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
 import { events, HERO_PICKS_UP_ITEM, HERO_USE_ITEM } from "../../Events.js";
 import { SaveGame } from "../../SaveGame.js";
 import { getCharacterFrame, getCharacterWidth } from "../SpriteTextString/spriteFontMap.js";
+import { TREE, STONE, BUSH, Item } from "../Item/Item.js";
 
-export const INVENTORY_TREE = "tree";
-export const INVENTORY_STONE = "stone";
-export const INVENTORY_BUSH = "bush";
-export const INVENTORY_ITEMS = [INVENTORY_TREE, INVENTORY_STONE, INVENTORY_BUSH] as const;
+export const INVENTORY_ITEMS = [TREE, STONE, BUSH] as const;
 export type InventoryUnion = typeof INVENTORY_ITEMS[number];
 
 export interface InventoryItemData {
@@ -118,7 +116,7 @@ export class Inventory extends GameObject {
       this.addChild(background);
 
       // Bild passend zum Item ermitteln
-      const frame = resources.getCollectibleItemFrame(item.name);
+      const frame = Item.getCollectibleItemFrame(item.name);
 
       // Item zeichnen
       const sprite = new Sprite({

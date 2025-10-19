@@ -83,13 +83,8 @@ export class Input {
     });
 
     // Events für Gamepad
-    window.addEventListener("gamepadconnected", (e) => {
-      // console.log("Gamepad verbunden:", e.gamepad);
-    });
-
-    window.addEventListener("gamepaddisconnected", (e) => {
-      // console.log("Gamepad getrennt:", e.gamepad);
-    });
+    window.addEventListener("gamepadconnected", (e) => { });
+    window.addEventListener("gamepaddisconnected", (e) => { });
   }
 
   get direction(): Direction | undefined {

@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (canvas) {
     const ctx = canvas.getContext("2d");
     if (ctx) {
-      console.log(`ctx LOADED`, ctx);
+      // console.log(`ctx LOADED`, ctx);
 
       // Load the main scene
       const mainScene = new Main(new Vector2(0, 0));

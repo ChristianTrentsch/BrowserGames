@@ -5,7 +5,7 @@ import { Sprite } from "../Sprite.js";
 import { Level } from "../objects/Level/Level.js";
 import { Exit } from "../objects/Exit/Exit.js";
 import { Hero } from "../objects/Hero/Hero.js";
-import { Item } from "../objects/Item/Item.js";
+import { BUSH, Item, STONE, TREE } from "../objects/Item/Item.js";
 import { events, HERO_EXITS, CHANGE_LEVEL } from "../Events.js";
 import { CaveLevel1 } from "./CaveLevel1.js";
 import { SaveGame } from "../SaveGame.js";
@@ -49,7 +49,7 @@ export class OutdoorLevel1 extends Level {
     // Choose actual Level Ground
     const groundSprite = new Sprite({
       resource: resources.images.outdoorGround,
-      frameSize: new Vector2(1600, 900),
+      frameSize: new Vector2(1600, 800),
       position: new Vector2(0, 0)
     });
     this.addChild(groundSprite);
@@ -66,18 +66,33 @@ export class OutdoorLevel1 extends Level {
     //** --- Resourcen laden --- */
     this.loadLevelResources();
 
+    //** --- Load Hero Data --- */
+    this.heroStartPosition = this.defaultHeroPosition;
+    // const heroSave = SaveGame.loadHero(this.levelId, heroPosition ?? this.defaultHeroPosition);
+    const heroSave = SaveGame.loadHero();
+    let exp = 0;
+    let level = 0;
+    if (heroSave) {
+      this.heroStartPosition = heroSave.pos ?? this.defaultHeroPosition;
+      exp = heroSave.exp;
+      level = heroSave.level;
+    }
+
     //** --- Create Hero and add to scene --- */
-    // entweder geladene Position (Reload) oder die übergebene Startposition (Levelwechsel)
-    this.heroStartPosition = SaveGame.loadHero(this.levelId, heroPosition ?? this.defaultHeroPosition);
-    const hero = new Hero(this.heroStartPosition.x, this.heroStartPosition.y);
+    const hero = new Hero(
+      this.heroStartPosition.x,
+      this.heroStartPosition.y,
+      exp,
+      level
+    );
     this.addChild(hero);
 
     //** --- Create Level walls add to scene --- */
     const wallDefinitions = {
-      right: this.generateWall(new Vector2(1568, 32), new Vector2(1568, 864), TILE_SIZE, "right"),
-      left: this.generateWall(new Vector2(16, 32), new Vector2(16, 864), TILE_SIZE, "left"),
+      right: this.generateWall(new Vector2(1568, 32), new Vector2(1568, 764), TILE_SIZE, "right"),
+      left: this.generateWall(new Vector2(16, 32), new Vector2(16, 764), TILE_SIZE, "left"),
       top: this.generateWall(new Vector2(32, 16), new Vector2(1568, 16), TILE_SIZE, "top"),
-      bottom: this.generateWall(new Vector2(32, 864), new Vector2(1568, 864), TILE_SIZE, "bottom"),
+      bottom: this.generateWall(new Vector2(32, 768), new Vector2(1568, 768), TILE_SIZE, "bottom"),
     };
     this.walls = new Set(Object.values(wallDefinitions).flat());
   }
@@ -85,18 +100,28 @@ export class OutdoorLevel1 extends Level {
   ready() {
     events.on(HERO_EXITS, this, () => {
 
-      // console.log("CHANGE LEVEL", this);
-
       // Alten Level-Sound stoppen
       this.stopBackgroundSound();
 
-      events.emit(
-        CHANGE_LEVEL,
-        new CaveLevel1({
-          position: new Vector2(gridCells(0), gridCells(0)),
-          heroPosition: new Vector2(gridCells(16), gridCells(6)), // feste Startposition
-        })
-      );
+      // Hero position im neuen Level
+      const heroPosition = new Vector2(gridCells(35), gridCells(33));
+
+      // Hero laden/speichern
+      // - exp speichern
+      // - Position festlegen
+      // - Level festlegen
+      const hero = SaveGame.loadHero();
+      if (hero) {
+        SaveGame.saveHero(hero.level, heroPosition, hero.exp);
+
+        events.emit(
+          CHANGE_LEVEL,
+          new CaveLevel1({
+            position: new Vector2(gridCells(0), gridCells(0)),
+            heroPosition: heroPosition, // feste Startposition
+          })
+        );
+      }
     });
   }
 
@@ -335,7 +360,7 @@ export class OutdoorLevel1 extends Level {
     const defaultResources = generateDefaultResources({
       levelId: "OutdoorLevel1",
       width: 1600,
-      height: 900,
+      height: 800,
       seed: 3, // bestimmter Seed = immer gleiche Karte
       pathZones: [
 
@@ -376,9 +401,9 @@ export class OutdoorLevel1 extends Level {
     for (const res of mergedResources) {
       if (res.hp > 0) {
         switch (res.type) {
-          case "tree": this.addChild(new Tree(res.x, res.y, res.hp)); break;
-          case "bush": this.addChild(new Bush(res.x, res.y, res.hp)); break;
-          case "stone": this.addChild(new Stone(res.x, res.y, res.hp)); break;
+          case BUSH: this.addChild(new Bush(res.x, res.y, res.hp)); break;
+          case TREE: this.addChild(new Tree(res.x, res.y, res.hp)); break;
+          case STONE: this.addChild(new Stone(res.x, res.y, res.hp)); break;
         }
       }
     }

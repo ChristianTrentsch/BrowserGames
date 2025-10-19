@@ -1,14 +1,12 @@
-import { EventCollectible, events, HERO_CHANGE_EQUIPMENT, HERO_PICKS_UP_ITEM } from "../../Events.js";
+import { events, HERO_CHANGE_EQUIPMENT, HERO_PICKS_UP_ITEM } from "../../Events.js";
 import { GameObject } from "../../GameObject.js";
-import { ResourceImageOptions, resources } from "../../Resource.js";
+import { resources } from "../../Resource.js";
 import { SaveGame } from "../../SaveGame.js";
 import { Sprite } from "../../Sprite.js";
 import { Vector2 } from "../../Vector2.js";
+import { SWORD, ROD_PURPLE, ROD_RED, Item } from "../Item/Item.js";
 
-export const EQUIPMENT_SWORD = "sword";
-export const EQUIPMENT_ROD_PURPLE = "rodPurple";
-export const EQUIPMENT_ROD_RED = "rodRed";
-export const EQUIPMENT_ITEMS = [EQUIPMENT_SWORD, EQUIPMENT_ROD_PURPLE, EQUIPMENT_ROD_RED] as const;
+export const EQUIPMENT_ITEMS = [SWORD, ROD_PURPLE, ROD_RED] as const;
 export type EquipmentUnion = typeof EQUIPMENT_ITEMS[number];
 
 export interface EquipmentItemData {
@@ -149,30 +147,15 @@ export class Equipment extends GameObject {
                 );
             }
 
-            let frame;
-            switch (item.name) {
-                case EQUIPMENT_SWORD:
-                    frame = 20;
-                    break;
-                case EQUIPMENT_ROD_PURPLE:
-                    frame = 21;
-                    break;
-                case EQUIPMENT_ROD_RED:
-                    frame = 22;
-                    break;
-                default:
-                    frame = 20;
-                    break;
-            }
+            // Bild passend zum Item ermitteln
+            const frame = Item.getCollectibleItemFrame(item.name);
 
             this.addChild(
                 new Sprite({
-                    resource: resources.images.equipment,
-                    position: new Vector2(baseX, baseY + zIndex),
-                    frameSize: new Vector2(frameSize, frameSize),
-                    hFrames: 25,
-                    vFrames: 1,
-                    frame: frame
+                    resource: resources.images.collectible,
+                    position: new Vector2(baseX + 4, baseY + 4),
+                    hFrames: 20,
+                    frame: frame,
                 })
             );
         });
@@ -188,9 +171,9 @@ export class Equipment extends GameObject {
         if (!activeItem) return 1; // Standard-Schaden ohne Waffe
 
         switch (activeItem.name) {
-            case EQUIPMENT_SWORD: return 1;
-            case EQUIPMENT_ROD_PURPLE: return 2;
-            case EQUIPMENT_ROD_RED: return 5;
+            case SWORD: return 1;
+            case ROD_PURPLE: return 2;
+            case ROD_RED: return 5;
             default: return 1;
         }
     }

@@ -1,7 +1,5 @@
 import { Vector2 } from "./Vector2.js";
 import { events } from "./Events.js";
-import { EquipmentUnion, EQUIPMENT_SWORD, EQUIPMENT_ROD_PURPLE, EQUIPMENT_ROD_RED } from "./objects/Equipment/Equipment.js";
-import { InventoryUnion, INVENTORY_BUSH, INVENTORY_TREE, INVENTORY_STONE } from "./objects/Inventory/Inventory.js";
 
 export type DrawLayer = "HUD" | "FLOOR";
 
@@ -98,7 +96,6 @@ export class GameObject {
   }
 
   removeChild(gameObject: GameObject) {
-    // console.log("GameObject.removeChild ", gameObject);
     events.unsubscribe(gameObject);
     this.children = this.children.filter((g) => {
       return gameObject !== g;
