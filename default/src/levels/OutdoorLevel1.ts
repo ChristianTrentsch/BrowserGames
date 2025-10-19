@@ -111,7 +111,7 @@ export class OutdoorLevel1 extends Level {
       if (hero) {
         SaveGame.saveHero(hero.level, heroPosition, hero.exp);
 
-        events.emit(CHANGE_LEVEL, new CaveLevel1(new Vector2(gridCells(0), gridCells(0))));
+        events.emit(CHANGE_LEVEL, new CaveLevel1(new Vector2(0, 0)));
       }
     });
   }
