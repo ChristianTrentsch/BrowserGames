@@ -130,7 +130,7 @@ export class Inventory extends GameObject {
       // Anzahl gesammelter Resourcen prüfen und Darstellen
       if (item.amount > 1) {
         const text = String(item.amount);
-        let xOffset = baseX; // etwas nach rechts vom Item
+        let xOffset = baseX - 2; // etwas nach rechts vom Item
         const yOffset = baseY + 20; // leicht nach oben
 
         // Jede Ziffer zeichnen
