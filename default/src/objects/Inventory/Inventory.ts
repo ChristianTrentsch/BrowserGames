@@ -121,7 +121,7 @@ export class Inventory extends GameObject {
       // Item zeichnen
       const sprite = new Sprite({
         resource: resources.images.collectible,
-        position: new Vector2(baseX + 4, baseY + 4),
+        position: new Vector2(baseX + 4, baseY + 3),
         hFrames: 20,
         frame: frame,
       });
@@ -130,8 +130,8 @@ export class Inventory extends GameObject {
       // Anzahl gesammelter Resourcen prüfen und Darstellen
       if (item.amount > 1) {
         const text = String(item.amount);
-        let xOffset = baseX - 4; // etwas nach rechts vom Item
-        const yOffset = baseY + 23; // leicht nach oben
+        let xOffset = baseX; // etwas nach rechts vom Item
+        const yOffset = baseY + 20; // leicht nach oben
 
         // Jede Ziffer zeichnen
         for (const char of text) {
@@ -139,7 +139,7 @@ export class Inventory extends GameObject {
 
           const numberSprite = new Sprite({
             position: new Vector2(xOffset, yOffset),
-            resource: resources.images.fontWhite, // Font-/Alphabet-SpriteSheet
+            resource: resources.images.fontBlack, // Font-/Alphabet-SpriteSheet
             hFrames: 13,
             vFrames: 6,
             frame: getCharacterFrame(char),
@@ -147,7 +147,7 @@ export class Inventory extends GameObject {
           });
 
           this.addChild(numberSprite);
-          xOffset += charWidth + 1; // etwas Abstand zwischen den Ziffern
+          xOffset += charWidth + 2; // etwas Abstand zwischen den Ziffern
         }
       }
     });

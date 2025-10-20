@@ -81,7 +81,7 @@ class Resources {
       // HUD
       textBox: "./images/sprites/textbox/box.png",
       fontWhite: "./images/sprites/textbox/font_white.png",
-      fontBlack: "./images/sprites/textbox/font_black.png",
+      fontBlack: "./images/sprites/textbox/font_white_black_border.png",
       portraits: "./images/sprites/textbox/portraits.png",
 
       // Resources
