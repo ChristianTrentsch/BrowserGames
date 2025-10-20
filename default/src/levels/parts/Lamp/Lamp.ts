@@ -19,7 +19,6 @@ export class Lamp extends GameObject {
         this.addChild(tree);
 
         this.isSolid = true;
-        this.drawLayer = "HUD";
     }
 
     ready() { }
