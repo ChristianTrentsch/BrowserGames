@@ -1,4 +1,4 @@
-export type BlockType = "Bush" | "Tree" | "Stone" | "House" | "Square" | "Swamp" | "Water" | "Nothing";
+export type BlockType = "Bush" | "Tree" | "Stone" | "House" | "Square" | "Swamp" | "Water" | "Nothing" | "Lamp";
 
 const texts: Record<BlockType, string[]> = {
     Bush: [
@@ -41,6 +41,14 @@ const texts: Record<BlockType, string[]> = {
         "Du kannst diesen Bereich nicht betreten.",
         "Eine unsichtbare Barriere hält dich zurück.",
     ],
+    Lamp: [
+        "Willkommen, junger Krieger! Lerne erst links den Weg des Abenteuers.",
+        "Tastatur: Q - Waffe wechseln, F - Angriff, Space - Interagieren.",
+        "Controller: Y - Waffe wechseln, B - Angriff, A - Interagieren.",
+        "Rechts liegen harte Prüfungen. Nur für erfahrene Kämpfer!",
+        "Links wartet deine erste Aufgabe, der Beginn deiner Reise!",
+        "Denke daran: Ein Krieger lernt durch Taten, nicht durch Worte.",
+    ],
 };
 
 // Merkt sich den aktuellen Index je Typ
@@ -53,6 +61,7 @@ const textIndices: Record<BlockType, number> = {
     Swamp: 0,
     Water: 0,
     Nothing: 0,
+    Lamp: 0,
 };
 
 export function getNextText(type: BlockType): string {

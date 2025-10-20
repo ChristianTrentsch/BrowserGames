@@ -43,6 +43,8 @@ export interface ResourceOptions {
   // Collectible
   collectible: string;
 
+  deko16x32: string;
+
   // exp
   exp: string;
   expBackground: string;
@@ -111,6 +113,8 @@ class Resources {
 
       // Collectibles
       collectible: "./images/sprites/collectible/collectible_00.png",
+
+      deko16x32: "./images/sprites/deko_16x32.png",
 
       // Weapon
       sword: "./images/sprites/animation/sword.png",

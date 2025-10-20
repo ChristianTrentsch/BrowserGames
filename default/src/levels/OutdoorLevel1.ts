@@ -19,6 +19,7 @@ import { House } from "./parts/House/House.js";
 import { generateDefaultResources } from "../helpers/generateResources.js";
 import { Npc } from "../objects/Npc/Npc.js";
 import { GameObject } from "../GameObject.js";
+import { Lamp } from "./parts/Lamp/Lamp.js";
 
 export class OutdoorLevel1 extends Level {
 
@@ -62,6 +63,10 @@ export class OutdoorLevel1 extends Level {
 
     //** --- Resourcen laden --- */
     this.loadLevelResources();
+
+    this.addChild(
+      new Lamp(gridCells(50), gridCells(25))
+    );
 
     //** --- Load Hero Data --- */
     this.heroStartPosition = this.defaultHeroPosition;
