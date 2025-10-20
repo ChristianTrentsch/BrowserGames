@@ -9,16 +9,15 @@ export class Lamp extends GameObject {
     constructor(x: number, y: number) {
         super(new Vector2(x, y));
 
-        const tree = new Sprite({
+        this.isSolid = true;
+
+        this.addChild(new Sprite({
             resource: resources.images.deko16x32,
             frameSize: new Vector2(16, 32),
             position: new Vector2(0, -16),
             hFrames: 4,
             frame: 0,
-        })
-        this.addChild(tree);
-
-        this.isSolid = true;
+        }));
     }
 
     ready() { }
