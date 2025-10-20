@@ -6,14 +6,14 @@ import { Sprite } from "../../Sprite.js";
 import { resources } from "../../Resource.js";
 import { Animations, AttackAnimationKey } from "../../Animations.js";
 import { FrameIndexPattern } from "../../FrameIndexPattern.js";
-import { WALK_LEFT, WALK_DOWN, WALK_UP, WALK_RIGHT, STAND_LEFT, STAND_DOWN, STAND_UP, STAND_RIGHT, PICK_UP_DOWN, ATTACK_DOWN, ATTACK_LEFT, ATTACK_RIGHT, ATTACK_UP } from "../Hero/heroAnimations.js";
+import { ATTACK_DOWN, ATTACK_LEFT, ATTACK_RIGHT, ATTACK_UP } from "../Hero/heroAnimations.js";
 import { SaveGame } from "../../SaveGame.js";
 import { EquipmentUnion } from "../Equipment/Equipment.js";
 
 export class Attack extends GameObject {
     lifetime: number = 400; // lebt 250ms
     facingDirection: Direction;
-    body: Sprite;
+    body: Sprite<AttackAnimationKey>;
 
     // Array mit Start/End-Zeiten (Sekunden) für jeden Sound
     private static attackSlices: [number, number][] = [

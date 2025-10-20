@@ -1,9 +1,9 @@
 import { Vector2 } from "./Vector2.js";
 import { GameObject } from "./GameObject.js";
-import { Animations } from "./Animations.js";
+import { Animations, AnimationUnion } from "./Animations.js";
 import { ResourceImageOptions } from "./Resource.js";
 
-export class Sprite extends GameObject {
+export class Sprite<T extends AnimationUnion = AnimationUnion> extends GameObject {
 
   resource: ResourceImageOptions;
   position: Vector2;
@@ -13,7 +13,7 @@ export class Sprite extends GameObject {
   frame: number;
   frameMap: Map<number, Vector2>;
   scale: number;
-  animations: Animations | null;
+  animations: Animations<T> | null;
 
   constructor({
     resource,
@@ -32,7 +32,7 @@ export class Sprite extends GameObject {
     vFrames?: number;                 // how is the sprite arranged vertically
     frame?: number;                   // which frame to show
     scale?: number;                   // how large to draw the sprite
-    animations?: Animations | null;   // animation pattern to use
+    animations?: Animations<T> | null;   // animation pattern to use
   }) {
 
     super(position);

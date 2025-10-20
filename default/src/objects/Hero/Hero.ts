@@ -55,7 +55,7 @@ export const LEVEL_THRESHOLDS = [
 
 export class Hero extends GameObject {
 
-  body: Sprite;
+  body: Sprite<HeroAnimationKey>;
   facingDirection: Direction;
   destinationPosition: Vector2;
   itemPickUpTime: number;
