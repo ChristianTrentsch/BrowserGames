@@ -10,18 +10,16 @@ import { getCharacterFrame, getCharacterWidth } from "../SpriteTextString/sprite
 export class Exp extends GameObject {
     exp: number;
     level: number;
-    heroPos: Vector2;
 
     constructor() {
-        super(new Vector2(21, 130));
+        super(new Vector2(0, 0));
 
         this.drawLayer = "HUD";
 
-        // get Hero Data and set exp
+        // get Hero Data and set values
         const hero = SaveGame.loadHero();
         this.exp = hero?.exp ? hero.exp : 0;
         this.level = hero?.level ? hero.level : 0;
-        this.heroPos = hero?.pos ? hero.pos : new Vector2();
 
         this.renderExp();
     }
@@ -30,7 +28,6 @@ export class Exp extends GameObject {
         events.on(HERO_CHANGE_EXP, this, (gainExp: EventGainXp) => {
             this.exp = gainExp.exp;
             this.level = gainExp.level;
-            this.heroPos = gainExp.heroPos;
             this.renderExp();
         });
     }
@@ -43,31 +40,33 @@ export class Exp extends GameObject {
         this.addChild(
             new Sprite({
                 resource: resources.images.expBackground,
-                position: new Vector2(-2, -11),
+                position: new Vector2(40, 140),
                 frameSize: new Vector2(240, 24),
                 frame: 0
             })
         );
 
-        this.addChild(
-            new Sprite({
-                resource: resources.images.levelBackground,
-                position: new Vector2(-32, -3),
-                frameSize: new Vector2(31, 31),
-            })
-        );
+        // this.addChild(
+        //     new Sprite({
+        //         resource: resources.images.levelBackground,
+        //         position: new Vector2(-32, -3),
+        //         frameSize: new Vector2(31, 31),
+        //     })
+        // );
 
-        this.addChild(
-            new Sprite({
-                position: new Vector2(-30, -1),
-                resource: resources.images.portraits
-            })
-        );
+        // this.addChild(
+        //     new Sprite({
+        //         position: new Vector2(-30, -1),
+        //         resource: resources.images.portraits
+        //     })
+        // );
 
         if (this.level > 0) {
-            const text = String(this.level);
-            let xOffset = -23; // etwas nach rechts vom Item
-            const yOffset = 16; // leicht nach oben
+            let text = String(this.level);
+            let xOffset = 38; // etwas nach rechts vom Item
+            const yOffset = 136; // leicht nach oben
+
+            text = "Lv:" + text;
 
             // Jede Ziffer zeichnen
             for (const char of text) {
@@ -75,7 +74,7 @@ export class Exp extends GameObject {
 
                 const numberSprite = new Sprite({
                     position: new Vector2(xOffset, yOffset),
-                    resource: resources.images.fontWhite, // Font-/Alphabet-SpriteSheet
+                    resource: resources.images.fontBlack, // Font-/Alphabet-SpriteSheet
                     hFrames: 13,
                     vFrames: 6,
                     frame: getCharacterFrame(char),
@@ -110,7 +109,7 @@ export class Exp extends GameObject {
                 this.addChild(
                     new Sprite({
                         resource: resources.images.exp,
-                        position: new Vector2(baseX + 1, 0),
+                        position: new Vector2(baseX + 43, 151),
                         frameSize: new Vector2(frameSize, 2),
                         hFrames: 240,
                         frame: i

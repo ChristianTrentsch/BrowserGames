@@ -343,8 +343,7 @@ export class Hero extends GameObject {
     // Daten für Exp class bereit stellen
     events.emit(HERO_CHANGE_EXP, {
       exp: this.exp,
-      level: this.level,
-      heroPos: this.position
+      level: this.level
     });
   }
 

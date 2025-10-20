@@ -53,7 +53,7 @@ export interface EventCollectible {
 export interface EventGainXp {
   exp: number,
   level: number,
-  heroPos: Vector2
+  // heroPos: Vector2
 }
 
 class Events {
