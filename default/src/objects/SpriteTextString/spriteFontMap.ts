@@ -21,6 +21,9 @@ width.set("W", 7);
 width.set(" ", 3);
 width.set("'", 1);
 width.set("!", 1);
+width.set(":", 2);
+width.set(";", 2);
+width.set("_", 2);
 
 export const getCharacterWidth = (char: string): number => {
   return width.get(char) ?? DEFAULT_WIDTH;
@@ -31,7 +34,7 @@ const frameMap = new Map();
 [
   "abcdefghijklmnopqrstuvwxyz",
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  "0123456789 __",
+  "0123456789:;_",
   ".!-,?'äüöÄÜÖß",
 ]
   .join("")
