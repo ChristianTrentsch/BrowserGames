@@ -619,185 +619,76 @@ export class OutdoorLevel1 extends Level {
   }
 
   loadStartSea() {
+    
     // sea north part
 
     // - 1. Reihe
-    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    for (let index = 43; index < 59; index++) {
+      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    }
 
     // - 2. Reihe
-    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    for (let index = 43; index < 59; index++) {
+      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    }
 
     // - 3. Reihe
-    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    for (let index = 43; index < 59; index++) {
+      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    }
 
     // - 4. Reihe
-    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    for (let index = 43; index < 59; index++) {
+      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    }
 
     // - 5. Reihe
     // -- links
-    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    for (let index = 43; index < 48; index++) {
+      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    }
 
     // -- rechts
-    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    for (let index = 52; index < 59; index++) {
+      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    }
 
     // - 6. Reihe
-    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(24)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(24)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(24)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(24)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(24)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-
+    for (let index = 43; index < 48; index++) {
+      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(24)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    }
 
     // sea south part
 
     // - 1. Reihe
-    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    for (let index = 52; index < 59; index++) {
+      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    }
 
     // - 2. Reihe
     // -- links
-    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    for (let index = 43; index < 48; index++) {
+      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    }
 
     // -- rechts
-    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    for (let index = 52; index < 59; index++) {
+      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    }
 
     // - 3. Reihe
-    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    for (let index = 43; index < 59; index++) {
+      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    }
 
     // - 4. Reihe
-    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    for (let index = 43; index < 59; index++) {
+      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    }
 
     // - 5. Reihe
-    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    for (let index = 43; index < 59; index++) {
+      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    }
   }
 }
