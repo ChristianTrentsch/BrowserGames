@@ -50,10 +50,14 @@ export interface ResourceOptions {
   expBackground: string;
   levelBackground: string;
 
-  // Weapon
+  // Animations
   sword: string;
   rodRed: string;
   rodPurple: string;
+  animBush: string;
+  animBushSmall: string;
+  animWater: string;
+  animLamp: string;
 };
 
 export interface ResourceImageOptions {
@@ -120,6 +124,10 @@ class Resources {
       sword: "./images/sprites/animation/sword.png",
       rodPurple: "./images/sprites/animation/rod_purple.png",
       rodRed: "./images/sprites/animation/rod_red.png",
+      animBushSmall: "./images/sprites/animation/deko_bush_00.png",
+      animBush: "./images/sprites/animation/deko_bush_01.png",
+      animWater: "./images/sprites/animation/water.png",
+      animLamp: "./images/sprites/animation/lamp.png",
 
       // exp
       exp: "./images/sprites/exp.png",

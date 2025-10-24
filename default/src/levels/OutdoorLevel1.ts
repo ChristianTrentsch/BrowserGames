@@ -16,10 +16,13 @@ import { Square } from "./parts/Square/Square.js";
 import { Water } from "./parts/Water/Water.js";
 import { Bush } from "./parts/Bush/Bush.js";
 import { House } from "./parts/House/House.js";
-import { generateDefaultResources } from "../helpers/generateResources.js";
+import { generateDefaultResources, generateDeko } from "../helpers/generateResources.js";
 import { Npc } from "../objects/Npc/Npc.js";
 import { GameObject } from "../GameObject.js";
 import { Lamp } from "./parts/Lamp/Lamp.js";
+import { Deko } from "./parts/Deko/Deko.js";
+import { Animations, DekoIdleKey } from "../Animations.js";
+import { FrameIndexPattern } from "../FrameIndexPattern.js";
 
 export class OutdoorLevel1 extends Level {
 
@@ -64,9 +67,46 @@ export class OutdoorLevel1 extends Level {
     //** --- Resourcen laden --- */
     this.loadLevelResources();
 
-    this.addChild(
-      new Lamp(gridCells(50), gridCells(25))
-    );
+    this.loadLevelDeko();
+
+    this.loadStartSea();
+
+
+    this.addChild(new Lamp(gridCells(50), gridCells(25)));
+    this.addChild(new Sprite({
+      resource: resources.images["animBushSmall"],
+      position: new Vector2(gridCells(48), gridCells(25)),
+      frame: 0,
+      hFrames: 3,
+      animations: new Animations({
+        dekoIdle: new FrameIndexPattern({
+          duration: 5000,
+          frames: [
+            {
+              time: 0,
+              frame: 0,
+            },
+            {
+              time: 120,
+              frame: 1,
+            },
+            {
+              time: 240,
+              frame: 0,
+            },
+            {
+              time: 360,
+              frame: 2,
+            },
+            {
+              time: 480,
+              frame: 0,
+            },
+          ],
+        })
+      }),
+    }))
+
 
     //** --- Load Hero Data --- */
     this.heroStartPosition = this.defaultHeroPosition;
@@ -96,7 +136,7 @@ export class OutdoorLevel1 extends Level {
       top: this.generateWall(new Vector2(32, 16), new Vector2(1568, 16), TILE_SIZE, "top"),
       bottom: this.generateWall(new Vector2(32, 768), new Vector2(1568, 768), TILE_SIZE, "bottom"),
 
-      // Start Island
+      // Start Island - Border
       startIslandTop1: this.generateWall(new Vector2(gridCells(48), gridCells(22)), new Vector2(gridCells(51), gridCells(22)), TILE_SIZE, "top"),
       startIslandTop2: this.generateWall(new Vector2(gridCells(52), gridCells(23)), new Vector2(gridCells(57), gridCells(23)), TILE_SIZE, "top"),
       startIslandTop3: this.generateWall(new Vector2(gridCells(44), gridCells(24)), new Vector2(gridCells(46), gridCells(24)), TILE_SIZE, "top"),
@@ -107,24 +147,14 @@ export class OutdoorLevel1 extends Level {
       startIslandBottom1: this.generateWall(new Vector2(gridCells(48), gridCells(27)), new Vector2(gridCells(51), gridCells(27)), TILE_SIZE, "bottom"),
       startIslandBottom2: this.generateWall(new Vector2(gridCells(52), gridCells(25)), new Vector2(gridCells(57), gridCells(25)), TILE_SIZE, "bottom"),
 
-      // Start Lake
-      startLakeTop1: this.generateWall(new Vector2(gridCells(43), gridCells(19)), new Vector2(gridCells(46), gridCells(19)), TILE_SIZE, "top"),
-      startLakeTop2: this.generateWall(new Vector2(gridCells(47), gridCells(20)), new Vector2(gridCells(53), gridCells(20)), TILE_SIZE, "top"),
-      startLakeTop3: this.generateWall(new Vector2(gridCells(54), gridCells(21)), new Vector2(gridCells(56), gridCells(21)), TILE_SIZE, "top"),
+      // Start Lake - Border
+      startLakeTop1: this.generateWall(new Vector2(gridCells(43), gridCells(19)), new Vector2(gridCells(58), gridCells(19)), TILE_SIZE, "top"),
+      startLakeBottom1: this.generateWall(new Vector2(gridCells(43), gridCells(29)), new Vector2(gridCells(58), gridCells(29)), TILE_SIZE, "bottom"),
 
-      startLakeLeft1: this.generateWall(new Vector2(gridCells(43), gridCells(24)), new Vector2(gridCells(43), gridCells(24)), TILE_SIZE, "left"),
+      startLakeLeft1: this.generateWall(new Vector2(gridCells(43), gridCells(20)), new Vector2(gridCells(43), gridCells(24)), TILE_SIZE, "left"),
       startLakeLeft2: this.generateWall(new Vector2(gridCells(43), gridCells(26)), new Vector2(gridCells(43), gridCells(28)), TILE_SIZE, "left"),
-      startLakeLeft3: this.generateWall(new Vector2(gridCells(43), gridCells(20)), new Vector2(gridCells(43), gridCells(21)), TILE_SIZE, "left"),
-      startLakeLeft4: this.generateWall(new Vector2(gridCells(44), gridCells(22)), new Vector2(gridCells(44), gridCells(23)), TILE_SIZE, "left"),
-
-      startLakeRight1: this.generateWall(new Vector2(gridCells(57), gridCells(20)), new Vector2(gridCells(57), gridCells(20)), TILE_SIZE, "right"),
-      startLakeRight2: this.generateWall(new Vector2(gridCells(58), gridCells(20)), new Vector2(gridCells(58), gridCells(22)), TILE_SIZE, "right"),
-
-      startLakeBottom1: this.generateWall(new Vector2(gridCells(56), gridCells(26)), new Vector2(gridCells(58), gridCells(26)), TILE_SIZE, "bottom"),
-      startLakeBottom2: this.generateWall(new Vector2(gridCells(53), gridCells(27)), new Vector2(gridCells(55), gridCells(27)), TILE_SIZE, "bottom"),
-      startLakeBottom3: this.generateWall(new Vector2(gridCells(44), gridCells(28)), new Vector2(gridCells(52), gridCells(28)), TILE_SIZE, "bottom"),
-      startLakeBottom4: this.generateWall(new Vector2(gridCells(44), gridCells(29)), new Vector2(gridCells(44), gridCells(29)), TILE_SIZE, "bottom"),
-      startLakeBottom5: this.generateWall(new Vector2(gridCells(47), gridCells(29)), new Vector2(gridCells(48), gridCells(29)), TILE_SIZE, "bottom"),
+      startLakeRight1: this.generateWall(new Vector2(gridCells(58), gridCells(20)), new Vector2(gridCells(58), gridCells(23)), TILE_SIZE, "right"),
+      startLakeRight2: this.generateWall(new Vector2(gridCells(58), gridCells(25)), new Vector2(gridCells(58), gridCells(28)), TILE_SIZE, "right"),
 
       // fakePfad: this.generateWall(new Vector2(gridCells(60), gridCells(32)), new Vector2(gridCells(85), gridCells(32)), TILE_SIZE, "bottom"),
 
@@ -409,7 +439,7 @@ export class OutdoorLevel1 extends Level {
 
         // horizontaler Pfad zum Exit
         { x1: 68, x2: 80, y1: 24, y2: 25 },
-        
+
         // horizontaler Pfad zum lila Zauberstab
         { x1: 25, x2: 37, y1: 23, y2: 25 },
         { x1: 25, x2: 26, y1: 26, y2: 39 },
@@ -444,5 +474,330 @@ export class OutdoorLevel1 extends Level {
         }
       }
     }
+  }
+
+  loadLevelDeko() {
+    // Default-Resourcen-Definition im Level
+    const dekos = generateDeko({
+      levelId: "OutdoorLevel1",
+      width: 1600,
+      height: 800,
+      seed: 2, // bestimmter Seed = immer gleiche Karte
+      pathZones: [
+
+        // füge Gruppenbasierte freie flächen hinzu
+        ...this.noResourceZones,
+
+        // Start Position Spieler
+        // oben
+        { x1: 41, x2: 48, y1: 17, y2: 17 },
+        { x1: 41, x2: 60, y1: 18, y2: 19 },
+        // mitte
+        { x1: 40, x2: 61, y1: 20, y2: 28 },
+        // unten
+        { x1: 41, x2: 58, y1: 29, y2: 29 },
+        { x1: 41, x2: 53, y1: 30, y2: 30 },
+        { x1: 42, x2: 49, y1: 31, y2: 31 },
+
+        // horizontaler Pfad zum Exit
+        { x1: 68, x2: 80, y1: 24, y2: 25 },
+
+        // horizontaler Pfad zum lila Zauberstab
+        { x1: 25, x2: 37, y1: 23, y2: 25 },
+        { x1: 25, x2: 26, y1: 26, y2: 39 },
+        { x1: 8, x2: 24, y1: 40, y2: 41 },
+        { x1: 8, x2: 9, y1: 22, y2: 39 },
+        { x1: 10, x2: 14, y1: 22, y2: 23 },
+      ],
+      density: {
+        animBushSmall: 0.020,
+        animBush: 0.010,
+      },
+      border: 32
+    });
+
+    // Deko anhand der Daten setzen
+    for (const deko of dekos) {
+
+      let randomDelay = this.getRandomDelay();
+      switch (deko.type) {
+        case "animBushSmall": this.addChild(new Sprite({
+          resource: resources.images[deko.type],
+          position: new Vector2(deko.x, deko.y),
+          frame: 0,
+          hFrames: 3,
+          animations: new Animations({
+            dekoIdle: new FrameIndexPattern({
+              duration: randomDelay,
+              frames: [
+                {
+                  time: 0,
+                  frame: 0,
+                },
+                {
+                  time: 120,
+                  frame: 1,
+                },
+                {
+                  time: 240,
+                  frame: 0,
+                },
+                {
+                  time: 360,
+                  frame: 2,
+                },
+                {
+                  time: 480,
+                  frame: 0,
+                },
+              ],
+            })
+          }),
+        })); break;
+
+        case "animBush": this.addChild(new Sprite({
+          resource: resources.images[deko.type],
+          position: new Vector2(deko.x, deko.y),
+          frame: 0,
+          hFrames: 6,
+          animations: new Animations({
+            dekoIdle: new FrameIndexPattern({
+              duration: randomDelay,
+              frames: [
+                {
+                  time: 0,
+                  frame: 0,
+                },
+                {
+                  time: 120,
+                  frame: 1,
+                },
+                {
+                  time: 240,
+                  frame: 2,
+                },
+                {
+                  time: 360,
+                  frame: 1,
+                },
+                {
+                  time: 480,
+                  frame: 0,
+                },
+                {
+                  time: 600,
+                  frame: 3,
+                },
+                {
+                  time: 720,
+                  frame: 4,
+                },
+                {
+                  time: 840,
+                  frame: 3,
+                },
+                {
+                  time: 960,
+                  frame: 0,
+                },
+              ],
+            })
+          }),
+        }));
+
+          break;
+        // case STONE: this.addChild(new Stone(res.x, res.y, res.hp)); break;
+      }
+
+    }
+  }
+
+  getRandomDelay(minSeconds = 4, maxSeconds = 7) {
+    const min = minSeconds * 1000; // in ms
+    const max = maxSeconds * 1000;
+    return Math.random() * (max - min) + min;
+  }
+
+  loadStartSea() {
+    // sea north part
+
+    // - 1. Reihe
+    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+
+    // - 2. Reihe
+    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+
+    // - 3. Reihe
+    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+
+    // - 4. Reihe
+    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+
+    // - 5. Reihe
+    // -- links
+    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+
+    // -- rechts
+    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+
+    // - 6. Reihe
+    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(24)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(24)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(24)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(24)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(24)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+
+
+    // sea south part
+
+    // - 1. Reihe
+    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+
+    // - 2. Reihe
+    // -- links
+    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+
+    // -- rechts
+    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+
+    // - 3. Reihe
+    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+
+    // - 4. Reihe
+    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+
+    // - 5. Reihe
+    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(44), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(45), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(46), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(47), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(52), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(53), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(54), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(55), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(56), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(57), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
   }
 }

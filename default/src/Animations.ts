@@ -21,7 +21,9 @@ export type AttackAnimationKey =
   | "attackUp"
   | "attackLeft"
 
-export type AnimationUnion = HeroAnimationKey | AttackAnimationKey
+export type DekoIdleKey = "dekoIdle"
+
+export type AnimationUnion = HeroAnimationKey | AttackAnimationKey | DekoIdleKey
 
 export class Animations<T extends AnimationUnion> {
   patterns: Record<T, FrameIndexPattern>;
@@ -50,4 +52,99 @@ export class Animations<T extends AnimationUnion> {
   step(delta: number) {
     this.patterns[this.activeKey].step(delta);
   }
+
+  // aller 5 sekunden
+  static makeIdleFrames = (rootFrame = 0) => {
+
+    return {
+      duration: 5000,
+      frames: [
+        {
+          time: 0,
+          frame: rootFrame,
+        },
+        {
+          time: 200,
+          frame: rootFrame + 1,
+        },
+        {
+          time: 400,
+          frame: rootFrame + 2,
+        },
+        {
+          time: 600,
+          frame: rootFrame + 3,
+        },
+        {
+          time: 800,
+          frame: rootFrame + 2,
+        },
+        {
+          time: 1000,
+          frame: rootFrame + 1,
+        },
+        {
+          time: 1200,
+          frame: rootFrame,
+        },
+      ],
+    };
+  };
+
+  static makeWaterFrames = (rootFrame = 0) => {
+
+    return {
+      duration: 3600,
+      frames: [
+        {
+          time: 0,
+          frame: rootFrame,
+        },
+        {
+          time: 300,
+          frame: rootFrame + 1,
+        },
+        {
+          time: 600,
+          frame: rootFrame + 2,
+        },
+        {
+          time: 900,
+          frame: rootFrame + 3,
+        },
+        {
+          time: 1200,
+          frame: rootFrame + 4,
+        },
+        {
+          time: 1500,
+          frame: rootFrame + 5,
+        },
+        {
+          time: 1800,
+          frame: rootFrame + 6,
+        },
+        {
+          time: 2100,
+          frame: rootFrame + 5,
+        },
+        {
+          time: 2400,
+          frame: rootFrame + 4,
+        },
+        {
+          time: 2700,
+          frame: rootFrame + 3,
+        },
+        {
+          time: 3000,
+          frame: rootFrame + 2,
+        },
+        {
+          time: 3300,
+          frame: rootFrame + 1,
+        },
+      ],
+    };
+  };
 }
