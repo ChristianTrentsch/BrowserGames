@@ -32,8 +32,6 @@ export class Attack extends GameObject {
         super(new Vector2(0, 0));
         this.facingDirection = facingDirection;
 
-        this.drawLayer = "HUD";
-
         // Sprite oder Animationszuweisung hier
         this.body = new Sprite({
             resource: resources.images[equipName],
