@@ -1,15 +1,11 @@
 import { Animations, DekoIdleKey } from "../../../Animations.js";
 import { FrameIndexPattern } from "../../../FrameIndexPattern.js";
 import { GameObject } from "../../../GameObject.js";
-import { gridCells } from "../../../helpers/grid.js";
 import { ResourceOptions, resources } from "../../../Resource.js";
 import { Sprite } from "../../../Sprite.js";
 import { Vector2 } from "../../../Vector2.js";
 
-export const DEKO_IDLE = Animations.makeIdleFrames(0);
-
 export class Deko extends GameObject {
-
 
   constructor(
     position: Vector2,
@@ -21,17 +17,19 @@ export class Deko extends GameObject {
   ) {
     super(position);
 
-    let frameIndexPattern = DEKO_IDLE;
-    if (imageKey === "animWater") {
-      frameIndexPattern = this.makeWaterFrames()
-    }
+    this.drawLayer = "FLOOR";
+    let frameIndexPattern = this.makeIdleFrames();
 
-    if (imageKey === "animLamp") {
-      frameIndexPattern = this.makeLampFrames()
-    }
-
-    if (imageKey === "animBushSmall") {
-      frameIndexPattern = this.makeStandardFrames()
+    switch (imageKey) {
+      case "animWater":
+        frameIndexPattern = this.makeWaterFrames();
+        break;
+      case "animLamp":
+        frameIndexPattern = this.makeLampFrames();
+        break;
+      case "animBushSmall":
+        frameIndexPattern = this.makeBushSmallFrames();
+        break;
     }
 
     this.addChild(new Sprite({
@@ -49,7 +47,44 @@ export class Deko extends GameObject {
 
   ready() { }
 
-  makeStandardFrames = (rootFrame = 0) => {
+  makeIdleFrames = (rootFrame = 0) => {
+
+    return {
+      duration: 5000,
+      frames: [
+        {
+          time: 0,
+          frame: rootFrame,
+        },
+        {
+          time: 200,
+          frame: rootFrame + 1,
+        },
+        {
+          time: 400,
+          frame: rootFrame + 2,
+        },
+        {
+          time: 600,
+          frame: rootFrame + 3,
+        },
+        {
+          time: 800,
+          frame: rootFrame + 2,
+        },
+        {
+          time: 1000,
+          frame: rootFrame + 1,
+        },
+        {
+          time: 1200,
+          frame: rootFrame,
+        },
+      ],
+    };
+  };
+
+  makeBushSmallFrames = (rootFrame = 0) => {
 
     return {
       duration: 2000,

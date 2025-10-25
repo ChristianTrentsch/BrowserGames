@@ -52,42 +52,4 @@ export class Animations<T extends AnimationUnion> {
   step(delta: number) {
     this.patterns[this.activeKey].step(delta);
   }
-
-  // aller 5 sekunden
-  static makeIdleFrames = (rootFrame = 0) => {
-
-    return {
-      duration: 5000,
-      frames: [
-        {
-          time: 0,
-          frame: rootFrame,
-        },
-        {
-          time: 200,
-          frame: rootFrame + 1,
-        },
-        {
-          time: 400,
-          frame: rootFrame + 2,
-        },
-        {
-          time: 600,
-          frame: rootFrame + 3,
-        },
-        {
-          time: 800,
-          frame: rootFrame + 2,
-        },
-        {
-          time: 1000,
-          frame: rootFrame + 1,
-        },
-        {
-          time: 1200,
-          frame: rootFrame,
-        },
-      ],
-    };
-  };
 }
