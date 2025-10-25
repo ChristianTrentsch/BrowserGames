@@ -19,10 +19,7 @@ import { House } from "./parts/House/House.js";
 import { generateDefaultResources, generateDeko } from "../helpers/generateResources.js";
 import { Npc } from "../objects/Npc/Npc.js";
 import { GameObject } from "../GameObject.js";
-import { Lamp } from "./parts/Lamp/Lamp.js";
-import { Deko } from "./parts/Deko/Deko.js";
-import { Animations, DekoIdleKey } from "../Animations.js";
-import { FrameIndexPattern } from "../FrameIndexPattern.js";
+import { Deko } from "../objects/Animations/Deko.js";
 
 export class OutdoorLevel1 extends Level {
 
@@ -55,62 +52,22 @@ export class OutdoorLevel1 extends Level {
     });
     this.addChild(groundSprite);
 
-    //** --- Check if Quest's finished --- */
+    // Check if Quest's finished
     this.checkGameProgress();
 
-    //** --- Build "purpleRod" Scene  --- */
     this.buildLevelGroupPurpleRod();
-
-    //** --- Build Exit Scene --- */
     this.buildLevelGroupExit();
 
-    //** --- Resourcen laden --- */
     this.loadLevelResources();
-
     this.loadLevelDeko();
+    this.loadStartLake();
 
-    this.loadStartSea();
-
-
-    this.addChild(new Lamp(gridCells(50), gridCells(25)));
-    this.addChild(new Sprite({
-      resource: resources.images["animBushSmall"],
-      position: new Vector2(gridCells(48), gridCells(25)),
-      frame: 0,
-      hFrames: 3,
-      animations: new Animations({
-        dekoIdle: new FrameIndexPattern({
-          duration: 5000,
-          frames: [
-            {
-              time: 0,
-              frame: 0,
-            },
-            {
-              time: 120,
-              frame: 1,
-            },
-            {
-              time: 240,
-              frame: 0,
-            },
-            {
-              time: 360,
-              frame: 2,
-            },
-            {
-              time: 480,
-              frame: 0,
-            },
-          ],
-        })
-      }),
-    }))
-
+    // Deko für Startbereich
+    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(25)), "animLamp"));
+    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(25)), "animBushSmall", 7000));
 
     //** --- Load Hero Data --- */
     this.heroStartPosition = this.defaultHeroPosition;
-    // const heroSave = SaveGame.loadHero(this.levelId, heroPosition ?? this.defaultHeroPosition);
     const heroSave = SaveGame.loadHero();
     let exp = 0;
     let level = 0;
@@ -476,6 +433,14 @@ export class OutdoorLevel1 extends Level {
     }
   }
 
+  /**
+   * Erstelle alle dekorativen Element in der Speilwelt
+   * - definiere Mapgröße
+   * - wähle einen Seed (platziert Elemente je Seed neu)
+   * - lege freie pathZones fest
+   * - definiere Dichte der zu platzierenden Elemente
+   * - definiere Mapbegrenzung
+   */
   loadLevelDeko() {
     // Default-Resourcen-Definition im Level
     const dekos = generateDeko({
@@ -518,177 +483,71 @@ export class OutdoorLevel1 extends Level {
 
     // Deko anhand der Daten setzen
     for (const deko of dekos) {
-
-      let randomDelay = this.getRandomDelay();
-      switch (deko.type) {
-        case "animBushSmall": this.addChild(new Sprite({
-          resource: resources.images[deko.type],
-          position: new Vector2(deko.x, deko.y),
-          frame: 0,
-          hFrames: 3,
-          animations: new Animations({
-            dekoIdle: new FrameIndexPattern({
-              duration: randomDelay,
-              frames: [
-                {
-                  time: 0,
-                  frame: 0,
-                },
-                {
-                  time: 120,
-                  frame: 1,
-                },
-                {
-                  time: 240,
-                  frame: 0,
-                },
-                {
-                  time: 360,
-                  frame: 2,
-                },
-                {
-                  time: 480,
-                  frame: 0,
-                },
-              ],
-            })
-          }),
-        })); break;
-
-        case "animBush": this.addChild(new Sprite({
-          resource: resources.images[deko.type],
-          position: new Vector2(deko.x, deko.y),
-          frame: 0,
-          hFrames: 6,
-          animations: new Animations({
-            dekoIdle: new FrameIndexPattern({
-              duration: randomDelay,
-              frames: [
-                {
-                  time: 0,
-                  frame: 0,
-                },
-                {
-                  time: 120,
-                  frame: 1,
-                },
-                {
-                  time: 240,
-                  frame: 2,
-                },
-                {
-                  time: 360,
-                  frame: 1,
-                },
-                {
-                  time: 480,
-                  frame: 0,
-                },
-                {
-                  time: 600,
-                  frame: 3,
-                },
-                {
-                  time: 720,
-                  frame: 4,
-                },
-                {
-                  time: 840,
-                  frame: 3,
-                },
-                {
-                  time: 960,
-                  frame: 0,
-                },
-              ],
-            })
-          }),
-        }));
-
-          break;
-        // case STONE: this.addChild(new Stone(res.x, res.y, res.hp)); break;
-      }
-
+      this.addChild(new Deko(
+        new Vector2(deko.x, deko.y),
+        deko.type,
+        this.getRandomDelay(),
+      ));
     }
   }
 
+  /**
+   * Erzeugt eine Zufallszahl zwischen 4 und 7 sekunden
+   * @param minSeconds 
+   * @param maxSeconds 
+   * @returns number in ms
+   */
   getRandomDelay(minSeconds = 4, maxSeconds = 7) {
     const min = minSeconds * 1000; // in ms
     const max = maxSeconds * 1000;
     return Math.random() * (max - min) + min;
   }
 
-  loadStartSea() {
-    
-    // sea north part
+  /**
+   * Platziert alle animierten Wasser Sprites
+   * - definiert größe des See's
+   * - legt Stellen die frei bleiben sollen fest
+   */
+  loadStartLake() {
+    // gesamte Bereich des See's
+    for (let y = 19; y < 30; y++) {
+      for (let x = 43; x < 59; x++) {
+        // Weg nach links frei lassen
+        if (y == 25 && x == 43) continue;
+        if (y == 25 && x == 44) continue;
+        if (y == 25 && x == 45) continue;
+        if (y == 25 && x == 46) continue;
+        if (y == 25 && x == 47) continue;
 
-    // - 1. Reihe
-    for (let index = 43; index < 59; index++) {
-      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(19)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    }
+        // Startinsel frei lassen
+        if (y == 23 && x == 48) continue;
+        if (y == 24 && x == 48) continue;
+        if (y == 25 && x == 48) continue;
+        if (y == 26 && x == 48) continue;
+        if (y == 23 && x == 49) continue;
+        if (y == 24 && x == 49) continue;
+        if (y == 25 && x == 49) continue;
+        if (y == 26 && x == 49) continue;
+        if (y == 23 && x == 50) continue;
+        if (y == 24 && x == 50) continue;
+        if (y == 25 && x == 50) continue;
+        if (y == 26 && x == 50) continue;
+        if (y == 23 && x == 51) continue;
+        if (y == 24 && x == 51) continue;
+        if (y == 25 && x == 51) continue;
+        if (y == 26 && x == 51) continue;
 
-    // - 2. Reihe
-    for (let index = 43; index < 59; index++) {
-      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(20)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    }
+        // Weg nach rechts frei lassen
+        if (y == 24 && x == 52) continue;
+        if (y == 24 && x == 53) continue;
+        if (y == 24 && x == 54) continue;
+        if (y == 24 && x == 55) continue;
+        if (y == 24 && x == 56) continue;
+        if (y == 24 && x == 57) continue;
+        if (y == 24 && x == 58) continue;
 
-    // - 3. Reihe
-    for (let index = 43; index < 59; index++) {
-      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(21)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    }
-
-    // - 4. Reihe
-    for (let index = 43; index < 59; index++) {
-      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(22)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    }
-
-    // - 5. Reihe
-    // -- links
-    for (let index = 43; index < 48; index++) {
-      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    }
-
-    // -- rechts
-    for (let index = 52; index < 59; index++) {
-      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(23)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    }
-
-    // - 6. Reihe
-    for (let index = 43; index < 48; index++) {
-      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(24)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    }
-
-    // sea south part
-
-    // - 1. Reihe
-    for (let index = 52; index < 59; index++) {
-      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(25)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    }
-
-    // - 2. Reihe
-    // -- links
-    for (let index = 43; index < 48; index++) {
-      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    }
-
-    // -- rechts
-    for (let index = 52; index < 59; index++) {
-      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(26)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    }
-
-    // - 3. Reihe
-    for (let index = 43; index < 59; index++) {
-      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(27)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    }
-
-    // - 4. Reihe
-    for (let index = 43; index < 59; index++) {
-      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(28)), "animWater", 0, 8, 1, new Vector2(16, 16)));
-    }
-
-    // - 5. Reihe
-    for (let index = 43; index < 59; index++) {
-      this.addChild(new Deko(new Vector2(gridCells(index), gridCells(29)), "animWater", 0, 8, 1, new Vector2(16, 16)));
+        this.addChild(new Deko(new Vector2(gridCells(x), gridCells(y)), "animWater"));
+      }
     }
   }
 }
