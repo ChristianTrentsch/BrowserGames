@@ -22,9 +22,11 @@ import { storyFlags } from "../../StoryFlags.js";
 import { Npc } from "../Npc/Npc.js";
 import { gridCells } from "../../helpers/grid.js";
 import { Exp } from "../Exp/Exp.js";
+import { LevelMap } from "../LevelMap/LevelMap.js";
 
 export class Main extends GameObject {
   level: null | Level;
+  map: null | LevelMap;
   input: Input;
   camera: Camera;
 
@@ -34,6 +36,7 @@ export class Main extends GameObject {
     super(position);
 
     this.level = null;
+    this.map = null;
     this.input = new Input();
     this.camera = new Camera(new Vector2(0, 0));
 
@@ -183,8 +186,16 @@ export class Main extends GameObject {
     if (this.level) {
       this.level.destroy();
     }
+
+    if (this.map) {
+      this.map.destroy();
+    }
+
     this.level = newLevelInstance;
     this.addChild(this.level);
+
+    this.map = new LevelMap();
+    this.addChild(this.map);
 
     // Resourcen des neuen Levels laden
     this.savedResources = SaveGame.loadResources(this.level.levelId) ?? [];

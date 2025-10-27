@@ -45,6 +45,8 @@ export class Input {
       KeyR: false,
       KeyQ: false,
       KeyF: false,
+      KeyM: false,
+      KeyI: false,
     };
     this.lastKeys = { ...this.keys };
 
@@ -169,7 +171,8 @@ export class Input {
     this.mapButton(gp.buttons[0], "Space");  // A -> Interact
     this.mapButton(gp.buttons[1], "KeyF");   // B -> Attack
     this.mapButton(gp.buttons[2], "KeyR");   // X -> Item2
-    this.mapButton(gp.buttons[3], "KeyQ");   // Y -> Item1
+    this.mapButton(gp.buttons[3], "KeyQ");   // Y -> Waffe wechseln
+    this.mapButton(gp.buttons[8], "KeyM");   // Select -> Map
     this.mapButton(gp.buttons[9], "KeyE");   // Start -> Menü
   }
 

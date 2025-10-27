@@ -50,6 +50,9 @@ export interface ResourceOptions {
   expBackground: string;
   levelBackground: string;
 
+  // map
+  mapMarker: string;
+
   // Animations
   sword: string;
   rodRed: string;
@@ -117,6 +120,9 @@ class Resources {
 
       // Collectibles
       collectible: "./images/sprites/collectible/collectible_00.png",
+
+      // map
+      mapMarker: "./images/sprites/map/map_marker.png",
 
       deko16x32: "./images/sprites/deko_16x32.png",
 

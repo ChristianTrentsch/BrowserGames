@@ -23,6 +23,7 @@ import {
   EventCollectible,
   RES_DESTROY,
   HERO_CHANGE_EXP,
+  HERO_SHOW_MAP,
 } from "../../Events.js";
 import { GameObject } from "../../GameObject.js";
 import { Vector2 } from "../../Vector2.js";
@@ -219,6 +220,11 @@ export class Hero extends GameObject {
     //** --- PRESS: KeyQ (change weapon)--- */ 
     if (input.getActionJustPressed("KeyQ")) {
       events.emit(HERO_CHANGE_EQUIPMENT, this);
+    }
+
+    //** --- PRESS: KeyM (show/hide map)--- */ 
+    if (input.getActionJustPressed("KeyM")) {
+      events.emit(HERO_SHOW_MAP, this);
     }
 
     const distance = moveTowards(this, this.destinationPosition, 1);
