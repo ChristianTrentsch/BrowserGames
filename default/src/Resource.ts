@@ -61,6 +61,7 @@ export interface ResourceOptions {
   animBushSmall: string;
   animWater: string;
   animLamp: string;
+  animTorch: string;
 };
 
 export interface ResourceImageOptions {
@@ -134,6 +135,7 @@ class Resources {
       animBush: "./images/sprites/animation/deko_bush_01.png",
       animWater: "./images/sprites/animation/water.png",
       animLamp: "./images/sprites/animation/lamp.png",
+      animTorch: "./images/sprites/animation/torch.png",
 
       // exp
       exp: "./images/sprites/exp.png",

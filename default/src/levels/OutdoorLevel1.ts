@@ -63,7 +63,9 @@ export class OutdoorLevel1 extends Level {
     this.loadStartLake();
 
     // Deko für Startbereich
-    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(25)), "animLamp"));
+    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(25)), "animTorch"));
+
+    // this.addChild(new Deko(new Vector2(gridCells(50), gridCells(25)), "animLamp"));
     this.addChild(new Deko(new Vector2(gridCells(48), gridCells(25)), "animBushSmall", 7000));
 
     //** --- Load Hero Data --- */

@@ -54,6 +54,12 @@ export class Deko extends GameObject {
       case "animBush":
         this.hFrames = 6;
         break;
+      case "animTorch":
+        this.isSolid = true;
+        this.hFrames = 4;
+        this.frameIndexPattern = this.makeTorchFrames();
+
+        break;
     }
 
     this.addChild(new Sprite({
@@ -257,6 +263,31 @@ export class Deko extends GameObject {
         {
           time: 500,
           frame: rootFrame + 1,
+        },
+      ],
+    };
+  };
+
+  makeTorchFrames = (rootFrame: number = 0, duration: number = 600) => {
+
+    return {
+      duration: duration,
+      frames: [
+        {
+          time: 0,
+          frame: rootFrame,
+        },
+        {
+          time: 150,
+          frame: rootFrame + 1,
+        },
+        {
+          time: 300,
+          frame: rootFrame + 2,
+        },
+        {
+          time: 450,
+          frame: rootFrame + 3,
         },
       ],
     };
