@@ -13,7 +13,6 @@ import { Main } from "../Main/Main.js";
 export class LevelMap extends GameObject {
 
     private isVisible: boolean = false; // Karte aktuell sichtbar?
-    private mapSprite?: Sprite | null;
     private heroMarker?: Sprite | null;
     private readonly mapScale = 0.14; // Maßstab für Karte und Positionen
 
@@ -64,22 +63,46 @@ export class LevelMap extends GameObject {
 
         // Bild auswählen passend zum Level
         let image = resources.images.outdoorGround;
+
+        // Standard - OutdoorLevel
+        let rodPos = new Vector2(22, 17);
+        let rodFrame = 21;
+        let exitPos = new Vector2(181, 24);
         switch (this.levelId) {
             case "CaveLevel1":
                 image = resources.images.desertGround;
+                rodPos = new Vector2(22, 17);
+                rodFrame = 22;
+                exitPos = new Vector2(72, 72)
                 break;
         }
 
         this.mapShell = new GameObject(heroPosition);
 
-        // Karte anzeigen
-        this.mapSprite = new Sprite({
+        // Karte festlegen
+        this.mapShell.addChild(new Sprite({
             position: new Vector2(0, 0),
             resource: image,
             frameSize: new Vector2(1600, 800),
             scale: this.mapScale,
-        });
-        this.mapShell.addChild(this.mapSprite);
+        }));
+
+        // Zauberstab darstellen
+        this.mapShell.addChild(new Sprite({
+            resource: resources.images.equipment,
+            position: rodPos,
+            frameSize: new Vector2(24, 24),
+            frame: rodFrame,
+            hFrames: 30,
+            scale: this.mapScale * 5
+        }));
+
+        // Exit darstellen
+        this.mapShell.addChild(new Sprite({
+            resource: resources.images.exit,
+            position: exitPos,
+            scale: this.mapScale * 5
+        }));
 
         // Position für Hero Marker
         const scaledHeroPos = new Vector2(
@@ -87,7 +110,7 @@ export class LevelMap extends GameObject {
             heroPosition.y * this.mapScale
         );
 
-        // Marker für den Hero
+        // Marker für den Hero und Position für step()
         this.heroMarker = new Sprite({
             resource: resources.images.mapMarker,
             position: scaledHeroPos,
@@ -99,11 +122,6 @@ export class LevelMap extends GameObject {
     }
 
     hideMap() {
-        if (this.mapSprite) {
-            this.removeChild(this.mapSprite);
-            this.mapSprite = null;
-        }
-
         if (this.heroMarker) {
             this.removeChild(this.heroMarker);
             this.heroMarker = null;
