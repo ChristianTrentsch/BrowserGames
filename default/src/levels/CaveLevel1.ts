@@ -84,10 +84,10 @@ export class CaveLevel1 extends Level {
 
     //** --- Create Level walls add to scene --- */
     const wallDefinitions = {
-      right: this.generateWall(new Vector2(1568, 32), new Vector2(1568, 1564), TILE_SIZE, "right"),
-      left: this.generateWall(new Vector2(16, 32), new Vector2(16, 1564), TILE_SIZE, "left"),
+      right: this.generateWall(new Vector2(1568, 32), new Vector2(1568, 764), TILE_SIZE, "right"),
+      left: this.generateWall(new Vector2(16, 32), new Vector2(16, 764), TILE_SIZE, "left"),
       top: this.generateWall(new Vector2(32, 16), new Vector2(1568, 16), TILE_SIZE, "top"),
-      bottom: this.generateWall(new Vector2(32, 1564), new Vector2(1568, 1564), TILE_SIZE, "bottom"),
+      bottom: this.generateWall(new Vector2(32, 768), new Vector2(1568, 768), TILE_SIZE, "bottom"),
     };
     this.walls = new Set(Object.values(wallDefinitions).flat());
   }
@@ -346,7 +346,7 @@ export class CaveLevel1 extends Level {
     const defaultResources = generateDefaultResources({
       levelId: "CaveLevel1",
       width: 1600,
-      height: 1600,
+      height: 800,
       seed: 1, // bestimmter Seed = immer gleiche Karte
       pathZones: [
         // füge Gruppenbasierte freie flächen hinzu
