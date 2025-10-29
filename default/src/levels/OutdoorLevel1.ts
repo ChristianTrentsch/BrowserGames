@@ -63,10 +63,11 @@ export class OutdoorLevel1 extends Level {
     this.loadStartLake();
 
     // Deko für Startbereich
-    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(25)), "animTorch"));
+    this.addChild(new Deko(new Vector2(gridCells(48)-1, gridCells(22)+ 8), "animTorch"));
+    this.addChild(new Deko(new Vector2(gridCells(51)+2, gridCells(26)- 4), "animTorch"));
 
     // this.addChild(new Deko(new Vector2(gridCells(50), gridCells(25)), "animLamp"));
-    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(25)), "animBushSmall", 7000));
+    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(25)), "animBushSmall", 7000));
 
     //** --- Load Hero Data --- */
     this.heroStartPosition = this.defaultHeroPosition;
@@ -511,45 +512,67 @@ export class OutdoorLevel1 extends Level {
    * - legt Stellen die frei bleiben sollen fest
    */
   loadStartLake() {
-    // gesamte Bereich des See's
-    for (let y = 19; y < 30; y++) {
-      for (let x = 43; x < 59; x++) {
-        // Weg nach links frei lassen
-        if (y == 25 && x == 43) continue;
-        if (y == 25 && x == 44) continue;
-        if (y == 25 && x == 45) continue;
-        if (y == 25 && x == 46) continue;
-        if (y == 25 && x == 47) continue;
 
-        // Startinsel frei lassen
-        if (y == 23 && x == 48) continue;
-        if (y == 24 && x == 48) continue;
-        if (y == 25 && x == 48) continue;
-        if (y == 26 && x == 48) continue;
-        if (y == 23 && x == 49) continue;
-        if (y == 24 && x == 49) continue;
-        if (y == 25 && x == 49) continue;
-        if (y == 26 && x == 49) continue;
-        if (y == 23 && x == 50) continue;
-        if (y == 24 && x == 50) continue;
-        if (y == 25 && x == 50) continue;
-        if (y == 26 && x == 50) continue;
-        if (y == 23 && x == 51) continue;
-        if (y == 24 && x == 51) continue;
-        if (y == 25 && x == 51) continue;
-        if (y == 26 && x == 51) continue;
-
-        // Weg nach rechts frei lassen
-        if (y == 24 && x == 52) continue;
-        if (y == 24 && x == 53) continue;
-        if (y == 24 && x == 54) continue;
-        if (y == 24 && x == 55) continue;
-        if (y == 24 && x == 56) continue;
-        if (y == 24 && x == 57) continue;
-        if (y == 24 && x == 58) continue;
-
-        this.addChild(new Deko(new Vector2(gridCells(x), gridCells(y)), "animWater"));
-      }
+    // nur obere Kante animieren
+    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(19)), "animWaterLeft"));
+    
+    for (let x = 44; x < 58; x++) {
+      this.addChild(new Deko(new Vector2(gridCells(x), gridCells(19)), "animWaterMiddle"));
     }
+
+    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(19)), "animWaterRight"));
+
+    // Kante Spielerinsel
+    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(27)), "animWaterLeft"));
+    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(27)), "animWaterMiddle"));
+    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(27)), "animWaterMiddle"));
+    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(27)), "animWaterRight"));
+    
+    // for (let x = 44; x < 58; x++) {
+    //   this.addChild(new Deko(new Vector2(gridCells(x), gridCells(19)), "animWaterMiddle"));
+    // }
+
+    // this.addChild(new Deko(new Vector2(gridCells(58), gridCells(19)), "animWaterRight"));
+
+    // gesamte Bereich des See's
+    // for (let y = 19; y < 30; y++) {
+    //   for (let x = 43; x < 59; x++) {
+    //     // Weg nach links frei lassen
+    //     if (y == 25 && x == 43) continue;
+    //     if (y == 25 && x == 44) continue;
+    //     if (y == 25 && x == 45) continue;
+    //     if (y == 25 && x == 46) continue;
+    //     if (y == 25 && x == 47) continue;
+
+    //     // Startinsel frei lassen
+    //     if (y == 23 && x == 48) continue;
+    //     if (y == 24 && x == 48) continue;
+    //     if (y == 25 && x == 48) continue;
+    //     if (y == 26 && x == 48) continue;
+    //     if (y == 23 && x == 49) continue;
+    //     if (y == 24 && x == 49) continue;
+    //     if (y == 25 && x == 49) continue;
+    //     if (y == 26 && x == 49) continue;
+    //     if (y == 23 && x == 50) continue;
+    //     if (y == 24 && x == 50) continue;
+    //     if (y == 25 && x == 50) continue;
+    //     if (y == 26 && x == 50) continue;
+    //     if (y == 23 && x == 51) continue;
+    //     if (y == 24 && x == 51) continue;
+    //     if (y == 25 && x == 51) continue;
+    //     if (y == 26 && x == 51) continue;
+
+    //     // Weg nach rechts frei lassen
+    //     if (y == 24 && x == 52) continue;
+    //     if (y == 24 && x == 53) continue;
+    //     if (y == 24 && x == 54) continue;
+    //     if (y == 24 && x == 55) continue;
+    //     if (y == 24 && x == 56) continue;
+    //     if (y == 24 && x == 57) continue;
+    //     if (y == 24 && x == 58) continue;
+
+    //     this.addChild(new Deko(new Vector2(gridCells(x), gridCells(y)), "animWater"));
+    //   }
+    // }
   }
 }

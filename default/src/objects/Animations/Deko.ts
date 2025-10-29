@@ -32,10 +32,16 @@ export class Deko extends GameObject {
     let spritePosY = 0;
 
     switch (imageKey) {
+      case "animWaterLeft":
+      case "animWaterRight":
+      case "animWaterMiddle":
+        this.hFrames = 3;
+        this.frameIndexPattern = this.makeWaterIdleFrames();
+        break;
       case "animWater":
         this.hFrames = 8;
         this.drawLayer = "FLOOR";
-        this.frameIndexPattern = this.makeWaterFrames(0, animationDuration);
+        this.frameIndexPattern = this.makeWaterFrames();
         this.contentType = "Water";
         break;
       case "animLamp":
@@ -55,7 +61,6 @@ export class Deko extends GameObject {
         this.hFrames = 6;
         break;
       case "animTorch":
-        this.isSolid = true;
         this.hFrames = 4;
         this.frameIndexPattern = this.makeTorchFrames();
 
@@ -288,6 +293,27 @@ export class Deko extends GameObject {
         {
           time: 450,
           frame: rootFrame + 3,
+        },
+      ],
+    };
+  };
+
+  makeWaterIdleFrames = (rootFrame: number = 0, duration: number = 3000) => {
+
+    return {
+      duration: duration,
+      frames: [
+        {
+          time: 0,
+          frame: rootFrame,
+        },
+        {
+          time: 400,
+          frame: rootFrame + 1,
+        },
+        {
+          time: 800,
+          frame: rootFrame + 2,
         },
       ],
     };

@@ -62,6 +62,10 @@ export interface ResourceOptions {
   animWater: string;
   animLamp: string;
   animTorch: string;
+
+  animWaterLeft: string;
+  animWaterMiddle: string;
+  animWaterRight: string;
 };
 
 export interface ResourceImageOptions {
@@ -100,7 +104,7 @@ class Resources {
       stone: "./images/sprites/resources/stone.png",
 
       square: "./images/sprites/level/outdoor/square.png",
-      
+
       // Level - Outdoor
       outdoorGround: "./images/sprites/level/outdoor/ground_01.png",
       outdoorHouse: "./images/sprites/level/outdoor/house.png",
@@ -136,6 +140,10 @@ class Resources {
       animWater: "./images/sprites/animation/water.png",
       animLamp: "./images/sprites/animation/lamp.png",
       animTorch: "./images/sprites/animation/torch.png",
+
+      animWaterLeft: "./images/sprites/animation/water_left.png",
+      animWaterMiddle: "./images/sprites/animation/water_middle.png",
+      animWaterRight: "./images/sprites/animation/water_right.png",
 
       // exp
       exp: "./images/sprites/exp.png",
