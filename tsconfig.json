@@ -4,8 +4,8 @@
     "outDir": "./default/dist",
 
     // Moderne Syntax für Browser
-    "target": "ES2020",
-    "module": "ESNext",
+    "target": "es2020",
+    "module": "NodeNext",
     "lib": ["ES2020", "DOM"],
 
     // Debugging
@@ -19,7 +19,7 @@
     "exactOptionalPropertyTypes": true,
 
     // Module-Auflösung
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
