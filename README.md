@@ -36,6 +36,8 @@ Statische Browsergames. Übersichtlich, modern und responsiv gestaltet mit HTML,
 - 📱 Responsives Design für Desktop und Mobile
 - ⚡ Schnelle Ladezeiten durch statische Struktur
 
+[⬆️ Inhaltsverzeichnis](#-inhaltsverzeichnis)
+
 ## 🛠️ Technologien
 
 - HTML5
@@ -43,6 +45,8 @@ Statische Browsergames. Übersichtlich, modern und responsiv gestaltet mit HTML,
 - Typescript 5.9
 - Bootstrap 5.3
 - GitHub Pages für Hosting
+
+[⬆️ Inhaltsverzeichnis](#-inhaltsverzeichnis)
 
 ## ⚙️ Lokale Entwicklung
 
@@ -53,6 +57,8 @@ Folgende Software muss installiert sein:
 - Node.js
 - npm (ist automatisch in Node.js enthalten)
 - optional: pnpm
+
+[⬆️ Inhaltsverzeichnis](#-inhaltsverzeichnis)
 
 ## 🔎 Installation prüfen
 
@@ -77,6 +83,8 @@ PowerShell als Administrator öffnen und einmalig ausführen:
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
+[⬆️ Inhaltsverzeichnis](#-inhaltsverzeichnis)
+
 ## 📦 pnpm installieren (optional)
 
 Das Projekt funktioniert normalerweise auch mit npm.  
@@ -94,6 +102,8 @@ Danach prüfen:
 pnpm -v
 ```
 
+[⬆️ Inhaltsverzeichnis](#-inhaltsverzeichnis)
+
 ## 📥 Projekt installieren
 
 Im Projektordner Terminal öffnen und Abhängigkeiten installieren.
@@ -109,6 +119,8 @@ oder mit npm:
 ```powershell
 npm install
 ```
+
+[⬆️ Inhaltsverzeichnis](#-inhaltsverzeichnis)
 
 ## ▶️ Entwicklungsserver starten
 
@@ -136,6 +148,8 @@ oder:
 npm start
 ```
 
+[⬆️ Inhaltsverzeichnis](#-inhaltsverzeichnis)
+
 ## 🖥️ Projekt im Browser öffnen
 
 Nach dem Start des Servers im Browser öffnen:
@@ -146,3 +160,5 @@ http://localhost:3000
 
 Je nach Projekt kann der Port auch abweichen.
 Der korrekte Link wird normalerweise im Terminal angezeigt.
+
+[⬆️ Inhaltsverzeichnis](#-inhaltsverzeichnis)
