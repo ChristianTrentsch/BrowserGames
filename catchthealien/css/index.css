@@ -8,6 +8,10 @@
     0 0 40px #00c2cc;
 }
 
+h1.text-neon {
+  font-size: clamp(1.4rem, 5vw, 2.5rem);
+}
+
 /* Canvas leichter Glow */
 canvas {
   border: 2px solid #00f3ff;
