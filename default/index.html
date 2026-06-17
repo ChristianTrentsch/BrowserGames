@@ -1,122 +1,171 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RangeR RPG</title>
+    <link rel="icon" href="./images/sprites/exit.png" />
 
-  <title>RangeR RPG</title>
-  <link rel="icon" href="./images/sprites/exit.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="./style.css">
-</head>
-
-<body>
-
-
-  <!-- Overlay -->
-  <div id="overlay" style="display: none;">
-    <div class="overlay-content">
-      <h2>🚧 Alpha Version 🚧</h2>
-      <p>
-        Hier sind Bugs, unfertige Features und wackelige Pixel inklusive.
-        Viel Spaß beim <strong>Testen</strong>!
-      </p>
-
-      <div class="mt-3 p-2 bg-dark text-light rounded">
-        <h5>🕹️ Steuerung</h5>
-        <p class="mb-1">
-          Du kannst mit <strong>Keyboard</strong> oder <strong>Controller</strong> spielen.
+  <body>
+    <!-- Overlay -->
+    <div id="overlay" style="display: none">
+      <div class="overlay-content">
+        <h2>🚧 Alpha Version 🚧</h2>
+        <p>
+          Hier sind Bugs, unfertige Features und wackelige Pixel inklusive. Viel
+          Spaß beim <strong>Testen</strong>!
         </p>
-        <ul class="list-unstyled mb-0">
-          <li>⌨️ PC, Laptop oder Tablet mit Tastatur</li>
-          <li>🎮 Controller via Kabel/Bluetooth (z. B. Xbox)</li>
-        </ul>
+
+        <div class="mt-3 p-2 bg-dark text-light rounded">
+          <h5>🕹️ Steuerung</h5>
+          <p class="mb-1">
+            Du kannst mit <strong>Keyboard</strong> oder
+            <strong>Controller</strong> spielen.
+          </p>
+          <ul class="list-unstyled mb-0">
+            <li>⌨️ PC, Laptop oder Tablet mit Tastatur</li>
+            <li>🎮 Controller via Kabel/Bluetooth (z. B. Xbox)</li>
+          </ul>
+        </div>
+
+        <div class="mt-3 p-2 bg-dark text-light rounded">
+          <h5>🔊 Sound</h5>
+          <p class="mb-0">
+            Die Hintergrundmusik ist standardmäßig <strong>deaktiviert</strong>.
+            Aktivieren kannst du den Sound über den 🔊Button unterhalb des
+            Spielfelds.
+          </p>
+        </div>
+
+        <button id="closeOverlay" class="btn btn-outline-light mt-3">
+          Okay, los geht’s!
+        </button>
       </div>
-
-      <button id="closeOverlay" class="btn btn-outline-light mt-3">Okay, los geht’s!</button>
     </div>
-  </div>
 
-  <!-- Spielfeld -->
-  <canvas class="mt-3" id="game-canvas" width="320" height="180"></canvas>
+    <!-- Spielfeld -->
+    <canvas class="mt-3" id="game-canvas" width="320" height="180"></canvas>
 
-  <!-- Steuerungserklärung -->
-  <div class="p-2 steuerung bg-gradient text-light mx-auto" id="keyboard-controls">
-    <!-- Tabs -->
-    <h3>⌨️ Steuerung (Tastatur)</h3>
-    <p>Bewege deine Spielfigur mit <strong>W, A, S, D</strong> oder den <strong>Pfeiltasten</strong>.</p>
-    <p><strong>Leertaste (Space)</strong>: Interagieren</p>
-    <p><strong>F Taste</strong>: Angriff</p>
-    <p><strong>Q Taste</strong>: Waffen wechseln</p>
-    <p><strong>M Taste</strong>: Karte</p>
-  </div>
+    <!-- Steuerungserklärung -->
+    <div
+      class="p-2 steuerung bg-gradient text-light mx-auto"
+      id="keyboard-controls"
+    >
+      <!-- Tabs -->
+      <h3>⌨️ Steuerung (Tastatur)</h3>
+      <p>
+        Bewege deine Spielfigur mit <strong>W, A, S, D</strong> oder den
+        <strong>Pfeiltasten</strong>.
+      </p>
+      <p><strong>Leertaste (Space)</strong>: Interagieren</p>
+      <p><strong>F Taste</strong>: Angriff</p>
+      <p><strong>Q Taste</strong>: Waffen wechseln</p>
+      <p><strong>M Taste</strong>: Karte</p>
+    </div>
 
-  <div class="p-2 steuerung bg-gradient text-light mx-auto d-none" id="controller-controls">
-    <!-- Tabs -->
-    <h3>🎮 Steuerung (Controller)</h3>
-    <p>Bewege deine Spielfigur mit dem <strong>Stick</strong> oder dem <strong>Steuerkreuz</strong>.</p>
-    <p><strong>A</strong>: Interagieren</p>
-    <p><strong>B</strong>: Angriff</p>
-    <p><strong>Y</strong>: Waffen wechseln</p>
-    <p><strong>Select</strong>: Karte</p>
-  </div>
-  <div class="text-center my-3">
-    <button id="tab-keyboard" class="btn btn-outline-light m-1 active">⌨️ Tastatur</button>
-    <button id="tab-controller" class="btn btn-outline-light m-1">🎮 Controller</button>
-    <button id="sound" class="btn btn-outline-light m-1">🔊</button>
-  </div>
+    <div
+      class="p-2 steuerung bg-gradient text-light mx-auto d-none"
+      id="controller-controls"
+    >
+      <!-- Tabs -->
+      <h3>🎮 Steuerung (Controller)</h3>
+      <p>
+        Bewege deine Spielfigur mit dem <strong>Stick</strong> oder dem
+        <strong>Steuerkreuz</strong>.
+      </p>
+      <p><strong>A</strong>: Interagieren</p>
+      <p><strong>B</strong>: Angriff</p>
+      <p><strong>Y</strong>: Waffen wechseln</p>
+      <p><strong>Select</strong>: Karte</p>
+    </div>
+    <div class="text-center my-3">
+      <button id="tab-keyboard" class="btn btn-outline-light m-1 active">
+        ⌨️ Tastatur
+      </button>
+      <button id="tab-controller" class="btn btn-outline-light m-1">
+        🎮 Controller
+      </button>
+      <button id="sound" class="btn btn-outline-light m-1">🔊</button>
+    </div>
 
-  <!-- Startseite/Reset/Sound -->
-  <div class="mt-4">
-    <a id="start" href="../index.html" class="btn btn-outline-info btn-lg m-1">
-      🎮 Zurück zur Startseite
-    </a>
-    <a id="reset" href="../default/index.html" class="btn btn-outline-danger btn-lg m-1">
-      🚧 Reset Game
-    </a>
-  </div>
+    <!-- Startseite/Reset/Sound -->
+    <div class="mt-4">
+      <a
+        id="start"
+        href="../index.html"
+        class="btn btn-outline-info btn-lg m-1"
+      >
+        🎮 Zurück zur Startseite
+      </a>
+      <a
+        id="reset"
+        href="../default/index.html"
+        class="btn btn-outline-danger btn-lg m-1"
+      >
+        🚧 Reset Game
+      </a>
+    </div>
 
-  <!-- aktuelle Features -->
-  <div class="mt-4 mb-4">
-    <h1 class="mt-3 text-light">aktuelle Features</h1>
+    <!-- aktuelle Features -->
+    <div class="mt-4 mb-4">
+      <h1 class="mt-3 text-light">aktuelle Features</h1>
 
-    <ul class="list-group text-start mx-auto" style="max-width: 300px;">
-      <li class="list-group-item bg-dark text-light">
-        <strong>Player</strong>
-        <ul class="list-group list-group-flush ms-1">
-          <li class="list-group-item bg-dark text-light">Movement Animation</li>
-          <li class="list-group-item bg-dark text-light">Attack Animation</li>
-          <li class="list-group-item bg-dark text-light">Resources collect</li>
-          <li class="list-group-item bg-dark text-light">Equipment collect</li>
-          <li class="list-group-item bg-dark text-light">Interact with Environment</li>
-        </ul>
-      </li>
-      <li class="list-group-item bg-dark text-light">
-        <strong>NPC</strong>
-        <ul class="list-group list-group-flush ms-1">
-          <li class="list-group-item bg-dark text-light">Dialog start/skip </li>
-          <li class="list-group-item bg-dark text-light">Path block</li>
-        </ul>
-      </li>
-      <li class="list-group-item bg-dark text-light">
-        <strong>Game</strong>
-        <ul class="list-group list-group-flush ms-1">
-          <li class="list-group-item bg-dark text-light">Input Keyboard/Controller</li>
-          <li class="list-group-item bg-dark text-light">persistent Gameprogress</li>
-          <li class="list-group-item bg-dark text-light">Resourcetypes</li>
-          <li class="list-group-item bg-dark text-light">Equipmenttypes</li>
-          <li class="list-group-item bg-dark text-light">change Weapon</li>
-          <li class="list-group-item bg-dark text-light">change Level</li>
-          <li class="list-group-item bg-dark text-light">reset Game</li>
-          <li class="list-group-item bg-dark text-light">Sound on/off</li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+      <ul class="list-group text-start mx-auto" style="max-width: 300px">
+        <li class="list-group-item bg-dark text-light">
+          <strong>Player</strong>
+          <ul class="list-group list-group-flush ms-1">
+            <li class="list-group-item bg-dark text-light">
+              Movement Animation
+            </li>
+            <li class="list-group-item bg-dark text-light">Attack Animation</li>
+            <li class="list-group-item bg-dark text-light">
+              Resources collect
+            </li>
+            <li class="list-group-item bg-dark text-light">
+              Equipment collect
+            </li>
+            <li class="list-group-item bg-dark text-light">
+              Interact with Environment
+            </li>
+          </ul>
+        </li>
+        <li class="list-group-item bg-dark text-light">
+          <strong>NPC</strong>
+          <ul class="list-group list-group-flush ms-1">
+            <li class="list-group-item bg-dark text-light">
+              Dialog start/skip
+            </li>
+            <li class="list-group-item bg-dark text-light">Path block</li>
+          </ul>
+        </li>
+        <li class="list-group-item bg-dark text-light">
+          <strong>Game</strong>
+          <ul class="list-group list-group-flush ms-1">
+            <li class="list-group-item bg-dark text-light">
+              Input Keyboard/Controller
+            </li>
+            <li class="list-group-item bg-dark text-light">
+              persistent Gameprogress
+            </li>
+            <li class="list-group-item bg-dark text-light">Resourcetypes</li>
+            <li class="list-group-item bg-dark text-light">Equipmenttypes</li>
+            <li class="list-group-item bg-dark text-light">change Weapon</li>
+            <li class="list-group-item bg-dark text-light">change Level</li>
+            <li class="list-group-item bg-dark text-light">reset Game</li>
+            <li class="list-group-item bg-dark text-light">Sound on/off</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
 
-  <script type="module" src="./dist/main.js"></script>
-</body>
-
+    <script type="module" src="./dist/main.js"></script>
+  </body>
 </html>

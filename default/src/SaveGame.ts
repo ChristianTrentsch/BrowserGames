@@ -282,7 +282,7 @@ export class SaveGame {
 
     static initAll() {
         this.saveOverlay("false");
-        this.saveSound("on");
+        this.saveSound("off");
         this.saveInput("keyboard");
         this.saveLevel("OutdoorLevel1");
 
