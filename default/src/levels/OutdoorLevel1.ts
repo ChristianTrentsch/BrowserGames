@@ -5,8 +5,14 @@ import { Sprite } from "../Sprite.js";
 import { Level } from "../objects/Level/Level.js";
 import { Exit } from "../objects/Exit/Exit.js";
 import { Hero } from "../objects/Hero/Hero.js";
-import { BUSH, Item, STONE, TREE } from "../objects/Item/Item.js";
-import { events, HERO_EXITS, CHANGE_LEVEL } from "../Events.js";
+import { BUSH, Item, ROD_PURPLE, STONE, TREE } from "../objects/Item/Item.js";
+import {
+  events,
+  HERO_EXITS,
+  CHANGE_LEVEL,
+  SHOW_HINT,
+} from "../Events.js";
+import { SpriteTextString } from "../objects/SpriteTextString/SpriteTextString.js";
 import { CaveLevel1 } from "./CaveLevel1.js";
 import { SaveGame } from "../SaveGame.js";
 import { LevelId } from "../helpers/levelRegistry.js";
@@ -16,13 +22,15 @@ import { Square } from "./parts/Square/Square.js";
 import { Water } from "./parts/Water/Water.js";
 import { Bush } from "./parts/Bush/Bush.js";
 import { House } from "./parts/House/House.js";
-import { generateDefaultResources, generateDeko } from "../helpers/generateResources.js";
+import {
+  generateDefaultResources,
+  generateDeko,
+} from "../helpers/generateResources.js";
 import { Npc } from "../objects/Npc/Npc.js";
 import { GameObject } from "../GameObject.js";
 import { Deko } from "../objects/Animations/Deko.js";
 
 export class OutdoorLevel1 extends Level {
-
   levelId: LevelId = "OutdoorLevel1";
   background: Sprite;
   walls: Set<string>;
@@ -41,14 +49,14 @@ export class OutdoorLevel1 extends Level {
     this.background = new Sprite({
       resource: resources.images.outdoorSky,
       frameSize: new Vector2(320, 180),
-      position: new Vector2(0, 0)
+      position: new Vector2(0, 0),
     });
 
     // Choose actual Level Ground
     const groundSprite = new Sprite({
       resource: resources.images.outdoorGround,
       frameSize: new Vector2(1600, 800),
-      position: new Vector2(0, 0)
+      position: new Vector2(0, 0),
     });
     this.addChild(groundSprite);
 
@@ -63,11 +71,21 @@ export class OutdoorLevel1 extends Level {
     this.loadStartLake();
 
     // Deko für Startbereich
-    this.addChild(new Deko(new Vector2(gridCells(48)-1, gridCells(22)+ 8), "animTorch"));
-    this.addChild(new Deko(new Vector2(gridCells(51)+2, gridCells(26)- 4), "animTorch"));
+    this.addChild(
+      new Deko(new Vector2(gridCells(48) - 1, gridCells(22) + 8), "animTorch"),
+    );
+    this.addChild(
+      new Deko(new Vector2(gridCells(51) + 2, gridCells(26) - 4), "animTorch"),
+    );
 
     // this.addChild(new Deko(new Vector2(gridCells(50), gridCells(25)), "animLamp"));
-    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(25)), "animBushSmall", 7000));
+    this.addChild(
+      new Deko(
+        new Vector2(gridCells(49), gridCells(25)),
+        "animBushSmall",
+        7000,
+      ),
+    );
 
     //** --- Load Hero Data --- */
     this.heroStartPosition = this.defaultHeroPosition;
@@ -85,45 +103,146 @@ export class OutdoorLevel1 extends Level {
       this.heroStartPosition.x,
       this.heroStartPosition.y,
       exp,
-      level
+      level,
     );
     this.addChild(hero);
 
     //** --- Create Level walls add to scene --- */
     const wallDefinitions = {
-      right: this.generateWall(new Vector2(1568, 32), new Vector2(1568, 764), TILE_SIZE, "right"),
-      left: this.generateWall(new Vector2(16, 32), new Vector2(16, 764), TILE_SIZE, "left"),
-      top: this.generateWall(new Vector2(32, 16), new Vector2(1568, 16), TILE_SIZE, "top"),
-      bottom: this.generateWall(new Vector2(32, 768), new Vector2(1568, 768), TILE_SIZE, "bottom"),
+      right: this.generateWall(
+        new Vector2(1568, 32),
+        new Vector2(1568, 764),
+        TILE_SIZE,
+        "right",
+      ),
+      left: this.generateWall(
+        new Vector2(16, 32),
+        new Vector2(16, 764),
+        TILE_SIZE,
+        "left",
+      ),
+      top: this.generateWall(
+        new Vector2(32, 16),
+        new Vector2(1568, 16),
+        TILE_SIZE,
+        "top",
+      ),
+      bottom: this.generateWall(
+        new Vector2(32, 768),
+        new Vector2(1568, 768),
+        TILE_SIZE,
+        "bottom",
+      ),
 
       // Start Island - Border
-      startIslandTop1: this.generateWall(new Vector2(gridCells(48), gridCells(22)), new Vector2(gridCells(51), gridCells(22)), TILE_SIZE, "top"),
-      startIslandTop2: this.generateWall(new Vector2(gridCells(52), gridCells(23)), new Vector2(gridCells(57), gridCells(23)), TILE_SIZE, "top"),
-      startIslandTop3: this.generateWall(new Vector2(gridCells(44), gridCells(24)), new Vector2(gridCells(46), gridCells(24)), TILE_SIZE, "top"),
-      startIslandTop4: this.generateWall(new Vector2(gridCells(44), gridCells(26)), new Vector2(gridCells(46), gridCells(26)), TILE_SIZE, "top"),
-      startIslandLeft1: this.generateWall(new Vector2(gridCells(47), gridCells(23)), new Vector2(gridCells(47), gridCells(24)), TILE_SIZE, "left"),
-      startIslandLeft2: this.generateWall(new Vector2(gridCells(47), gridCells(26)), new Vector2(gridCells(47), gridCells(26)), TILE_SIZE, "left"),
-      startIslandRight1: this.generateWall(new Vector2(gridCells(52), gridCells(26)), new Vector2(gridCells(52), gridCells(26)), TILE_SIZE, "right"),
-      startIslandBottom1: this.generateWall(new Vector2(gridCells(48), gridCells(27)), new Vector2(gridCells(51), gridCells(27)), TILE_SIZE, "bottom"),
-      startIslandBottom2: this.generateWall(new Vector2(gridCells(52), gridCells(25)), new Vector2(gridCells(57), gridCells(25)), TILE_SIZE, "bottom"),
+      startIslandTop1: this.generateWall(
+        new Vector2(gridCells(48), gridCells(22)),
+        new Vector2(gridCells(51), gridCells(22)),
+        TILE_SIZE,
+        "top",
+      ),
+      startIslandTop2: this.generateWall(
+        new Vector2(gridCells(52), gridCells(23)),
+        new Vector2(gridCells(57), gridCells(23)),
+        TILE_SIZE,
+        "top",
+      ),
+      startIslandTop3: this.generateWall(
+        new Vector2(gridCells(44), gridCells(24)),
+        new Vector2(gridCells(46), gridCells(24)),
+        TILE_SIZE,
+        "top",
+      ),
+      startIslandTop4: this.generateWall(
+        new Vector2(gridCells(44), gridCells(26)),
+        new Vector2(gridCells(46), gridCells(26)),
+        TILE_SIZE,
+        "top",
+      ),
+      startIslandLeft1: this.generateWall(
+        new Vector2(gridCells(47), gridCells(23)),
+        new Vector2(gridCells(47), gridCells(24)),
+        TILE_SIZE,
+        "left",
+      ),
+      startIslandLeft2: this.generateWall(
+        new Vector2(gridCells(47), gridCells(26)),
+        new Vector2(gridCells(47), gridCells(26)),
+        TILE_SIZE,
+        "left",
+      ),
+      startIslandRight1: this.generateWall(
+        new Vector2(gridCells(52), gridCells(26)),
+        new Vector2(gridCells(52), gridCells(26)),
+        TILE_SIZE,
+        "right",
+      ),
+      startIslandBottom1: this.generateWall(
+        new Vector2(gridCells(48), gridCells(27)),
+        new Vector2(gridCells(51), gridCells(27)),
+        TILE_SIZE,
+        "bottom",
+      ),
+      startIslandBottom2: this.generateWall(
+        new Vector2(gridCells(52), gridCells(25)),
+        new Vector2(gridCells(57), gridCells(25)),
+        TILE_SIZE,
+        "bottom",
+      ),
 
       // Start Lake - Border
-      startLakeTop1: this.generateWall(new Vector2(gridCells(43), gridCells(19)), new Vector2(gridCells(58), gridCells(19)), TILE_SIZE, "top"),
-      startLakeBottom1: this.generateWall(new Vector2(gridCells(43), gridCells(29)), new Vector2(gridCells(58), gridCells(29)), TILE_SIZE, "bottom"),
+      startLakeTop1: this.generateWall(
+        new Vector2(gridCells(43), gridCells(19)),
+        new Vector2(gridCells(58), gridCells(19)),
+        TILE_SIZE,
+        "top",
+      ),
+      startLakeBottom1: this.generateWall(
+        new Vector2(gridCells(43), gridCells(29)),
+        new Vector2(gridCells(58), gridCells(29)),
+        TILE_SIZE,
+        "bottom",
+      ),
 
-      startLakeLeft1: this.generateWall(new Vector2(gridCells(43), gridCells(20)), new Vector2(gridCells(43), gridCells(24)), TILE_SIZE, "left"),
-      startLakeLeft2: this.generateWall(new Vector2(gridCells(43), gridCells(26)), new Vector2(gridCells(43), gridCells(28)), TILE_SIZE, "left"),
-      startLakeRight1: this.generateWall(new Vector2(gridCells(58), gridCells(20)), new Vector2(gridCells(58), gridCells(23)), TILE_SIZE, "right"),
-      startLakeRight2: this.generateWall(new Vector2(gridCells(58), gridCells(25)), new Vector2(gridCells(58), gridCells(28)), TILE_SIZE, "right"),
+      startLakeLeft1: this.generateWall(
+        new Vector2(gridCells(43), gridCells(20)),
+        new Vector2(gridCells(43), gridCells(24)),
+        TILE_SIZE,
+        "left",
+      ),
+      startLakeLeft2: this.generateWall(
+        new Vector2(gridCells(43), gridCells(26)),
+        new Vector2(gridCells(43), gridCells(28)),
+        TILE_SIZE,
+        "left",
+      ),
+      startLakeRight1: this.generateWall(
+        new Vector2(gridCells(58), gridCells(20)),
+        new Vector2(gridCells(58), gridCells(23)),
+        TILE_SIZE,
+        "right",
+      ),
+      startLakeRight2: this.generateWall(
+        new Vector2(gridCells(58), gridCells(25)),
+        new Vector2(gridCells(58), gridCells(28)),
+        TILE_SIZE,
+        "right",
+      ),
 
       // fakePfad: this.generateWall(new Vector2(gridCells(60), gridCells(32)), new Vector2(gridCells(85), gridCells(32)), TILE_SIZE, "bottom"),
-
     };
     this.walls = new Set(Object.values(wallDefinitions).flat());
   }
 
-  ready() {
+  override ready() {
     events.on(HERO_EXITS, this, () => {
+
+      // Quest-Check: Lila Zauberstab muss gefunden worden sein
+      if (!SaveGame.isInEquipment(ROD_PURPLE)) {
+        // SHOW_HINT: Main.ts faengt diesen Event ab und zeigt die Textbox korrekt an
+        events.emit(SHOW_HINT, "Dieser Weg ist versperrt. Finde zuerst den lila Zauberstab!");
+        return;
+      }
 
       // Alten Level-Sound stoppen
       this.stopBackgroundSound();
@@ -152,30 +271,29 @@ export class OutdoorLevel1 extends Level {
    * - Resources
    */
   buildLevelGroupPurpleRod() {
-    let npc = new Npc(
-      gridCells(5),
-      gridCells(8),
-      [
-        {
-          string: "Du hast nun die stärkste Waffe und keine Resource kann dich aufhalten",
-          requires: ["STORY_01_PART_01", "STORY_02_PART_01"], // any string in the List must exists in our available list of storyflags
-          // bypass: [], // if we have done any of this storyflags then we dont show this message
-          // storyFlag: "STORY_01_PART_02", // add string to list of known flags
-        },
-        {
-          string: "Danke für das Holz. Jetzt kannst du noch schneller Resourcen sammeln!  Sprich mit meinem Bruder wenn du Zeit findest.",
-          requires: ["STORY_01_PART_01"], // any string in the List must exists in our available list of storyflags
-          // bypass: [], // if we have done any of this storyflags then we dont show this message
-          // storyFlag: "STORY_01_PART_02", // add string to list of known flags
-        },
-        {
-          string: "Bringe mir 5x Holz und ich gebe dir einen Zauberstab der mehr Schaden austeilt!",
-          // requires: [], // any string in the List must exists in our available list of storyflags
-          // bypass: [], // if we have done any of this storyflags then we dont show this message
-          storyFlag: "STORY_01_PART_01", // add string to list of known flags
-        }
-      ],
-    );
+    let npc = new Npc(gridCells(5), gridCells(8), [
+      {
+        string:
+          "Du hast nun die stärkste Waffe und keine Resource kann dich aufhalten",
+        requires: ["STORY_01_PART_01", "STORY_02_PART_01"], // any string in the List must exists in our available list of storyflags
+        // bypass: [], // if we have done any of this storyflags then we dont show this message
+        // storyFlag: "STORY_01_PART_02", // add string to list of known flags
+      },
+      {
+        string:
+          "Danke für das Holz. Jetzt kannst du noch schneller Resourcen sammeln!  Sprich mit meinem Bruder wenn du Zeit findest.",
+        requires: ["STORY_01_PART_01"], // any string in the List must exists in our available list of storyflags
+        // bypass: [], // if we have done any of this storyflags then we dont show this message
+        // storyFlag: "STORY_01_PART_02", // add string to list of known flags
+      },
+      {
+        string:
+          "Bringe mir 5x Holz und ich gebe dir einen Zauberstab der mehr Schaden austeilt!",
+        // requires: [], // any string in the List must exists in our available list of storyflags
+        // bypass: [], // if we have done any of this storyflags then we dont show this message
+        storyFlag: "STORY_01_PART_01", // add string to list of known flags
+      },
+    ]);
 
     //** --- Check if Quest "rodPurple" is finished --- */
     if (SaveGame.isInEquipment("rodPurple")) {
@@ -222,58 +340,58 @@ export class OutdoorLevel1 extends Level {
         /** --- OBEN --- */
         {
           x1: 4, // links
-          x2: 6,// rechts
+          x2: 6, // rechts
           y1: 0, // oben
           y2: 0, // unten
         },
         {
           x1: 3, // links
-          x2: 7,// rechts
+          x2: 7, // rechts
           y1: 1, // oben
           y2: 1, // unten
         },
         {
           x1: 2, // links
-          x2: 8,// rechts
+          x2: 8, // rechts
           y1: 2, // oben
           y2: 2, // unten
         },
         {
           x1: 1, // links
-          x2: 9,// rechts
+          x2: 9, // rechts
           y1: 3, // oben
           y2: 3, // unten
         },
         /** --- MITTE --- */
         {
           x1: 0, // links
-          x2: 10,// rechts
+          x2: 10, // rechts
           y1: 4, // oben
           y2: 6, // unten
         },
         /** --- UNTEN --- */
         {
           x1: 1, // links
-          x2: 9,// rechts
+          x2: 9, // rechts
           y1: 7, // oben
           y2: 7, // unten
         },
         {
           x1: 2, // links
-          x2: 8,// rechts
+          x2: 8, // rechts
           y1: 8, // oben
           y2: 8, // unten
         },
         {
           x1: 3, // links
-          x2: 7,// rechts
+          x2: 7, // rechts
           y1: 9, // oben
           y2: 9, // unten
         },
         /** --- EINGANG --- */
         {
           x1: 4, // links
-          x2: 6,// rechts
+          x2: 6, // rechts
           y1: 10, // oben
           y2: 13, // unten
         },
@@ -314,52 +432,52 @@ export class OutdoorLevel1 extends Level {
         /** --- OBEN --- */
         {
           x1: 3, // links
-          x2: 7,// rechts
+          x2: 7, // rechts
           y1: 1, // oben
           y2: 1, // unten
         },
         {
           x1: 2, // links
-          x2: 8,// rechts
+          x2: 8, // rechts
           y1: 2, // oben
           y2: 2, // unten
         },
         {
           x1: 1, // links
-          x2: 9,// rechts
+          x2: 9, // rechts
           y1: 3, // oben
           y2: 3, // unten
         },
         /** --- MITTE --- */
         {
           x1: 2, // links
-          x2: 8,// rechts
+          x2: 8, // rechts
           y1: 4, // oben
           y2: 6, // unten
         },
         /** --- UNTEN --- */
         {
           x1: 1, // links
-          x2: 9,// rechts
+          x2: 9, // rechts
           y1: 7, // oben
           y2: 7, // unten
         },
         {
           x1: 2, // links
-          x2: 8,// rechts
+          x2: 8, // rechts
           y1: 8, // oben
           y2: 8, // unten
         },
         {
           x1: 3, // links
-          x2: 7,// rechts
+          x2: 7, // rechts
           y1: 9, // oben
           y2: 9, // unten
         },
         /** --- EINGANG --- */
         {
           x1: 4, // links
-          x2: 6,// rechts
+          x2: 6, // rechts
           y1: 10, // oben
           y2: 13, // unten
         },
@@ -382,7 +500,6 @@ export class OutdoorLevel1 extends Level {
       height: 800,
       seed: 3, // bestimmter Seed = immer gleiche Karte
       pathZones: [
-
         // füge Gruppenbasierte freie flächen hinzu
         ...this.noResourceZones,
 
@@ -408,19 +525,21 @@ export class OutdoorLevel1 extends Level {
         { x1: 10, x2: 14, y1: 22, y2: 23 },
       ],
       density: {
-        Tree: 0.500,
-        Bush: 0.200,
-        Stone: 0.100
+        Tree: 0.5,
+        Bush: 0.2,
+        Stone: 0.1,
       },
-      border: 32
+      border: 32,
     });
 
     // Geladene Savegame-Daten
     const savedResources = SaveGame.loadResources(this.levelId);
 
     // Merging Logik
-    const mergedResources = defaultResources.map(def => {
-      const saved = savedResources.find(s => s.x === def.x && s.y === def.y && s.type === def.type);
+    const mergedResources = defaultResources.map((def) => {
+      const saved = savedResources.find(
+        (s) => s.x === def.x && s.y === def.y && s.type === def.type,
+      );
       return saved ? { ...def, ...saved } : def;
     });
 
@@ -428,9 +547,15 @@ export class OutdoorLevel1 extends Level {
     for (const res of mergedResources) {
       if (res.hp > 0) {
         switch (res.type) {
-          case BUSH: this.addChild(new Bush(res.x, res.y, res.hp)); break;
-          case TREE: this.addChild(new Tree(res.x, res.y, res.hp)); break;
-          case STONE: this.addChild(new Stone(res.x, res.y, res.hp)); break;
+          case BUSH:
+            this.addChild(new Bush(res.x, res.y, res.hp));
+            break;
+          case TREE:
+            this.addChild(new Tree(res.x, res.y, res.hp));
+            break;
+          case STONE:
+            this.addChild(new Stone(res.x, res.y, res.hp));
+            break;
         }
       }
     }
@@ -452,7 +577,6 @@ export class OutdoorLevel1 extends Level {
       height: 800,
       seed: 2, // bestimmter Seed = immer gleiche Karte
       pathZones: [
-
         // füge Gruppenbasierte freie flächen hinzu
         ...this.noResourceZones,
 
@@ -478,26 +602,24 @@ export class OutdoorLevel1 extends Level {
         { x1: 10, x2: 14, y1: 22, y2: 23 },
       ],
       density: {
-        animBushSmall: 0.020,
-        animBush: 0.010,
+        animBushSmall: 0.02,
+        animBush: 0.01,
       },
-      border: 32
+      border: 32,
     });
 
     // Deko anhand der Daten setzen
     for (const deko of dekos) {
-      this.addChild(new Deko(
-        new Vector2(deko.x, deko.y),
-        deko.type,
-        this.getRandomDelay(),
-      ));
+      this.addChild(
+        new Deko(new Vector2(deko.x, deko.y), deko.type, this.getRandomDelay()),
+      );
     }
   }
 
   /**
    * Erzeugt eine Zufallszahl zwischen 4 und 7 sekunden
-   * @param minSeconds 
-   * @param maxSeconds 
+   * @param minSeconds
+   * @param maxSeconds
    * @returns number in ms
    */
   getRandomDelay(minSeconds = 4, maxSeconds = 7) {
@@ -512,22 +634,35 @@ export class OutdoorLevel1 extends Level {
    * - legt Stellen die frei bleiben sollen fest
    */
   loadStartLake() {
-
     // nur obere Kante animieren
-    this.addChild(new Deko(new Vector2(gridCells(43), gridCells(19)), "animWaterLeft"));
-    
+    this.addChild(
+      new Deko(new Vector2(gridCells(43), gridCells(19)), "animWaterLeft"),
+    );
+
     for (let x = 44; x < 58; x++) {
-      this.addChild(new Deko(new Vector2(gridCells(x), gridCells(19)), "animWaterMiddle"));
+      this.addChild(
+        new Deko(new Vector2(gridCells(x), gridCells(19)), "animWaterMiddle"),
+      );
     }
 
-    this.addChild(new Deko(new Vector2(gridCells(58), gridCells(19)), "animWaterRight"));
+    this.addChild(
+      new Deko(new Vector2(gridCells(58), gridCells(19)), "animWaterRight"),
+    );
 
     // Kante Spielerinsel
-    this.addChild(new Deko(new Vector2(gridCells(48), gridCells(27)), "animWaterLeft"));
-    this.addChild(new Deko(new Vector2(gridCells(49), gridCells(27)), "animWaterMiddle"));
-    this.addChild(new Deko(new Vector2(gridCells(50), gridCells(27)), "animWaterMiddle"));
-    this.addChild(new Deko(new Vector2(gridCells(51), gridCells(27)), "animWaterRight"));
-    
+    this.addChild(
+      new Deko(new Vector2(gridCells(48), gridCells(27)), "animWaterLeft"),
+    );
+    this.addChild(
+      new Deko(new Vector2(gridCells(49), gridCells(27)), "animWaterMiddle"),
+    );
+    this.addChild(
+      new Deko(new Vector2(gridCells(50), gridCells(27)), "animWaterMiddle"),
+    );
+    this.addChild(
+      new Deko(new Vector2(gridCells(51), gridCells(27)), "animWaterRight"),
+    );
+
     // for (let x = 44; x < 58; x++) {
     //   this.addChild(new Deko(new Vector2(gridCells(x), gridCells(19)), "animWaterMiddle"));
     // }

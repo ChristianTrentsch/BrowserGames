@@ -15,6 +15,7 @@ export const HERO_CHANGE_EXP = "HERO_CHANGE_EXP";
 export const HERO_SHOW_MAP = "HERO_SHOW_MAP";
 
 export const CHANGE_LEVEL = "CHANGE_LEVEL";
+export const SHOW_HINT = "SHOW_HINT ";
 export const TEXTBOX_START = "TEXTBOX_START";
 export const TEXTBOX_END = "TEXTBOX_END";
 export const RES_DESTROY = "RES_DESTROY";
@@ -31,12 +32,13 @@ export const EVENT_ITEMS = [
   HERO_SHOW_MAP,
 
   CHANGE_LEVEL,
+  SHOW_HINT,
   TEXTBOX_START,
   TEXTBOX_END,
   RES_DESTROY,
 ] as const;
 
-export type EventUnion = typeof EVENT_ITEMS[number];
+export type EventUnion = (typeof EVENT_ITEMS)[number];
 
 export interface EventCallbackItem {
   id: number;
@@ -46,15 +48,15 @@ export interface EventCallbackItem {
 }
 
 export interface EventCollectible {
-  name: EquipmentUnion | InventoryUnion
-  position: Vector2
-  image: ResourceImageOptions
-  itemSound: HTMLAudioElement
+  name: EquipmentUnion | InventoryUnion;
+  position: Vector2;
+  image: ResourceImageOptions;
+  itemSound: HTMLAudioElement;
 }
 
 export interface EventGainXp {
-  exp: number,
-  level: number,
+  exp: number;
+  level: number;
   // heroPos: Vector2
 }
 
@@ -67,16 +69,28 @@ class Events {
   }
 
   // emit event
-  emit(eventName: EventUnion, caller?: GameObject | Vector2 | EventCollectible | EventGainXp) {
-    this.callbacks.forEach((stored: { eventName: EventUnion, callback: (...args: any[]) => void }) => {
-      if (stored.eventName === eventName) {
-        stored.callback(caller);
-      }
-    });
+  emit(
+    eventName: EventUnion,
+    caller?: GameObject | Vector2 | EventCollectible | EventGainXp | string,
+  ) {
+    this.callbacks.forEach(
+      (stored: {
+        eventName: EventUnion;
+        callback: (...args: any[]) => void;
+      }) => {
+        if (stored.eventName === eventName) {
+          stored.callback(caller);
+        }
+      },
+    );
   }
 
   // subscribe to something happening
-  on(eventName: EventUnion, caller: GameObject, callback: (...args: any[]) => void) {
+  on(
+    eventName: EventUnion,
+    caller: GameObject,
+    callback: (...args: any[]) => void,
+  ) {
     this.nextId += 1;
     this.callbacks.push({
       id: this.nextId,
@@ -94,7 +108,7 @@ class Events {
 
   unsubscribe(caller: GameObject) {
     this.callbacks = this.callbacks.filter(
-      (stored) => stored.caller !== caller
+      (stored) => stored.caller !== caller,
     );
   }
 }
