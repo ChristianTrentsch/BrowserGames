@@ -29,7 +29,7 @@ export class Square extends GameObject {
         this.drawLayer = "FLOOR";
     }
 
-    ready() { }
+    override ready() { }
 
     getContent() {
         // Maybe expand with story flag logic, etc.

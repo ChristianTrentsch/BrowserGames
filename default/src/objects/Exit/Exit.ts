@@ -19,7 +19,7 @@ export class Exit extends GameObject {
     this.drawLayer = "FLOOR";
   }
 
-  ready() {
+  override ready() {
     events.on(HERO_POSTION, this, (pos) => {
       // detect overlap...
       const roundedHeroX = Math.round(pos.x);

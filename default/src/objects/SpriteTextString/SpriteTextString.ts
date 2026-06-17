@@ -88,7 +88,7 @@ export class SpriteTextString extends GameObject {
     this.timeUntilNextShow = this.textSpeed;
   }
 
-  step(delta: number, root: Main) {
+  override step(delta: number, root: Main) {
     const input = root.input;
     if (input?.getActionJustPressed("Space")) {
       if (this.showingIndex < this.finalIndex) {
@@ -112,7 +112,7 @@ export class SpriteTextString extends GameObject {
     }
   }
 
-  drawImage(ctx: CanvasRenderingContext2D, drawPosX: number, drawPosY: number) {
+  override drawImage(ctx: CanvasRenderingContext2D, drawPosX: number, drawPosY: number) {
     // Draw backdrop first
     this.backdrop.drawImage(ctx, drawPosX, drawPosY);
 

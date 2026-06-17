@@ -5,6 +5,7 @@ import { Inventory } from "../Inventory/Inventory.js";
 import {
   events,
   CHANGE_LEVEL,
+  SHOW_HINT,
   HERO_REQUESTS_ACTION,
   TEXTBOX_START,
   TEXTBOX_END,
@@ -43,7 +44,7 @@ export class Main extends GameObject {
     this.savedResources = [];
   }
 
-  ready() {
+  override ready() {
     const inventory = new Inventory();
     this.addChild(inventory);
 
@@ -55,22 +56,32 @@ export class Main extends GameObject {
 
     // Change the level
     events.on(CHANGE_LEVEL, this, (newLevelInstance: Level) => {
-
       // neues Level speichern
       SaveGame.saveLevel(newLevelInstance.levelId);
 
       this.setLevel(newLevelInstance);
     });
 
+    // Zeigt eine Hinweis-Textbox an (z.B. wenn Quest-Bedingung nicht erfüllt)
+    events.on(SHOW_HINT, this, (text: string) => {
+      const textbox = new SpriteTextString(0, text);
+      this.addChild(textbox);
+      events.emit(TEXTBOX_START);
+
+      // Unsubscribe from this textbox after it's destroyed
+      const endingSub = events.on(TEXTBOX_END, this, () => {
+        textbox.destroy();
+        events.off(endingSub);
+      });
+    });
+
     // Check for hero action
     events.on(HERO_REQUESTS_ACTION, this, (withObject) => {
-
       // Wenn keine getContent function dann raus
       if (typeof withObject.getContent !== "function") return;
 
       // Prüfen ob Npc
       if (withObject instanceof Npc) {
-
         // aktuelle Scenario
         const scenarios = withObject.getContent();
 
@@ -97,11 +108,13 @@ export class Main extends GameObject {
             break;
 
           case "STORY_02_PART_01":
-            if (inventory.completeQuest([
-              { name: "tree", amount: 25 },
-              { name: "bush", amount: 20 },
-              { name: "stone", amount: 10 }
-            ])) {
+            if (
+              inventory.completeQuest([
+                { name: "tree", amount: 25 },
+                { name: "bush", amount: 20 },
+                { name: "stone", amount: 10 },
+              ])
+            ) {
               // Story-Flag setzen
               storyFlags.add(flag);
               // console.log(flag);
@@ -129,7 +142,10 @@ export class Main extends GameObject {
       }
 
       // Textbox erstellen und anzeigen
-      const textbox = new SpriteTextString(content.portraitFrame, content.string);
+      const textbox = new SpriteTextString(
+        content.portraitFrame,
+        content.string,
+      );
       this.addChild(textbox);
 
       events.emit(TEXTBOX_START);
@@ -139,11 +155,10 @@ export class Main extends GameObject {
         textbox.destroy();
         events.off(endingSub);
       });
-
     });
 
+    // Handle damage
     events.on(HERO_ATTACK_ACTION, this, (withObject: Tree | Stone | Bush) => {
-
       // HP reduzieren basierend auf Waffe
       withObject.healthPoints -= equipment.getActiveDamage();
 
@@ -156,15 +171,15 @@ export class Main extends GameObject {
         this.pushResource(withObject);
         SaveGame.saveResources(this.level.levelId, this.savedResources);
       }
-
     });
   }
 
   pushResource(withObject: Tree | Stone | Bush) {
     const existing = this.savedResources.find(
-      r => r.type === withObject.type &&
+      (r) =>
+        r.type === withObject.type &&
         r.x === withObject.position.x &&
-        r.y === withObject.position.y
+        r.y === withObject.position.y,
     );
 
     if (existing) {
@@ -176,7 +191,7 @@ export class Main extends GameObject {
         type: withObject.type,
         x: withObject.position.x,
         y: withObject.position.y,
-        hp: withObject.healthPoints
+        hp: withObject.healthPoints,
       });
     }
   }
@@ -204,7 +219,11 @@ export class Main extends GameObject {
   drawBackground(ctx: CanvasRenderingContext2D) {
     // ...
     if (this.level) {
-      this.level.background.drawImage(ctx, this.level.background.position.x, this.level.background.position.x);
+      this.level.background.drawImage(
+        ctx,
+        this.level.background.position.x,
+        this.level.background.position.x,
+      );
     }
   }
 

@@ -24,7 +24,7 @@ export class Exp extends GameObject {
         this.renderExp();
     }
 
-    ready() {
+    override ready() {
         events.on(HERO_CHANGE_EXP, this, (gainExp: EventGainXp) => {
             this.exp = gainExp.exp;
             this.level = gainExp.level;

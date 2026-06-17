@@ -35,9 +35,9 @@ export class Stone extends GameObject {
         this.addChild(this.stoneSprite);
     }
 
-    ready() { }
+    override ready() { }
 
-    step(delta: number) {
+    override step(delta: number) {
 
         // bei welchem Image starten wir abhängig vom Type
         let startFrame = getResourceFrame(this.type, this.design);
@@ -68,7 +68,7 @@ export class Stone extends GameObject {
         }
     }
 
-    destroy(killedByHero = false) {
+    override destroy(killedByHero = false) {
         if (killedByHero) {
             this.spawnItem();
         }

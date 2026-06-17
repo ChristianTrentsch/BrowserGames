@@ -51,7 +51,7 @@ export class Inventory extends GameObject {
     this.renderInventory();
   }
 
-  ready() {
+  override ready() {
     // Event Inventory add item
     events.on(HERO_PICKS_UP_ITEM, this, (data: { name: InventoryUnion }) => {
       const { name } = data;

@@ -42,7 +42,7 @@ export class Equipment extends GameObject {
         this.renderEquipment();
     }
 
-    ready() {
+    override ready() {
         //** --- Add Equipment --- */ 
         events.on(HERO_PICKS_UP_ITEM, this, (data: { name: EquipmentUnion }) => {
             const { name } = data;

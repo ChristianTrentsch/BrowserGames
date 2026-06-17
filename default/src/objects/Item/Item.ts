@@ -42,7 +42,7 @@ export class Item extends GameObject {
     );
   }
 
-  ready() {
+  override ready() {
     events.on(HERO_POSTION, this, (pos) => {
       // detect overlap...
       const roundedHeroX = Math.round(pos.x);

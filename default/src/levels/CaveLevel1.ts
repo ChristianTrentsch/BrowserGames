@@ -92,7 +92,7 @@ export class CaveLevel1 extends Level {
     this.walls = new Set(Object.values(wallDefinitions).flat());
   }
 
-  ready() {
+  override ready() {
     events.on(HERO_EXITS, this, () => {
 
       // Alten Level-Sound stoppen

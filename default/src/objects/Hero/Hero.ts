@@ -109,7 +109,7 @@ export class Hero extends GameObject {
     this.level = level;
   }
 
-  ready() {
+  override ready() {
     // Hero picks up item
     events.on(HERO_PICKS_UP_ITEM, this, (data: EventCollectible) => {
       this.onPickUpItem(data);
@@ -130,7 +130,7 @@ export class Hero extends GameObject {
     });
   }
 
-  step(delta: number, root: Main) {
+  override step(delta: number, root: Main) {
     // Implement Hero specific logic here
 
     // locked movement while in conversation with npc, etc.

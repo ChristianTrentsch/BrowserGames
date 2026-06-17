@@ -80,7 +80,7 @@ export class Deko extends GameObject {
     }));
   }
 
-  ready() { }
+  override ready() { }
 
   getContent() {
     if (this.contentType) {
