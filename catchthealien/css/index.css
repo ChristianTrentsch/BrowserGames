@@ -16,7 +16,10 @@ canvas {
     0 0 10px rgba(0, 243, 255, 0.7),
     0 0 20px rgba(0, 243, 255, 0.5);
   background-color: #111;
+
   touch-action: manipulation; /* verhindert Doppeltipp-Zoom */
+  max-width: 100%;
+  height: auto;
 }
 
 body {
