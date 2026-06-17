@@ -1,6 +1,6 @@
 {
   "name": "browsergames",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Statische Browsergames. Übersichtlich, modern und responsiv gestaltet mit HTML, CSS und JavaScript.",
   "main": "server.js",
   "type": "module",
@@ -23,11 +23,11 @@
   },
   "homepage": "https://github.com/ChristianTrentsch/BrowserGames#readme",
   "devDependencies": {
-    "@eslint/js": "^9.36.0",
-    "esbuild": "^0.25.10",
-    "eslint": "^9.36.0",
-    "globals": "^16.4.0",
-    "rimraf": "^6.0.1",
-    "typescript": "^5.9.2"
+    "@eslint/js": "10.0.1",
+    "esbuild": "0.28.0",
+    "eslint": "10.4.1",
+    "globals": "17.6.0",
+    "rimraf": "6.1.3",
+    "typescript": "6.0.3"
   }
 }
