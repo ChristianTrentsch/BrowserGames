@@ -10,7 +10,7 @@ import { OutdoorLevel1 } from "./OutdoorLevel1.js";
 import { Npc } from "../objects/Npc/Npc.js";
 import { BUSH, Item, STONE, TREE } from "../objects/Item/Item.js";
 import { SaveGame } from "../SaveGame.js";
-import { LevelId, levelRegistry } from "../helpers/levelRegistry.js";
+import { LevelId } from "../helpers/levelRegistry.js";
 import { GameObject } from "../GameObject.js";
 import { generateDefaultResources } from "../helpers/generateResources.js";
 import { Tree } from "./parts/Tree/Tree.js";

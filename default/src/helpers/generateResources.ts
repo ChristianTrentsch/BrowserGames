@@ -1,6 +1,5 @@
 import { gridCells } from "../helpers/grid.js";
 import { LevelId } from "../helpers/levelRegistry.js";
-import { InventoryUnion } from "../objects/Inventory/Inventory.js";
 import { ResourceSaveData } from "../SaveGame.js";
 
 interface DekoOptions {

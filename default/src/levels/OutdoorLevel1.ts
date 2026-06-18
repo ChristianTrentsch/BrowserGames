@@ -12,7 +12,6 @@ import {
   CHANGE_LEVEL,
   SHOW_HINT,
 } from "../Events.js";
-import { SpriteTextString } from "../objects/SpriteTextString/SpriteTextString.js";
 import { CaveLevel1 } from "./CaveLevel1.js";
 import { SaveGame } from "../SaveGame.js";
 import { LevelId } from "../helpers/levelRegistry.js";

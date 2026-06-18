@@ -1,6 +1,5 @@
 import { CHANGE_LEVEL, events, HERO_SHOW_MAP } from "../../Events.js";
 import { GameObject } from "../../GameObject.js";
-import { gridCells } from "../../helpers/grid.js";
 import { LevelId } from "../../helpers/levelRegistry.js";
 import { resources } from "../../Resource.js";
 import { SaveGame } from "../../SaveGame.js";
@@ -25,7 +24,7 @@ export class LevelMap extends GameObject {
         this.levelId = SaveGame.loadLevel();
     }
 
-    ready(): void {
+    override ready(): void {
 
         events.on(CHANGE_LEVEL, this, (newLevelInstance: Level) => {
             // Toggle-Zustand zurücksetzen
@@ -46,7 +45,7 @@ export class LevelMap extends GameObject {
         })
     }
 
-    step(delta: number, root: Main): void {
+    override step(delta: number, root: Main): void {
         // Wenn Karte sichtbar ist, Marker-Position aktualisieren
         if (this.isVisible && this.heroMarker) {
             if (root.level) {
