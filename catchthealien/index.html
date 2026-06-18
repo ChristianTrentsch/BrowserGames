@@ -91,6 +91,16 @@
 
       const warningSound = new Audio("./sounds/countdown.mp3");
       warningSound.volume = 0.5;
+
+      // Warnung bei exakt diesem Zeitwert starten (Sekunden)
+      // Wird nach dem Laden des Sounds automatisch gesetzt
+      let warnAtTime = 3.552; // Fallback falls Sound nicht lädt
+
+      warningSound.addEventListener("loadedmetadata", () => {
+        // warten bis sound geladen , dann dauer ermitteln
+        warnAtTime = warningSound.duration;
+      });
+
       let warningPlayed = false;
 
       // Spielzustand
@@ -99,6 +109,9 @@
       let timeLeft = 20;
       let gameRunning = false;
       let clicked = false;
+
+      // Zeitstempel für deltaTime-basierte Bewegung
+      let lastTimestamp = null;
 
       // Alien-Bild
       const img = new Image();
@@ -127,18 +140,20 @@
         }
       }
 
-      function updatePosition() {
-        x += dx;
-        y += dy;
+      // deltaTime in Sekunden → Bewegung ist unabhängig von der Framerate
+      function updatePosition(delta) {
+        const move = delta * 60; // normiert auf 60fps-Basis
+        x += dx * move;
+        y += dy * move;
         if (x < 20 || x > canvas.width - 20) dx = -dx;
         if (y < 20 || y > canvas.height - 20) dy = -dy;
       }
 
-      function updateTimer() {
-        timeLeft -= 0.016;
+      function updateTimer(delta) {
+        timeLeft -= delta;
         timer_display.textContent = Math.max(timeLeft, 0).toFixed(1);
 
-        if (!warningPlayed && timeLeft <= warningSound.duration + 4) {
+        if (!warningPlayed && timeLeft <= warnAtTime) {
           warningSound.play();
           warningPlayed = true;
         }
@@ -148,6 +163,7 @@
 
       function gameOver() {
         gameRunning = false;
+        lastTimestamp = null;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         let name = prompt(`Game Over! Punkte: ${score}\nGib deinen Namen ein (3 Buchstaben):`) || "???";
         name = name.substring(0, 3).toUpperCase();
@@ -172,9 +188,7 @@
         });
       }
 
-      // ── Koordinaten korrekt auf interne Canvas-Auflösung umrechnen ──
-      // Der Canvas wird per CSS skaliert (max-width: 100%), daher muss
-      // die visuelle Größe gegen die interne Auflösung (400x400) gerechnet werden.
+      // Koordinaten auf interne Canvas-Auflösung umrechnen (CSS-Skalierung ausgleichen)
       function getCanvasCoords(clientX, clientY) {
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width;
@@ -185,7 +199,7 @@
         };
       }
 
-      // ── Hit-Logik zentral ──
+      // Hit-Logik zentral
       function handleHit(clientX, clientY) {
         if (!gameRunning) return;
         const { x: cx, y: cy } = getCanvasCoords(clientX, clientY);
@@ -206,10 +220,15 @@
         }
       }
 
-      // Touch (passive: false damit preventDefault() greift)
+      // touchstart → Treffer prüfen
       canvas.addEventListener("touchstart", (e) => {
         e.preventDefault();
         handleHit(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: false });
+
+      // touchmove → nur blocken, keine Aktion
+      canvas.addEventListener("touchmove", (e) => {
+        e.preventDefault();
       }, { passive: false });
 
       // Maus
@@ -230,15 +249,23 @@
         resetTimer();
         resetSound();
         resetSpeed();
+        lastTimestamp = null;
         gameRunning = true;
-        gameLoop();
+        requestAnimationFrame(gameLoop);
       });
 
-      function gameLoop() {
+      function gameLoop(timestamp) {
         if (!gameRunning) return;
+
+        // Delta berechnen: Zeit seit letztem Frame in Sekunden
+        if (lastTimestamp === null) lastTimestamp = timestamp;
+        const delta = Math.min((timestamp - lastTimestamp) / 1000, 0.05);
+        // max 50ms gecappt → bei Tab-Wechsel kein riesiger Sprung
+        lastTimestamp = timestamp;
+
         drawAlien();
-        updatePosition();
-        updateTimer();
+        updatePosition(delta);
+        updateTimer(delta);
         requestAnimationFrame(gameLoop);
       }
 
