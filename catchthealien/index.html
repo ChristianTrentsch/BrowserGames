@@ -17,21 +17,15 @@
 
   <body class="bg-dark text-light">
     <div class="container py-5 text-center">
+
       <!-- Titel -->
       <h1 class="display-4 fw-bold text-neon mb-3 d-flex align-items-center justify-content-center flex-wrap gap-2">
-        <img
-          src="./images/space_alien.png"
-          alt="Alien"
-          style="height: 70px; vertical-align: middle; margin-right: 10px"
-        />
+        <img src="./images/space_alien.png" alt="Alien" style="height: 70px" />
         Fang das Alien!
       </h1>
 
       <!-- Beschreibung -->
-      <div
-        class="mb-4 p-3 bg-gradient text-light rounded-3 shadow-lg mx-auto"
-        style="max-width: 600px"
-      >
+      <div class="mb-4 p-3 bg-gradient text-light rounded-3 shadow-lg mx-auto" style="max-width: 600px">
         <p>
           Treffe das Alien, bevor die Zeit von 20 Sekunden abläuft.<br />
           Jeder Treffer macht es schneller, setzt den Timer zurück und spielt
@@ -51,12 +45,8 @@
 
       <!-- Start- und Reset-Buttons -->
       <div class="mb-4">
-        <button id="startButton" class="btn btn-info btn-lg">
-          Neues Spiel
-        </button>
-        <button hidden id="resetButton" class="btn btn-danger btn-lg">
-          Reset Highscore
-        </button>
+        <button id="startButton" class="btn btn-info btn-lg">Neues Spiel</button>
+        <button hidden id="resetButton" class="btn btn-danger btn-lg">Reset Highscore</button>
       </div>
 
       <!-- Startseite -->
@@ -67,25 +57,14 @@
       </div>
 
       <!-- Spielbereich -->
-      <div
-        class="card bg-secondary shadow-lg rounded-4 p-3 mx-auto"
-        style="max-width: 450px"
-      >
-        <canvas
-          id="game"
-          width="400"
-          height="400"
-          class="mx-auto d-block"
-        ></canvas>
+      <div class="card bg-secondary shadow-lg rounded-4 p-3 mx-auto" style="max-width: 450px">
+        <canvas id="game" width="400" height="400" class="mx-auto d-block"></canvas>
       </div>
 
       <!-- Highscore -->
       <div class="mt-4">
         <h3>Highscore</h3>
-        <table
-          class="table table-dark table-striped w-50 mx-auto"
-          id="highscoreTable"
-        >
+        <table class="table table-dark table-striped w-50 mx-auto" id="highscoreTable">
           <thead>
             <tr>
               <th>Platz</th>
@@ -106,58 +85,41 @@
 
       // Soundeffekte
       const hitSound = new Audio("./sounds/hit.mp3");
-      hitSound.volume = 0.5; // Lautstärke anpassen
+      hitSound.volume = 0.5;
       hitSound.preload = "auto";
       hitSound.load();
 
       const warningSound = new Audio("./sounds/countdown.mp3");
-      warningSound.volume = 0.5; // Lautstärke anpassen
+      warningSound.volume = 0.5;
       let warningPlayed = false;
 
-      // Initiale Position des Aliens und Score
-      let x = 100,
-        y = 100,
-        score = 0;
-
-      // Startgeschwindigkeit
-      let dx = 1.5,
-        dy = 1.5;
-
-      // Sekunden bis Game Over ohne Klick
+      // Spielzustand
+      let x = 100, y = 100, score = 0;
+      let dx = 1.5, dy = 1.5;
       let timeLeft = 20;
       let gameRunning = false;
       let clicked = false;
 
-      // Alien-Bild laden
+      // Alien-Bild
       const img = new Image();
       img.src = "./images/space_alien.png";
 
-      // Reset der Zeit auf 20 Sekunden
-      function resetTimer() {
-        timeLeft = 20;
-      }
+      function resetTimer() { timeLeft = 20; }
 
-      // Damit der Sound beim nächsten Run wieder spielt
       function resetSound() {
         warningPlayed = false;
         warningSound.pause();
         warningSound.currentTime = 0;
-
         hitSound.pause();
         hitSound.currentTime = 0;
       }
 
-      // Reset der Geschwindigkeit auf die Startwerte
-      function resetSpeed() {
-        dx = 1.5;
-        dy = 1.5;
-      }
+      function resetSpeed() { dx = 1.5; dy = 1.5; }
 
       function drawAlien() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         if (img.complete) {
           if (clicked) {
-            // Alien größer zeichnen, z.B. 50x50 statt 40x40
             ctx.drawImage(img, x - 35, y - 35, 70, 70);
           } else {
             ctx.drawImage(img, x - 20, y - 20, 40, 40);
@@ -168,13 +130,12 @@
       function updatePosition() {
         x += dx;
         y += dy;
-
         if (x < 20 || x > canvas.width - 20) dx = -dx;
         if (y < 20 || y > canvas.height - 20) dy = -dy;
       }
 
       function updateTimer() {
-        timeLeft -= 0.016; // bei ~60fps ca. 1 Sekunde pro 60 Frames
+        timeLeft -= 0.016;
         timer_display.textContent = Math.max(timeLeft, 0).toFixed(1);
 
         if (!warningPlayed && timeLeft <= warningSound.duration + 4) {
@@ -182,18 +143,13 @@
           warningPlayed = true;
         }
 
-        if (timeLeft <= 0) {
-          gameOver();
-        }
+        if (timeLeft <= 0) gameOver();
       }
 
       function gameOver() {
         gameRunning = false;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        let name =
-          prompt(
-            `Game Over! Punkte: ${score}\nGib deinen Namen ein, du hast 3 Buchstaben ein:`,
-          ) || "???";
+        let name = prompt(`Game Over! Punkte: ${score}\nGib deinen Namen ein (3 Buchstaben):`) || "???";
         name = name.substring(0, 3).toUpperCase();
         saveHighscore(name, score);
         loadHighscores();
@@ -203,7 +159,7 @@
         let scores = JSON.parse(localStorage.getItem("alienHighscores")) || [];
         scores.push({ name, points });
         scores.sort((a, b) => b.points - a.points);
-        scores = scores.slice(0, 10); // nur Top 10 behalten
+        scores = scores.slice(0, 10);
         localStorage.setItem("alienHighscores", JSON.stringify(scores));
       }
 
@@ -216,75 +172,53 @@
         });
       }
 
-      canvas.addEventListener(
-        "touchstart",
-        (e) => {
-          e.preventDefault(); // verhindert Scrollen & Zoom
-          const touch = e.touches[0];
-          const rect = canvas.getBoundingClientRect();
-          const clickX = touch.clientX - rect.left;
-          const clickY = touch.clientY - rect.top;
-
-          if (Math.hypot(clickX - x, clickY - y) < 35 && gameRunning) {
-            score++;
-            score_display.textContent = score;
-
-            resetTimer();
-            resetSound();
-
-            // Sound abspielen
-            hitSound.play();
-
-            // Geschwindigkeit leicht erhöhen und position verändern
-            const speed = Math.sqrt(dx * dx + dy * dy) * 1.05;
-            const angle = Math.random() * 2 * Math.PI;
-            dx = speed * Math.cos(angle);
-            dy = speed * Math.sin(angle);
-
-            // Optisches Feedback starten
-            clicked = true;
-            setTimeout(() => {
-              clicked = false;
-            }, 200);
-          }
-        },
-        { passive: false },
-      ); // passive: false erlaubt preventDefault()
-
-      canvas.addEventListener("click", (e) => {
+      // ── Koordinaten korrekt auf interne Canvas-Auflösung umrechnen ──
+      // Der Canvas wird per CSS skaliert (max-width: 100%), daher muss
+      // die visuelle Größe gegen die interne Auflösung (400x400) gerechnet werden.
+      function getCanvasCoords(clientX, clientY) {
         const rect = canvas.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const clickY = e.clientY - rect.top;
-        if (Math.hypot(clickX - x, clickY - y) < 35 && gameRunning) {
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        return {
+          x: (clientX - rect.left) * scaleX,
+          y: (clientY - rect.top) * scaleY,
+        };
+      }
+
+      // ── Hit-Logik zentral ──
+      function handleHit(clientX, clientY) {
+        if (!gameRunning) return;
+        const { x: cx, y: cy } = getCanvasCoords(clientX, clientY);
+        if (Math.hypot(cx - x, cy - y) < 35) {
           score++;
           score_display.textContent = score;
-
           resetTimer();
           resetSound();
-
-          // Sound abspielen
           hitSound.play();
 
-          // Geschwindigkeit leicht erhöhen und position verändern
           const speed = Math.sqrt(dx * dx + dy * dy) * 1.05;
           const angle = Math.random() * 2 * Math.PI;
           dx = speed * Math.cos(angle);
           dy = speed * Math.sin(angle);
 
-          // Optisches Feedback starten
           clicked = true;
-          setTimeout(() => {
-            clicked = false;
-          }, 200);
+          setTimeout(() => { clicked = false; }, 200);
         }
+      }
+
+      // Touch (passive: false damit preventDefault() greift)
+      canvas.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        handleHit(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: false });
+
+      // Maus
+      canvas.addEventListener("click", (e) => {
+        handleHit(e.clientX, e.clientY);
       });
 
       document.getElementById("resetButton").addEventListener("click", () => {
-        if (
-          confirm(
-            "Bist du sicher, dass du den Highscore zurücksetzen möchtest?",
-          )
-        ) {
+        if (confirm("Bist du sicher, dass du den Highscore zurücksetzen möchtest?")) {
           localStorage.removeItem("alienHighscores");
           loadHighscores();
         }
@@ -293,11 +227,9 @@
       document.getElementById("startButton").addEventListener("click", () => {
         score = 0;
         score_display.textContent = score;
-
         resetTimer();
         resetSound();
         resetSpeed();
-
         gameRunning = true;
         gameLoop();
       });

@@ -21,7 +21,7 @@ canvas {
     0 0 20px rgba(0, 243, 255, 0.5);
   background-color: #111;
 
-  touch-action: manipulation; /* verhindert Doppeltipp-Zoom */
+  touch-action: none; /* verhindert Scrollen & Zoom auf dem Canvas */
   max-width: 100%;
   height: auto;
 }
