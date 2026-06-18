@@ -13,6 +13,8 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./css/index.css" />
+
+    <script src="./js/config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
 
@@ -113,9 +115,9 @@
     </div>
 
     <script>
-      // DB Api
-      const SUPABASE_URL = "https://gcjwjjfajvmraxjokhoh.supabase.co";
-      const SUPABASE_KEY = "sb_publishable_-VOW-uAt6oJOmTBb_6z4Fg_ThcQxkl0";
+
+      // DB Api: https://supabase.com/
+      // Die Variablen SUPABASE_URL und SUPABASE_KEY werden in der config.js definiert.
       const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
       const score_display = document.getElementById("score");
