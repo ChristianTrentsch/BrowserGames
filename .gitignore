@@ -6,9 +6,7 @@ eslint.config.mjs
 .vscode
 
 # Games
-catchthealien/js/config.js
 catchthealien.zip
-
 default.zip
 
 # Build output
