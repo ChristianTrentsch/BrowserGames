@@ -38,7 +38,7 @@ let birdVelocity = 0;
 let rotation = 0;
 let obstacles = [];
 let score = 0;
-let highscore = Number(localStorage.getItem(HIGHSCORE_KEY)) || 0;
+let highscore = 0;
 let speed = BASE_SPEED;
 let gameOverTime = 0;
 let lastTimestamp = 0;
@@ -52,6 +52,24 @@ const stars = Array.from({ length: 28 }, () => ({
 }));
 
 highscoreEl.textContent = highscore;
+
+async function setHighestScore(){
+  const { data, error } = await supabaseClient
+    .from("highscores")
+    .select("name, points")
+    .eq("game", "canyonflight")
+    .order("points", { ascending: false })
+    .limit(1);
+
+  if (error) {
+    console.error("Fehler beim Laden:", error.message);
+    highscoreEl.textContent =
+      'error loading';
+    return;
+  }
+
+  highscoreEl.textContent = data[0].points;
+}
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -461,3 +479,4 @@ spawnObstacle(W + 100);
 draw();
 requestAnimationFrame(loop);
 loadHighscores();
+setHighestScore();
