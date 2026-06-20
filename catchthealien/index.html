@@ -2,10 +2,16 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Fang das Alien!</title>
     <link rel="icon" href="./images/space_alien.png" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./css/index.css" />
 
     <script src="./js/config.js"></script>
@@ -15,7 +21,9 @@
   <body class="bg-dark text-light">
     <div class="container py-5 text-center">
       <!-- Titel -->
-      <h1 class="display-4 fw-bold text-neon mb-3 d-flex align-items-center justify-content-center flex-wrap gap-2">
+      <h1
+        class="display-4 fw-bold text-neon mb-3 d-flex align-items-center justify-content-center flex-wrap gap-2"
+      >
         <img src="./images/space_alien.png" alt="Alien" style="height: 70px" />
         Fang das Alien!
       </h1>
@@ -44,23 +52,38 @@
 
       <!-- Start-Button -->
       <div class="mb-4">
-        <button id="startButton" class="btn btn-info btn-lg">Neues Spiel</button>
+        <button id="startButton" class="btn btn-info btn-lg">
+          Neues Spiel
+        </button>
       </div>
 
       <!-- Startseite -->
       <div class="mb-4">
-        <a href="../index.html" class="btn btn-outline-info btn-lg">🎮 Zurück zur Startseite</a>
+        <a href="../index.html" class="btn btn-outline-info btn-lg"
+          >🎮 Zurück zur Startseite</a
+        >
       </div>
 
       <!-- Spielbereich -->
-      <div class="card bg-secondary shadow-lg rounded-4 p-3 mx-auto" style="max-width: 450px">
-        <canvas id="game" width="400" height="400" class="mx-auto d-block"></canvas>
+      <div
+        class="card bg-secondary shadow-lg rounded-4 p-3 mx-auto"
+        style="max-width: 450px"
+      >
+        <canvas
+          id="game"
+          width="400"
+          height="400"
+          class="mx-auto d-block"
+        ></canvas>
       </div>
 
       <!-- Highscore -->
       <div class="mt-4">
         <h3>Highscore (Top 10)</h3>
-        <table class="table table-dark table-striped w-50 mx-auto" id="highscoreTable">
+        <table
+          class="table table-dark table-striped w-50 mx-auto"
+          id="highscoreTable"
+        >
           <thead>
             <tr>
               <th>Platz</th>
@@ -74,24 +97,133 @@
     </div>
 
     <!-- Game Over Modal -->
-    <div id="gameOverModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000; align-items:center; justify-content:center;">
-      <div style="background:#1a1a1a; border:2px solid #00f3ff; border-radius:16px; padding:2rem; width:min(320px, 90vw); text-align:center; box-shadow:0 0 30px rgba(0,243,255,0.2);">
-        <img src="./images/space_alien.png" alt="Alien" style="height:70px; width:auto; margin-bottom:0.5rem;" />
-        <h2 style="color:#00f3ff; font-size:1.4rem; font-weight:600; margin:0 0 0.25rem; text-shadow:0 0 8px #00f3ff;">Game Over</h2>
-        <p style="color:#aaa; font-size:0.9rem; margin:0 0 1.25rem;">Punkte: <span id="modalScore" style="color:#fff; font-weight:600;"></span></p>
-        <div style="margin-bottom:1rem; text-align:left;">
-          <label style="display:block; font-size:0.75rem; color:#888; margin-bottom:6px;">Name (A–Z, 0–9, max. 6 Zeichen)</label>
-          <input id="nameInput" type="text" maxlength="6" placeholder="RangeR" autocomplete="off"
-            style="width:100%; box-sizing:border-box; background:#111; border:1px solid rgba(0,243,255,0.35); border-radius:8px; color:#fff; font-size:1.4rem; text-align:center; letter-spacing:6px; padding:10px; outline:none; font-family:monospace;" />
-          <p id="nameError" style="color:#ff4c4c; font-size:0.75rem; margin:6px 0 0; display:none;">Bitte mindestens einen Buchstaben eingeben.</p>
+    <div
+      id="gameOverModal"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div
+        style="
+          background: #1a1a1a;
+          border: 2px solid #00f3ff;
+          border-radius: 16px;
+          padding: 2rem;
+          width: min(320px, 90vw);
+          text-align: center;
+          box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+        "
+      >
+        <img
+          src="./images/space_alien.png"
+          alt="Alien"
+          style="height: 70px; width: auto; margin-bottom: 0.5rem"
+        />
+        <h2
+          style="
+            color: #00f3ff;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 0 0 0.25rem;
+            text-shadow: 0 0 8px #00f3ff;
+          "
+        >
+          Game Over
+        </h2>
+        <p style="color: #aaa; font-size: 0.9rem; margin: 0 0 1.25rem">
+          Punkte:
+          <span id="modalScore" style="color: #fff; font-weight: 600"></span>
+        </p>
+        <div style="margin-bottom: 1rem; text-align: left">
+          <label
+            style="
+              display: block;
+              font-size: 0.75rem;
+              color: #888;
+              margin-bottom: 6px;
+            "
+            >Name (A–Z, 0–9, max. 6 Zeichen)</label
+          >
+          <input
+            id="nameInput"
+            type="text"
+            maxlength="6"
+            placeholder="RangeR"
+            autocomplete="off"
+            style="
+              width: 100%;
+              box-sizing: border-box;
+              background: #111;
+              border: 1px solid rgba(0, 243, 255, 0.35);
+              border-radius: 8px;
+              color: #fff;
+              font-size: 1.4rem;
+              text-align: center;
+              letter-spacing: 6px;
+              padding: 10px;
+              outline: none;
+              font-family: monospace;
+            "
+          />
+          <p
+            id="nameError"
+            style="
+              color: #ff4c4c;
+              font-size: 0.75rem;
+              margin: 6px 0 0;
+              display: none;
+            "
+          >
+            Bitte mindestens einen Buchstaben eingeben.
+          </p>
         </div>
-        <button id="modalSaveBtn" style="width:100%; background:#00f3ff; color:#111; border:none; border-radius:8px; padding:10px; font-size:1rem; font-weight:600; cursor:pointer;">Speichern</button>
-        <p style="font-size:0.7rem; color:#555; margin:0.75rem 0 0;">Sonderzeichen werden automatisch entfernt</p>
+        <button
+          id="catchthealien_modalSaveBtn"
+          class="mb-3"
+          style="
+            width: 100%;
+            background: #00f3ff;
+            color: #111;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+          "
+        >
+          Highscore speichern
+        </button>
+        <!-- Schließen -->
+        <button
+          id="catchthealien_modalCloseBtn"
+          class="m"
+          style="
+            width: 100%;
+            background: #333;
+            color: #ccc;
+            border: 1px solid #555;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+          "
+        >
+          Schließen
+        </button>
+        <p style="font-size: 0.7rem; color: #555; margin: 0.75rem 0 0">
+          Sonderzeichen werden automatisch entfernt
+        </p>
       </div>
     </div>
 
     <script>
-
       // DB Api: https://supabase.com/
       // Die Variablen SUPABASE_URL und SUPABASE_KEY werden in der config.js definiert.
       const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -122,8 +254,11 @@
       let warningPlayed = false;
 
       // Spielzustand
-      let x = 100, y = 100, score = 0;
-      let dx = 1.5, dy = 1.5;
+      let x = 100,
+        y = 100,
+        score = 0;
+      let dx = 1.5,
+        dy = 1.5;
       let timeLeft = 20;
       let gameRunning = false;
       let clicked = false;
@@ -208,13 +343,35 @@
 
       const BLOCKLIST = [
         // Deutsch
-        "FICKEN", "FICKT",  "SCHEIS", "FOTZE",  "HURENS",
-        "WICHSE", "WICHST", "ARSCHL", "KACKE",  "PENNIS",
-        "VAGINA", "NUTTEN", "HUREN",  "SCHLAMM",
+        "FICKEN",
+        "FICKT",
+        "SCHEIS",
+        "FOTZE",
+        "HURENS",
+        "WICHSE",
+        "WICHST",
+        "ARSCHL",
+        "KACKE",
+        "PENNIS",
+        "VAGINA",
+        "NUTTEN",
+        "HUREN",
+        "SCHLAMM",
         // Englisch
-        "FUCKYО", "FUCKOF", "FUCKER", "BITCH",  "ASSHO",
-        "PUSSY",  "CUNT",   "NIGGER", "FAGGOT", "RETARD",
-        "WHORE",  "SLUT",   "BASTRD", "DICKHE",
+        "FUCKYО",
+        "FUCKOF",
+        "FUCKER",
+        "BITCH",
+        "ASSHO",
+        "PUSSY",
+        "CUNT",
+        "NIGGER",
+        "FAGGOT",
+        "RETARD",
+        "WHORE",
+        "SLUT",
+        "BASTRD",
+        "DICKHE",
       ];
 
       function containsBlockedWord(name) {
@@ -237,22 +394,23 @@
           input.value = sanitizeName(input.value);
         });
 
-        document.getElementById("modalSaveBtn").onclick = async () => {
-          let name = sanitizeName(input.value) || "";
+        document.getElementById("catchthealien_modalSaveBtn").onclick =
+          async () => {
+            let name = sanitizeName(input.value) || "";
 
-          if (!name) {
-            errorMsg.style.display = "block";
-            return;
-          }
+            if (!name) {
+              errorMsg.style.display = "block";
+              return;
+            }
 
-          if (containsBlockedWord(name)) {
-            name = "???";
-          }
+            if (containsBlockedWord(name)) {
+              name = "???";
+            }
 
-          modal.style.display = "none";
-          await saveHighscore(name, punkte);
-          await loadHighscores();
-        };
+            modal.style.display = "none";
+            await saveHighscore(name, punkte);
+            await loadHighscores();
+          };
       }
 
       async function gameOver() {
@@ -381,6 +539,14 @@
         updateTimer(delta);
         requestAnimationFrame(gameLoop);
       }
+
+      const modal = document.getElementById("gameOverModal");
+
+      document
+        .getElementById("catchthealien_modalCloseBtn")
+        .addEventListener("click", () => {
+          modal.style.display = "none";
+        });
 
       loadHighscores();
     </script>

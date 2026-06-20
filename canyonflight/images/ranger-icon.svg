@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+
+  <!-- Badge-Hintergrund -->
+  <circle cx="100" cy="100" r="96" fill="#1c1c1c" stroke="#ff2e2e" stroke-width="6"/>
+
+  <!-- Flügel (hinter der Figur) -->
+  <g fill="#f5f1e8" stroke="#d8cdb0" stroke-width="2" stroke-linejoin="round">
+    <path d="M76,122 C50,104 32,82 42,58 C60,72 72,94 80,120 Z"/>
+    <path d="M124,122 C150,104 168,82 158,58 C140,72 128,94 120,120 Z"/>
+  </g>
+  <g fill="none" stroke="#d8cdb0" stroke-width="1.5" stroke-linecap="round">
+    <path d="M68,108 Q54,92 50,72"/>
+    <path d="M62,96 Q50,84 48,68"/>
+    <path d="M132,108 Q146,92 150,72"/>
+    <path d="M138,96 Q150,84 152,68"/>
+  </g>
+
+  <!-- Kleiner Rucksack -->
+  <rect x="86" y="118" width="28" height="26" rx="8" fill="#8a5a3c"/>
+
+  <!-- Körper / Ranger-Shirt -->
+  <path d="M72,150 C72,128 84,116 100,116 C116,116 128,128 128,150 L128,166 C128,172 122,176 116,176 L84,176 C78,176 72,172 72,166 Z" fill="#6b8e4e"/>
+
+  <!-- Halstuch -->
+  <path d="M88,116 L112,116 L100,134 Z" fill="#ff2e2e"/>
+
+  <!-- Abzeichen am Hemd -->
+  <circle cx="100" cy="148" r="7" fill="#ffd34d" stroke="#caa12b" stroke-width="1.5"/>
+
+  <!-- Kopf -->
+  <circle cx="100" cy="92" r="36" fill="#f4c89a"/>
+
+  <!-- Ohren -->
+  <circle cx="65" cy="94" r="7" fill="#f4c89a"/>
+  <circle cx="135" cy="94" r="7" fill="#f4c89a"/>
+
+  <!-- Hut: Krempe -->
+  <ellipse cx="100" cy="76" rx="50" ry="11" fill="#b08d57"/>
+  <!-- Hut: Kuppel -->
+  <path d="M70,76 C70,54 86,42 100,42 C114,42 130,54 130,76 C130,80 70,80 70,76 Z" fill="#a07b45"/>
+  <!-- Hutband -->
+  <rect x="71" y="69" width="58" height="7" fill="#ff2e2e"/>
+
+  <!-- Wangen -->
+  <circle cx="72" cy="104" r="7" fill="#ff9a9a" opacity="0.55"/>
+  <circle cx="128" cy="104" r="7" fill="#ff9a9a" opacity="0.55"/>
+
+  <!-- Augen -->
+  <ellipse cx="82" cy="92" rx="9" ry="11" fill="#ffffff"/>
+  <ellipse cx="118" cy="92" rx="9" ry="11" fill="#ffffff"/>
+  <circle cx="84" cy="96" r="5" fill="#1c1c1c"/>
+  <circle cx="116" cy="96" r="5" fill="#1c1c1c"/>
+  <circle cx="86" cy="93" r="1.6" fill="#ffffff"/>
+  <circle cx="118" cy="93" r="1.6" fill="#ffffff"/>
+
+  <!-- Lächeln -->
+  <path d="M90,110 Q100,118 110,110" fill="none" stroke="#7a4a2a" stroke-width="3" stroke-linecap="round"/>
+
+</svg>

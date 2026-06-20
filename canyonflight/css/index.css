@@ -1,0 +1,93 @@
+/* ===== Canyon Flight – spielspezifische Styles ===== */
+
+/* Neon-Titel */
+.text-neon {
+  color: #ff5a36;
+  text-shadow:
+    0 0 4px #ff5a36,
+    0 0 8px #ff5a36,
+    0 0 16px #ff3c00,
+    0 0 32px #ff2600,
+    0 0 48px #ff2600;
+}
+
+h1.text-neon {
+  font-size: clamp(1.4rem, 5vw, 2.5rem);
+}
+
+.back-btn {
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #aaa;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.game-wrapper {
+  position: relative;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+#gameCanvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #0f0f1a;
+  border: 2px solid #333;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  touch-action: none; /* verhindert Scrollen/Zoomen beim Tippen aufs Canvas */
+  user-select: none;
+}
+
+.hud {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.hud-sep {
+  color: #555;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.78);
+  border-radius: 12px;
+}
+
+.overlay h2 {
+  color: #fff;
+  margin: 0 0 0.5rem;
+}
+
+.overlay p {
+  color: #ccc;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+  max-width: 280px;
+}
+
+.hint {
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+.hint i {
+  color: #ff2e2e;
+}
