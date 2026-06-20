@@ -163,13 +163,28 @@
         }
       }
 
-      // deltaTime in Sekunden → Bewegung ist unabhängig von der Framerate
       function updatePosition(delta) {
         const move = delta * 60; // normiert auf 60fps-Basis
         x += dx * move;
         y += dy * move;
-        if (x < 20 || x > canvas.width - 20) dx = -dx;
-        if (y < 20 || y > canvas.height - 20) dy = -dy;
+
+        const margin = 20;
+
+        if (x < margin) {
+          x = margin;
+          dx = Math.abs(dx);
+        } else if (x > canvas.width - margin) {
+          x = canvas.width - margin;
+          dx = -Math.abs(dx);
+        }
+
+        if (y < margin) {
+          y = margin;
+          dy = Math.abs(dy);
+        } else if (y > canvas.height - margin) {
+          y = canvas.height - margin;
+          dy = -Math.abs(dy);
+        }
       }
 
       function updateTimer(delta) {
@@ -302,7 +317,10 @@
           resetSound();
           hitSound.play();
 
-          const speed = Math.sqrt(dx * dx + dy * dy) * 1.05;
+          const MAX_SPEED = 50; // Deckelung, verhindert Tunneling durch den Rand
+          let speed = Math.sqrt(dx * dx + dy * dy) * 1.05;
+          speed = Math.min(speed, MAX_SPEED);
+
           const angle = Math.random() * 2 * Math.PI;
           dx = speed * Math.cos(angle);
           dy = speed * Math.sin(angle);
