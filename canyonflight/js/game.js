@@ -21,13 +21,46 @@ const saveScoreBtn = document.getElementById("saveScoreBtn");
 // ---- Sound ----
 const bgMusic = new Audio("./sounds/canyon_flight_bg.mp3");
 bgMusic.loop = true;
-bgMusic.volume = 0.3;
+bgMusic.volume = 0.4;
+bgMusic.preload = "auto"; // Browser beginnt schon beim Laden der Seite zu puffern
 
-const fallSound = new Audio("./sounds/char_fall_down.mp3");
+// Aufprall-Sound läuft über die Web Audio API statt <audio>:
+// Die Datei wird EINMAL vorab dekodiert (rohe PCM-Daten im Speicher),
+// dadurch entfällt das Dekodieren/Seeken bei jedem einzelnen Abspielen
+// genau das ist auf Mobilgeräten die spürbare Verzögerung.
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const fallSound = new Audio("./sounds/char_fall_down.mp3"); // Fallback, falls Web Audio nicht verfügbar ist
 fallSound.volume = 0.7;
 // Die Datei hat ~85ms Stille am Anfang (per ffmpeg silencedetect gemessen) –
 // hier starten wir kurz davor, ohne die Datei selbst schneiden zu müssen.
 const FALL_SOUND_START = 0.07;
+
+let fallSoundBuffer = null;
+fetch("./sounds/char_fall_down.mp3")
+  .then((res) => res.arrayBuffer())
+  .then((data) => audioCtx.decodeAudioData(data))
+  .then((buffer) => {
+    fallSoundBuffer = buffer;
+  })
+  .catch((err) => console.warn("Aufprall-Sound konnte nicht vorab dekodiert werden:", err));
+
+function playFallSound() {
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+
+  if (!fallSoundBuffer) {
+    // Sehr seltener Fallback: Web-Audio-Buffer war noch nicht fertig dekodiert
+    fallSound.currentTime = FALL_SOUND_START;
+    fallSound.play().catch(() => {});
+    return;
+  }
+
+  const source = audioCtx.createBufferSource();
+  source.buffer = fallSoundBuffer;
+  source.connect(audioCtx.destination);
+  source.start(0, FALL_SOUND_START); // sample-genauer Start, kein erneutes Dekodieren nötig
+}
 
 // ---- Konstanten ----
 const W = canvas.width;
@@ -40,7 +73,7 @@ const FLAP_VELOCITY = -7.6;
 const BASE_SPEED = 2.6;
 const MAX_SPEED_BONUS = 2.4;
 const PIPE_WIDTH = 56;
-const SPAWN_DISTANCE = 220;
+const SPAWN_DISTANCE = 210;
 const HIGHSCORE_KEY = "canyonflight_highscore";
 
 // ---- Spielzustand ----
@@ -131,6 +164,10 @@ function flap() {
 }
 
 function handleInput() {
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+
   if (gameState === "ready") {
     startGame();
     flap();
@@ -243,8 +280,7 @@ function endGame() {
   bgMusic.pause();
   bgMusic.currentTime = 0;
 
-  fallSound.currentTime = FALL_SOUND_START;
-  fallSound.play().catch(() => {});
+  playFallSound();
 
   overlayTitle.textContent = "Abgestürzt!";
   overlayText.textContent = `Punkte: ${lastScore}`;
