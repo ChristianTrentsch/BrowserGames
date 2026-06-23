@@ -27,7 +27,7 @@ const fallSound = new Audio("./sounds/char_fall_down.mp3");
 fallSound.volume = 0.7;
 // Die Datei hat ~85ms Stille am Anfang (per ffmpeg silencedetect gemessen) –
 // hier starten wir kurz davor, ohne die Datei selbst schneiden zu müssen.
-const FALL_SOUND_START = 0.08;
+const FALL_SOUND_START = 0.07;
 
 // ---- Konstanten ----
 const W = canvas.width;
