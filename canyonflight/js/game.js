@@ -16,6 +16,7 @@ const overlay = document.getElementById("overlay");
 const overlayTitle = document.getElementById("overlayTitle");
 const overlayText = document.getElementById("overlayText");
 const overlayBtn = document.getElementById("overlayBtn");
+const saveScoreBtn = document.getElementById("saveScoreBtn");
 
 // ---- Konstanten ----
 const W = canvas.width;
@@ -104,6 +105,7 @@ function resetGame() {
 function startGame() {
   resetGame();
   gameState = "playing";
+  saveScoreBtn.classList.add("d-none");
   overlay.classList.add("d-none");
 }
 
@@ -154,8 +156,10 @@ function showGameOverModal(punkte) {
     }
 
     modal.style.display = "none";
+    saveScoreBtn.classList.add("d-none");
     await saveHighscore(name, punkte);
     await loadHighscores();
+    await setHighestScore();
   };
 }
 
@@ -217,19 +221,12 @@ async function loadHighscores() {
 function endGame() {
   gameState = "gameover";
   gameOverTime = Date.now();
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  showGameOverModal(score);
-
-  // if (score > highscore) {
-  //   highscore = score;
-  //   localStorage.setItem(HIGHSCORE_KEY, String(highscore));
-  // }
-  // highscoreEl.textContent = highscore;
-
-  // overlayTitle.textContent = "Abgestürzt!";
-  // overlayText.textContent = `Punkte: ${score} – Highscore: ${highscore}`;
+  lastScore = score;
+ 
+  overlayTitle.textContent = "Abgestürzt!";
+  overlayText.textContent = `Punkte: ${lastScore}`;
   overlayBtn.textContent = "Neustart";
+  saveScoreBtn.classList.remove("d-none");
   overlay.classList.remove("d-none");
 }
 
@@ -473,6 +470,10 @@ canvas.addEventListener(
 );
 
 overlayBtn.addEventListener("click", handleInput);
+
+saveScoreBtn.addEventListener("click", () => {
+  showGameOverModal(lastScore);
+});
 
 // ---- Start ----
 spawnObstacle(W + 100);
