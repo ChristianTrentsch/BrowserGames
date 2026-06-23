@@ -18,6 +18,14 @@ const overlayText = document.getElementById("overlayText");
 const overlayBtn = document.getElementById("overlayBtn");
 const saveScoreBtn = document.getElementById("saveScoreBtn");
 
+// ---- Sound ----
+const bgMusic = new Audio("./sounds/canyon_flight_bg.mp3");
+bgMusic.loop = true;
+bgMusic.volume = 0.4;
+
+const fallSound = new Audio("./sounds/char_fall_down.mp3");
+fallSound.volume = 0.7;
+
 // ---- Konstanten ----
 const W = canvas.width;
 const H = canvas.height;
@@ -29,7 +37,7 @@ const FLAP_VELOCITY = -7.6;
 const BASE_SPEED = 2.6;
 const MAX_SPEED_BONUS = 2.4;
 const PIPE_WIDTH = 56;
-const SPAWN_DISTANCE = 210;
+const SPAWN_DISTANCE = 220;
 const HIGHSCORE_KEY = "canyonflight_highscore";
 
 // ---- Spielzustand ----
@@ -39,6 +47,7 @@ let birdVelocity = 0;
 let rotation = 0;
 let obstacles = [];
 let score = 0;
+let lastScore = 0;
 let highscore = 0;
 let speed = BASE_SPEED;
 let gameOverTime = 0;
@@ -107,6 +116,11 @@ function startGame() {
   gameState = "playing";
   saveScoreBtn.classList.add("d-none");
   overlay.classList.add("d-none");
+
+  bgMusic.currentTime = 0;
+  bgMusic.play().catch(() => {
+    // Browser kann Autoplay vor einer Nutzer-Interaktion blockieren – hier kein Fehler nötig
+  });
 }
 
 function flap() {
@@ -138,11 +152,6 @@ function showGameOverModal(punkte) {
   modal.style.display = "flex";
   setTimeout(() => input.focus(), 100);
 
-  // Eingabe live filtern
-  input.addEventListener("input", () => {
-    input.value = sanitizeName(input.value);
-  });
-
   document.getElementById("canyonflight_modalSaveBtn").onclick = async () => {
     let name = sanitizeName(input.value) || "";
 
@@ -162,6 +171,11 @@ function showGameOverModal(punkte) {
     await setHighestScore();
   };
 }
+
+// Eingabe live filtern (nur einmal registrieren, nicht bei jedem Modal-Öffnen)
+document.getElementById("nameInput").addEventListener("input", (e) => {
+  e.target.value = sanitizeName(e.target.value);
+});
 
 function sanitizeName(input) {
   return input
@@ -222,7 +236,13 @@ function endGame() {
   gameState = "gameover";
   gameOverTime = Date.now();
   lastScore = score;
- 
+
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
+
+  fallSound.currentTime = 0;
+  fallSound.play().catch(() => {});
+
   overlayTitle.textContent = "Abgestürzt!";
   overlayText.textContent = `Punkte: ${lastScore}`;
   overlayBtn.textContent = "Neustart";
