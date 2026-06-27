@@ -73,7 +73,7 @@ const FLAP_VELOCITY = -7.6;
 const BASE_SPEED = 2.6;
 const MAX_SPEED_BONUS = 2.4;
 const PIPE_WIDTH = 56;
-const SPAWN_DISTANCE = 210;
+const SPAWN_DISTANCE = 250;
 const HIGHSCORE_KEY = "canyonflight_highscore";
 
 // ---- Spielzustand ----
