@@ -35,7 +35,7 @@ try {
   const CONFIG = {
     gridSize: 20, // Felder pro Seite
     startInterval: 250, // ms pro Zug, am Anfang
-    minInterval: 65, // ms pro Zug, schnellste Stufe
+    minInterval: 100, // ms pro Zug, schnellste Stufe
     speedStep: 3, // ms schneller pro gefressenem Apfel
     scorePerFood: 10,
     swipeThreshold: 24, // px, ab der ein Touch als Wisch statt Tipp gilt
