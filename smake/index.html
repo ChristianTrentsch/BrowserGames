@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Smake</title>
+
+    <link
+      rel="icon"
+      href="../images/ranger-high-resolution-logo-transparent_neu.ico"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./css/index.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+
+  <body>
+    <div class="container py-4 py-md-5">
+      
+      <header class="smake-header text-center mb-3 mb-md-4">
+        <h1 class="smake-title">SMAKE</h1>
+
+        <div class="mb-4 p-3 bg-gradient text-light rounded-3 shadow-lg mx-auto" style="max-width: 600px">
+          <p>Steuere deine Smake durch das Raster und fress dich groß aber pass auf, du wirst mit jedem Happen schneller! Die Wände sind kein Problem, dein eigener Körper schon.</p>
+          <p>Wie lange hältst du durch?</p>
+        </div>
+
+        <div class="mb-4">
+          <a href="../index.html" class="btn btn-outline-success btn-lg"
+            >🎮 Zurück zur Startseite</a
+          >
+        </div>
+        
+        <div class="smake-scoreboard">
+          <div class="score-box">
+            <span class="score-label">Score</span>
+            <span class="score-value" id="score" aria-live="polite">000</span>
+          </div>
+          <div class="score-box">
+            <span class="score-label">Bestwert</span>
+            <span class="score-value" id="highscore" aria-live="polite"
+              >000</span
+            >
+          </div>
+        </div>
+      </header>
+
+      <main class="smake-stage mx-auto">
+        <div class="crt-frame" id="crtFrame">
+          <canvas id="gameCanvas" aria-label="Smake Spielfeld"></canvas>
+          <div class="crt-scanlines" aria-hidden="true"></div>
+          <div class="crt-vignette" aria-hidden="true"></div>
+
+          <div class="overlay" id="overlay">
+            <p class="overlay-eyebrow" id="overlayEyebrow">BEREIT?</p>
+            <h2 class="overlay-title" id="overlayTitle">SMAKE</h2>
+            <p class="overlay-text" id="overlayText">
+              Leertaste, Tippen ins Feld oder D-Pad zum Start
+            </p>
+            <div class="overlay-actions">
+              <button class="btn-arcade" id="overlayButton" type="button">
+                START
+              </button>
+              <button
+                class="btn-arcade btn-arcade-ghost is-hidden"
+                id="saveScoreButton"
+                type="button"
+              >
+                💾 Highscore speichern
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <p class="hint text-center d-none d-md-block">
+          Steuerung: Pfeiltasten / WASD &nbsp;•&nbsp; Leertaste = Pause
+        </p>
+        <p class="hint hint-mobile text-center d-md-none">
+          D-Pad nutzen oder über das Feld wischen
+        </p>
+      </main>
+
+      <div class="dpad-wrap" id="dpadWrap">
+        <div class="dpad" id="dpad">
+          <button
+            class="dpad-btn dpad-up"
+            data-dir="up"
+            type="button"
+            aria-label="Hoch"
+          >
+            <i class="fa-solid fa-chevron-up"></i>
+          </button>
+          <button
+            class="dpad-btn dpad-left"
+            data-dir="left"
+            type="button"
+            aria-label="Links"
+          >
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button
+            class="dpad-btn dpad-pause"
+            data-action="pause"
+            type="button"
+            aria-label="Pause"
+          >
+            <i class="fa-solid fa-pause" id="pauseIcon"></i>
+          </button>
+          <button
+            class="dpad-btn dpad-right"
+            data-dir="right"
+            type="button"
+            aria-label="Rechts"
+          >
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+          <button
+            class="dpad-btn dpad-down"
+            data-dir="down"
+            type="button"
+            aria-label="Runter"
+          >
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Highscore -->
+      <div class="highscore-section mt-5 text-center">
+        <h3>Highscore (Top 10)</h3>
+        <table
+          class="table table-dark table-striped w-100 mx-auto"
+          id="highscoreTable"
+        >
+          <thead>
+            <tr>
+              <th>Platz</th>
+              <th>Name</th>
+              <th>Punkte</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="3">Lade Highscores…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Modal: Punktestand mit Namen speichern -->
+    <div
+      class="modal fade modal-smake"
+      id="saveScoreModal_smake"
+      tabindex="-1"
+      aria-labelledby="saveScoreModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="saveScoreModalLabel">
+              Highscore speichern
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Schließen"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <img
+              src="./images/smake_icon.png"
+              alt="Smake Mascot"
+              class="modal-mascot"
+            />
+            <p class="modal-score-line">
+              Du hast <strong id="modalScoreValue">0</strong> Punkte erreicht!
+            </p>
+            <label for="playerNameInput" class="form-label">
+              Name (A–Z, 0–9, max. 6 Zeichen)
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="playerNameInput"
+              maxlength="6"
+              placeholder="z. B. RangeR"
+              autocomplete="off"
+            />
+            <p class="modal-error is-hidden" id="modalError">
+              Bitte gib einen Namen ein.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-arcade" id="confirmSaveButton" type="button">
+              Speichern
+            </button>
+            <button
+              type="button"
+              class="btn-arcade btn-arcade-ghost"
+              data-bs-dismiss="modal"
+            >
+              Abbrechen
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./js/game.js"></script>
+  </body>
+</html>
